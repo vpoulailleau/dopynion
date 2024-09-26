@@ -1,4 +1,16 @@
-from dopynion.cards import Copper, Curse, Duchy, Estate, Gold, Province, Silver
+import random
+
+from dopynion.cards import (
+    Card,
+    Copper,
+    Curse,
+    Duchy,
+    Estate,
+    Gold,
+    Province,
+    Silver,
+    kingdom_cards,
+)
 from dopynion.constants import MAX_NB_PLAYERS
 from dopynion.exceptions import AddPlayerDuringGameError, InvalidCommandError
 from dopynion.player import Player
@@ -15,6 +27,7 @@ class Game:
         self.duchies: list[type[Duchy]] = [Duchy] * 12
         self.provinces: list[type[Province]] = [Province] * 12
         self.curses: list[type[Curse]] = [Curse] * 30
+        self.kingdoms: dict[type[Card], int] = {}
 
     def add_player(self, player: Player) -> None:
         if self.started:
@@ -35,3 +48,10 @@ class Game:
             self.curses = self.curses[:10]
         elif len(self.players) == 3:  # noqa: PLR2004
             self.curses = self.curses[:20]
+        possible_kingdoms = kingdom_cards.copy()
+        for _ in range(10):
+            card_type = random.choice(possible_kingdoms)  # noqa: S311
+            self.kingdoms[card_type] = 10
+            # TODO pour jardin c'est particulier, cf bas de la page 2
+            # TODO possible_kingdoms.remove(card_type)
+        print(self.kingdoms)
