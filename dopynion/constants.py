@@ -1,0 +1,1 @@
+MAX_NB_PLAYERS = 4

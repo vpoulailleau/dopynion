@@ -18,6 +18,15 @@ ignore = ["CPY001", "D1", "D203", "D212", "T201"]
 fixable = ["ALL"]
 unfixable = []
 
+[tool.ruff.lint.extend-per-file-ignores]
+"tests/**/*.py" = [
+    "S101",    # asserts allowed in tests...
+    "ARG",     # Unused function args -> fixtures nevertheless are functionally relevant...
+    "FBT",     # Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    "PLR2004", # Magic value used in comparison, ...
+    "INP001",  #  Add an `__init__.py`
+]
+
 [tool.ruff.format]
 preview = true
 quote-style = "double"
@@ -25,7 +34,8 @@ indent-style = "space"
 docstring-code-format = true
 
 [tool.uv]
-dev-dependencies = [
-    "pytest>=8.3.3",
-    "ruff>=0.6.8",
-]
+dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-vvv --cov=dopynion  --cov-report html"
