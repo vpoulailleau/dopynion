@@ -60,3 +60,30 @@ def test_initial_estates_3_players() -> None:
     assert len(game.estates) == 12
     assert len(game.duchies) == 12
     assert len(game.provinces) == 12
+
+
+def test_initial_malediction_2_players() -> None:
+    game = Game()
+    game.add_player(Player("1"))
+    game.add_player(Player("2"))
+    game.start()
+    assert len(game.curses) == 10
+
+
+def test_initial_malediction_3_players() -> None:
+    game = Game()
+    game.add_player(Player("1"))
+    game.add_player(Player("2"))
+    game.add_player(Player("3"))
+    game.start()
+    assert len(game.curses) == 20
+
+
+def test_initial_malediction_4_players() -> None:
+    game = Game()
+    game.add_player(Player("1"))
+    game.add_player(Player("2"))
+    game.add_player(Player("3"))
+    game.add_player(Player("4"))
+    game.start()
+    assert len(game.curses) == 30

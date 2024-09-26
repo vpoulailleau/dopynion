@@ -15,6 +15,10 @@ class Copper:
     name = "Cuivre"
 
 
+class Curse:
+    name = "Malédiction"
+
+
 class Duchy:
     name = "Duché"
 

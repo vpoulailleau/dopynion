@@ -1,4 +1,4 @@
-from dopynion.cards import Copper, Duchy, Estate, Gold, Province, Silver
+from dopynion.cards import Copper, Curse, Duchy, Estate, Gold, Province, Silver
 from dopynion.constants import MAX_NB_PLAYERS
 from dopynion.exceptions import AddPlayerDuringGameError, InvalidCommandError
 from dopynion.player import Player
@@ -14,6 +14,7 @@ class Game:
         self.estates: list[type[Estate]] = [Estate] * 12
         self.duchies: list[type[Duchy]] = [Duchy] * 12
         self.provinces: list[type[Province]] = [Province] * 12
+        self.curses: list[type[Curse]] = [Curse] * 30
 
     def add_player(self, player: Player) -> None:
         if self.started:
@@ -31,3 +32,6 @@ class Game:
             self.estates = self.estates[:8]
             self.duchies = self.duchies[:8]
             self.provinces = self.provinces[:8]
+            self.curses = self.curses[:10]
+        elif len(self.players) == 3:  # noqa: PLR2004
+            self.curses = self.curses[:20]
