@@ -15,12 +15,20 @@ class Copper:
     name = "Cuivre"
 
 
+class Duchy:
+    name = "Duché"
+
+
 class Estate:
     name = "Domaine"
 
 
 class Gold:
     name = "Or"
+
+
+class Province:
+    name = "Province"
 
 
 class Silver:
