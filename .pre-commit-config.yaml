@@ -1,0 +1,44 @@
+# Installation in two steps
+
+## Step 1: Get the pre-commit tool (once per computer)
+
+# Linux
+# curl -LsSf https://astral.sh/ruff/install.sh | sh
+
+# Windows
+# powershell -c "irm https://astral.sh/ruff/install.ps1 | iex"
+
+# alternative installation:
+# https://docs.astral.sh/ruff/installation/
+
+## Step 2: Use pre-commit (once per repository)
+
+# pre-commit install
+
+## Step 3: Skip pre-commit (never)
+
+# git commit -m "my beautiful message" --no-verify
+
+
+repos:
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-merge-conflict # Check for files that contain merge conflict strings
+  - id: check-yaml # Attempts to load all yaml files to verify syntax
+  - id: end-of-file-fixer # Makes sure files end in a newline and only a newline
+  - id: trailing-whitespace # Trims trailing whitespace
+
+# - repo: https://github.com/pre-commit/mirrors-clang-format
+#   rev: v17.0.6
+#   hooks:
+#   - id: clang-format
+#     types_or: [c++, c]
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.6.5
+  hooks:
+    - id: ruff
+      verbose: true
+    - id: ruff-format
