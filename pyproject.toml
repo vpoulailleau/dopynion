@@ -23,3 +23,9 @@ preview = true
 quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.3",
+    "ruff>=0.6.8",
+]
