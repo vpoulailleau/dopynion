@@ -6,3 +6,10 @@ def test_initial_deck() -> None:
     assert len(player.deck) == 10
     assert sum(card == Copper for card in player.deck) == 7
     assert sum(card == Estate for card in player.deck) == 3
+
+
+def test_make_hand_enough_cards_in_deck() -> None:
+    player = Player("toto")
+    player.start_turn()
+    assert len(player.hand) == 5
+    assert len(player.deck) == 5
