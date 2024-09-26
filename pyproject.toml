@@ -38,4 +38,4 @@ dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
-addopts = "-vvv --cov=dopynion  --cov-report html"
+addopts = "-vvv --cov=dopynion  --cov-report html --cov-branch"
