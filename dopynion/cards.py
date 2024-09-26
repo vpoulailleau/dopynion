@@ -17,3 +17,11 @@ class Copper:
 
 class Estate:
     name = "Domaine"
+
+
+class Gold:
+    name = "Or"
+
+
+class Silver:
+    name = "Argent"

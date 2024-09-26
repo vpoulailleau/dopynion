@@ -1,4 +1,5 @@
-from dopynion import Copper, Estate, Player
+from dopynion.cards import Copper, Estate
+from dopynion.player import Player
 
 
 def test_initial_deck() -> None:
