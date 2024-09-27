@@ -10,3 +10,6 @@ game.add_player(player1)
 game.add_player(player2)
 game.add_player(player3)
 game.start()
+
+player1.start_turn()
+player1.action("Smithy")

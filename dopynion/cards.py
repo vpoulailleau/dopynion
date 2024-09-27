@@ -4,7 +4,12 @@ import inspect
 import sys
 
 
-class Card:
+class ClassNameRepr(type):
+    def __repr__(cls) -> str:
+        return cls.__name__
+
+
+class Card(metaclass=ClassNameRepr):
     name = "Unknown"
     is_kingdom = True
 
@@ -13,6 +18,9 @@ class Card:
 
     def __hash__(self) -> int:
         return hash(self.name)
+
+    def __repr__(self) -> str:
+        return self.name
 
 
 class Copper(Card):
