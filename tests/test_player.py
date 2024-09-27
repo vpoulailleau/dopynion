@@ -1,7 +1,7 @@
 import pytest
 
 from dopynion.cards import Copper, Estate
-from dopynion.exceptions import UnknownActionError
+from dopynion.exceptions import InvalidActionError, UnknownActionError
 from dopynion.player import Player
 
 
@@ -28,3 +28,10 @@ def test_unknown_action() -> None:
     player.start_turn()
     with pytest.raises(UnknownActionError):
         player.action("FooBar")
+
+
+def test_invalid_action() -> None:
+    player = Player("toto")
+    player.start_turn()
+    with pytest.raises(InvalidActionError):
+        player.action("Smithy")

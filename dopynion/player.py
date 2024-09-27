@@ -1,7 +1,7 @@
 from random import shuffle
 
 from dopynion.cards import Card, Copper, Estate
-from dopynion.exceptions import UnknownActionError
+from dopynion.exceptions import InvalidActionError, UnknownActionError
 
 
 class State:
@@ -32,6 +32,12 @@ class Player:
 
     def action(self, card_name: str) -> None:
         try:
-            getattr(self, f"_action_{card_name.lower()}")()
+            action = getattr(self, f"_action_{card_name.lower()}")
         except AttributeError as err:
             raise UnknownActionError(card_name) from err
+        if not any(str(card) == card_name for card in self.hand):
+            raise InvalidActionError(card_name)
+        action()
+
+    def _action_smithy(self) -> None:
+        pass
