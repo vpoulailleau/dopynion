@@ -1,8 +1,12 @@
 import pytest
 
 from dopynion.cards import Copper, Estate
-from dopynion.exceptions import InvalidActionError, UnknownActionError
-from dopynion.player import Player
+from dopynion.exceptions import (
+    ActionDuringBuyError,
+    InvalidActionError,
+    UnknownActionError,
+)
+from dopynion.player import Player, State
 
 
 def test_initial_deck() -> None:
@@ -26,6 +30,7 @@ def test_make_hand_not_enough_cards_in_deck() -> None:
 def test_unknown_action() -> None:
     player = Player("toto")
     player.start_turn()
+    player.state = State.ACTION
     with pytest.raises(UnknownActionError):
         player.action("FooBar")
 
@@ -33,5 +38,13 @@ def test_unknown_action() -> None:
 def test_invalid_action() -> None:
     player = Player("toto")
     player.start_turn()
-    with pytest.raises(InvalidActionError):
+    with pytest.raises(ActionDuringBuyError):
         player.action("Smithy")
+
+
+def test_invalid_action_when_no_corresponding_card() -> None:
+    player = Player("toto")
+    player.start_turn()
+    player.state = State.ACTION
+    with pytest.raises(InvalidActionError):
+        player.action("Village")

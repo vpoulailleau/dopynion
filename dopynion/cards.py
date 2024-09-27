@@ -12,6 +12,7 @@ class ClassNameRepr(type):
 class Card(metaclass=ClassNameRepr):
     name = "Unknown"
     is_kingdom = True
+    is_action = False
 
     def __eq__(self, other: object) -> bool:
         return isinstance(self, other) or self.__class__ is other
@@ -60,6 +61,7 @@ class Silver(Card):
 
 class Smithy(Card):
     name = "Forgeron"
+    is_action = True
 
 
 kingdom_cards: list[type[Card]] = [

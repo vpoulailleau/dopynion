@@ -12,3 +12,7 @@ class InvalidActionError(Exception):
 
 class UnknownActionError(Exception):
     pass
+
+
+class ActionDuringBuyError(Exception):
+    pass

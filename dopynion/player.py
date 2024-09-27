@@ -1,7 +1,11 @@
 from random import shuffle
 
 from dopynion.cards import Card, Copper, Estate
-from dopynion.exceptions import InvalidActionError, UnknownActionError
+from dopynion.exceptions import (
+    ActionDuringBuyError,
+    InvalidActionError,
+    UnknownActionError,
+)
 
 
 class State:
@@ -17,10 +21,17 @@ class Player:
         shuffle(self.deck)
         self.hand: list[type[Card]] = []
         self.state = State.ACTION
+        self.actions_left: int = 0
+        self.buys_left: int = 0
 
     def start_turn(self) -> None:
         self._adjust()
         self.state = State.ACTION
+        self.actions_left = 1
+        self.buys_left = 1
+        if not any(card.is_action for card in self.hand):
+            self.actions_left = 0
+            self.state = State.BUY
 
     def end_turn(self) -> None:
         pass
@@ -31,6 +42,8 @@ class Player:
         self.state = State.ADJUST
 
     def action(self, card_name: str) -> None:
+        if self.state != State.ACTION:
+            raise ActionDuringBuyError(card_name)
         try:
             action = getattr(self, f"_action_{card_name.lower()}")
         except AttributeError as err:
@@ -40,4 +53,7 @@ class Player:
         action()
 
     def _action_smithy(self) -> None:
+        pass
+
+    def _action_village(self) -> None:
         pass
