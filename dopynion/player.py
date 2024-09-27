@@ -24,14 +24,17 @@ class Player:
         self.actions_left: int = 0
         self.buys_left: int = 0
 
+    def _check_for_action_to_buy_transition(self) -> None:
+        if not any(card.is_action for card in self.hand):
+            self.actions_left = 0
+            self.state = State.BUY
+
     def start_turn(self) -> None:
         self._adjust()
         self.state = State.ACTION
         self.actions_left = 1
         self.buys_left = 1
-        if not any(card.is_action for card in self.hand):
-            self.actions_left = 0
-            self.state = State.BUY
+        self._check_for_action_to_buy_transition()
 
     def end_turn(self) -> None:
         pass
@@ -51,6 +54,8 @@ class Player:
         if not any(str(card) == card_name for card in self.hand):
             raise InvalidActionError(card_name)
         action()
+        self._check_for_action_to_buy_transition()
+        # TODO pop card from hand
 
     def _action_smithy(self) -> None:
         pass
