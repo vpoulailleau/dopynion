@@ -12,8 +12,9 @@ class ClassNameRepr(type):
 class Card(metaclass=ClassNameRepr):
     name = "Unknown"
     cost = 10_000
-    is_kingdom = True
     is_action = False
+    is_kingdom = True
+    is_money = False
 
     def __eq__(self, other: object) -> bool:
         return isinstance(self, other) or self.__class__ is other
@@ -28,6 +29,7 @@ class Card(metaclass=ClassNameRepr):
 class Copper(Card):
     name = "Cuivre"
     is_kingdom = False
+    is_money = True
 
 
 class Curse(Card):
@@ -48,6 +50,7 @@ class Estate(Card):
 class Gold(Card):
     name = "Or"
     is_kingdom = False
+    is_money = True
 
 
 class Province(Card):
@@ -58,6 +61,7 @@ class Province(Card):
 class Silver(Card):
     name = "Argent"
     is_kingdom = False
+    is_money = True
 
 
 class Smithy(Card):

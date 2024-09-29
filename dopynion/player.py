@@ -32,6 +32,11 @@ class Player:
             self.actions_left = 0
             self.state = State.BUY
 
+    def _check_for_buy_to_adjust_transition(self) -> None:
+        if not any(card.is_money for card in self.hand) or not self.buys_left:
+            self.buys_left = 0
+            self.state = State.ADJUST
+
     def start_turn(self) -> None:
         self._adjust()
         self.state = State.ACTION
