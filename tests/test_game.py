@@ -43,7 +43,7 @@ def test_initial_money() -> None:
     game.start()
     assert len(game.buyable_cards["Gold"]) == 30
     assert len(game.buyable_cards["Silver"]) == 40
-    assert len(game.coppers) == 60 - 7 * 2
+    assert len(game.buyable_cards["Copper"]) == 60 - 7 * 2
 
 
 def test_initial_estates_2_players() -> None:

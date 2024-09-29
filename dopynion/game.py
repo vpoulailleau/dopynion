@@ -28,8 +28,8 @@ class Game:
         self.buyable_cards: dict[str, list[type[Card]]] = {
             "Gold": [Gold] * 30,
             "Silver": [Silver] * 40,
+            "Copper": [Copper] * 60,
         }
-        self.coppers: list[type[Copper]] = [Copper] * 60
         self.estates: list[type[Estate]] = [Estate] * 12
         self.duchies: list[type[Duchy]] = [Duchy] * 12
         self.provinces: list[type[Province]] = [Province] * 12
@@ -42,7 +42,7 @@ class Game:
         if len(self.players) < MAX_NB_PLAYERS:
             self.players.append(player)
             player.game = self
-            self.coppers = self.coppers[7:]
+            self.buyable_cards["Copper"] = self.buyable_cards["Copper"][7:]
         else:
             msg = f"At most {MAX_NB_PLAYERS} players"
             raise InvalidCommandError(msg)
