@@ -41,9 +41,9 @@ def test_initial_money() -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
-    assert len(game.stock["Gold"]) == 30
-    assert len(game.stock["Silver"]) == 40
-    assert len(game.stock["Copper"]) == 60 - 7 * 2
+    assert game.gold_qty == 30
+    assert game.silver_qty == 40
+    assert game.copper_qty == 60 - 7 * 2
 
 
 def test_initial_estates_2_players() -> None:
@@ -51,9 +51,9 @@ def test_initial_estates_2_players() -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
-    assert len(game.stock["Estate"]) == 8
-    assert len(game.stock["Duchy"]) == 8
-    assert len(game.stock["Province"]) == 8
+    assert game.estate_qty == 8
+    assert game.duchy_qty == 8
+    assert game.province_qty == 8
 
 
 def test_initial_estates_3_players() -> None:
@@ -62,9 +62,9 @@ def test_initial_estates_3_players() -> None:
     game.add_player(Player("2"))
     game.add_player(Player("3"))
     game.start()
-    assert len(game.stock["Estate"]) == 12
-    assert len(game.stock["Duchy"]) == 12
-    assert len(game.stock["Province"]) == 12
+    assert game.estate_qty == 12
+    assert game.duchy_qty == 12
+    assert game.province_qty == 12
 
 
 def test_initial_malediction_2_players() -> None:
@@ -72,7 +72,7 @@ def test_initial_malediction_2_players() -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
-    assert len(game.stock["Curse"]) == 10
+    assert game.curse_qty == 10
 
 
 def test_initial_malediction_3_players() -> None:
@@ -81,7 +81,7 @@ def test_initial_malediction_3_players() -> None:
     game.add_player(Player("2"))
     game.add_player(Player("3"))
     game.start()
-    assert len(game.stock["Curse"]) == 20
+    assert game.curse_qty == 20
 
 
 def test_initial_malediction_4_players() -> None:
@@ -91,7 +91,7 @@ def test_initial_malediction_4_players() -> None:
     game.add_player(Player("3"))
     game.add_player(Player("4"))
     game.start()
-    assert len(game.stock["Curse"]) == 30
+    assert game.curse_qty == 30
 
 
 def test_move_card() -> None:

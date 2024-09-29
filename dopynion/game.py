@@ -2,16 +2,7 @@ import inspect
 import random
 
 import dopynion.cards
-from dopynion.cards import (
-    Card,
-    Copper,
-    Curse,
-    Duchy,
-    Estate,
-    Gold,
-    Province,
-    Silver,
-)
+from dopynion.cards import Card
 from dopynion.constants import MAX_NB_PLAYERS
 from dopynion.exceptions import (
     AddPlayerDuringGameError,
@@ -25,15 +16,21 @@ class Game:
     def __init__(self) -> None:
         self.players: list[Player] = []
         self.started = False
-        self.stock: dict[str, list[type[Card]]] = {
-            "Gold": [Gold] * 30,
-            "Silver": [Silver] * 40,
-            "Copper": [Copper] * 60,
-            "Estate": [Estate] * 12,
-            "Duchy": [Duchy] * 12,
-            "Province": [Province] * 12,
-            "Curse": [Curse] * 30,
+        self.stock: dict[str, int] = {
+            "Gold": 30,
+            "Silver": 40,
+            "Copper": 60,
+            "Estate": 12,
+            "Duchy": 12,
+            "Province": 12,
+            "Curse": 30,
         }
+
+    def __getattr__(self, name: str) -> int:
+        if name.endswith("_qty"):
+            card_name = name[:-4]
+            return self.stock[Card.types[card_name].__name__]
+        raise AttributeError
 
     def add_player(self, player: Player) -> None:
         if self.started:
@@ -41,7 +38,7 @@ class Game:
         if len(self.players) < MAX_NB_PLAYERS:
             self.players.append(player)
             player.game = self
-            self.stock["Copper"] = self.stock["Copper"][7:]
+            self.copper_qty -= 7
         else:
             msg = f"At most {MAX_NB_PLAYERS} players"
             raise InvalidCommandError(msg)
@@ -49,12 +46,12 @@ class Game:
     def start(self) -> None:
         self.started = True
         if len(self.players) <= 2:  # noqa: PLR2004
-            self.stock["Estate"] = self.stock["Estate"][:8]
-            self.stock["Duchy"] = self.stock["Duchy"][:8]
-            self.stock["Province"] = self.stock["Province"][:8]
-            self.stock["Curse"] = self.stock["Curse"][:10]
+            self.estate_qty = 8
+            self.duchy_qty = 8
+            self.province_qty = 8
+            self.curse_qty = 10
         elif len(self.players) == 3:  # noqa: PLR2004
-            self.stock["Curse"] = self.stock["Curse"][:20]
+            self.curse_qty = 20
         possible_kingdoms: list[type[Card]] = [
             class_
             for _, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)
@@ -64,7 +61,7 @@ class Game:
         ]
         for _ in range(10):
             card_type = random.choice(possible_kingdoms)  # noqa: S311
-            self.stock[card_type.__name__] = [card_type] * 10
+            self.stock[card_type.__name__] = 10
             # TODO pour jardin c'est particulier, cf bas de la page 2
             # TODO possible_kingdoms.remove(card_type)
 
