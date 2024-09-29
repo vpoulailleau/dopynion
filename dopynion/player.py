@@ -1,12 +1,15 @@
 from random import shuffle
+from typing import TYPE_CHECKING
 
 from dopynion.cards import Card, Copper, Estate
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
-    MissingCardError,
     UnknownActionError,
 )
+
+if TYPE_CHECKING:
+    import dopynion.game
 
 
 class State:
@@ -17,6 +20,7 @@ class State:
 
 class Player:
     def __init__(self, name: str) -> None:
+        self.game: dopynion.game.Game = None
         self.name = name
         self.deck: list[type[Card]] = [Copper] * 7 + [Estate] * 3
         shuffle(self.deck)
@@ -52,23 +56,6 @@ class Player:
         self.deck = self.deck[:-5]
         self.state = State.ADJUST
 
-    @staticmethod
-    def move_card(index: int, src: list[type[Card]], dst: list[type[Card]]) -> None:
-        dst.append(src.pop(index))
-
-    @staticmethod
-    def move_card_by_name(
-        card_name: str,
-        src: list[type[Card]],
-        dst: list[type[Card]],
-    ) -> None:
-        for index, card in enumerate(src):
-            if card.__name__ == card_name:
-                Player.move_card(index, src, dst)
-                break
-        else:
-            raise MissingCardError
-
     def action(self, card_name: str) -> None:
         if self.state != State.ACTION:
             raise ActionDuringBuyError(card_name)
@@ -80,7 +67,7 @@ class Player:
             raise InvalidActionError(card_name)
         action()
         self.actions_left -= 1
-        self.move_card_by_name(card_name, self.hand, self.played_cards)
+        self.game.move_card_by_name(card_name, self.hand, self.played_cards)
         self._check_for_action_to_buy_transition()
 
     def _action_smithy(self) -> None:
