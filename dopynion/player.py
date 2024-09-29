@@ -20,12 +20,14 @@ class Player:
         self.deck: list[type[Card]] = [Copper] * 7 + [Estate] * 3
         shuffle(self.deck)
         self.hand: list[type[Card]] = []
+        self.discard: list[type[Card]] = []
+        self.played_cards: list[type[Card]] = []
         self.state = State.ACTION
         self.actions_left: int = 0
         self.buys_left: int = 0
 
     def _check_for_action_to_buy_transition(self) -> None:
-        if not any(card.is_action for card in self.hand):
+        if not any(card.is_action for card in self.hand) or not self.actions_left:
             self.actions_left = 0
             self.state = State.BUY
 
@@ -44,6 +46,10 @@ class Player:
         self.deck = self.deck[:-5]
         self.state = State.ADJUST
 
+    @staticmethod
+    def move_card(index: int, src: list[type[Card]], dst: list[type[Card]]) -> None:
+        dst.append(src.pop(index))
+
     def action(self, card_name: str) -> None:
         if self.state != State.ACTION:
             raise ActionDuringBuyError(card_name)
@@ -54,8 +60,9 @@ class Player:
         if not any(str(card) == card_name for card in self.hand):
             raise InvalidActionError(card_name)
         action()
-        self._check_for_action_to_buy_transition()
         # TODO pop card from hand
+        self.actions_left -= 1
+        self._check_for_action_to_buy_transition()
 
     def _action_smithy(self) -> None:
         pass

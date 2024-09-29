@@ -48,3 +48,11 @@ def test_invalid_action_when_no_corresponding_card() -> None:
     player.state = State.ACTION
     with pytest.raises(InvalidActionError):
         player.action("Village")
+
+
+def test_move_card() -> None:
+    src = [Estate, Copper, Estate, Estate]
+    dst = [Estate, Copper]
+    Player.move_card(1, src, dst)
+    assert src == [Estate, Estate, Estate]
+    assert dst == [Estate, Copper, Copper]
