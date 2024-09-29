@@ -34,7 +34,6 @@ class Game:
             "Province": [Province] * 12,
             "Curse": [Curse] * 30,
         }
-        self.kingdoms: dict[type[Card], int] = {}
 
     def add_player(self, player: Player) -> None:
         if self.started:
@@ -65,10 +64,10 @@ class Game:
         ]
         for _ in range(10):
             card_type = random.choice(possible_kingdoms)  # noqa: S311
-            self.kingdoms[card_type] = 10
+            self.stock[card_type.__name__] = [card_type] * 10
             # TODO pour jardin c'est particulier, cf bas de la page 2
             # TODO possible_kingdoms.remove(card_type)
-        print(self.kingdoms)
+        print(self.stock)
 
     @staticmethod
     def move_card(index: int, src: list[type[Card]], dst: list[type[Card]]) -> None:
