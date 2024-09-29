@@ -27,8 +27,8 @@ class Game:
         self.started = False
         self.buyable_cards: dict[str, list[type[Card]]] = {
             "Gold": [Gold] * 30,
+            "Silver": [Silver] * 40,
         }
-        self.silvers: list[type[Silver]] = [Silver] * 40
         self.coppers: list[type[Copper]] = [Copper] * 60
         self.estates: list[type[Estate]] = [Estate] * 12
         self.duchies: list[type[Duchy]] = [Duchy] * 12
