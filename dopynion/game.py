@@ -25,7 +25,9 @@ class Game:
     def __init__(self) -> None:
         self.players: list[Player] = []
         self.started = False
-        self.golds: list[type[Gold]] = [Gold] * 30
+        self.buyable_cards: dict[str, list[type[Card]]] = {
+            "Gold": [Gold] * 30,
+        }
         self.silvers: list[type[Silver]] = [Silver] * 40
         self.coppers: list[type[Copper]] = [Copper] * 60
         self.estates: list[type[Estate]] = [Estate] * 12

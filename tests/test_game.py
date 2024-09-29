@@ -41,7 +41,7 @@ def test_initial_money() -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
-    assert len(game.golds) == 30
+    assert len(game.buyable_cards["Gold"]) == 30
     assert len(game.silvers) == 40
     assert len(game.coppers) == 60 - 7 * 2
 
