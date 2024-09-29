@@ -32,8 +32,8 @@ class Game:
             "Estate": [Estate] * 12,
             "Duchy": [Duchy] * 12,
             "Province": [Province] * 12,
+            "Curse": [Curse] * 30,
         }
-        self.curses: list[type[Curse]] = [Curse] * 30
         self.kingdoms: dict[type[Card], int] = {}
 
     def add_player(self, player: Player) -> None:
@@ -53,9 +53,9 @@ class Game:
             self.stock["Estate"] = self.stock["Estate"][:8]
             self.stock["Duchy"] = self.stock["Duchy"][:8]
             self.stock["Province"] = self.stock["Province"][:8]
-            self.curses = self.curses[:10]
+            self.stock["Curse"] = self.stock["Curse"][:10]
         elif len(self.players) == 3:  # noqa: PLR2004
-            self.curses = self.curses[:20]
+            self.stock["Curse"] = self.stock["Curse"][:20]
         possible_kingdoms: list[type[Card]] = [
             class_
             for _, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)

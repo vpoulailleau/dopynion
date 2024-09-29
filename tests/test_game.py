@@ -72,7 +72,7 @@ def test_initial_malediction_2_players() -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
-    assert len(game.curses) == 10
+    assert len(game.stock["Curse"]) == 10
 
 
 def test_initial_malediction_3_players() -> None:
@@ -81,7 +81,7 @@ def test_initial_malediction_3_players() -> None:
     game.add_player(Player("2"))
     game.add_player(Player("3"))
     game.start()
-    assert len(game.curses) == 20
+    assert len(game.stock["Curse"]) == 20
 
 
 def test_initial_malediction_4_players() -> None:
@@ -91,7 +91,7 @@ def test_initial_malediction_4_players() -> None:
     game.add_player(Player("3"))
     game.add_player(Player("4"))
     game.start()
-    assert len(game.curses) == 30
+    assert len(game.stock["Curse"]) == 30
 
 
 def test_move_card() -> None:
