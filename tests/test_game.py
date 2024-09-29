@@ -53,7 +53,7 @@ def test_initial_estates_2_players() -> None:
     game.start()
     assert len(game.stock["Estate"]) == 8
     assert len(game.stock["Duchy"]) == 8
-    assert len(game.provinces) == 8
+    assert len(game.stock["Province"]) == 8
 
 
 def test_initial_estates_3_players() -> None:
@@ -64,7 +64,7 @@ def test_initial_estates_3_players() -> None:
     game.start()
     assert len(game.stock["Estate"]) == 12
     assert len(game.stock["Duchy"]) == 12
-    assert len(game.provinces) == 12
+    assert len(game.stock["Province"]) == 12
 
 
 def test_initial_malediction_2_players() -> None:
