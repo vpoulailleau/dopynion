@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import ClassVar
+
 
 class ClassNameRepr(type):
     def __repr__(cls) -> str:
@@ -7,12 +9,16 @@ class ClassNameRepr(type):
 
 
 class Card(metaclass=ClassNameRepr):
+    types: ClassVar[dict[str, type[Card]]] = {}
     name = "Unknown"
     cost = 10_000
     money = 0
     is_action = False
     is_kingdom = True
     is_money = False
+
+    def __init_subclass__(cls) -> None:
+        Card.types[cls.__name__.lower()] = cls
 
     def __eq__(self, other: object) -> bool:
         return isinstance(self, other) or self.__class__ is other
