@@ -4,6 +4,7 @@ from dopynion.cards import Card, Copper, Estate
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
+    MissingCardError,
     UnknownActionError,
 )
 
@@ -49,6 +50,19 @@ class Player:
     @staticmethod
     def move_card(index: int, src: list[type[Card]], dst: list[type[Card]]) -> None:
         dst.append(src.pop(index))
+
+    @staticmethod
+    def move_card_by_name(
+        card_name: str,
+        src: list[type[Card]],
+        dst: list[type[Card]],
+    ) -> None:
+        for index, card in enumerate(src):
+            if card.__name__ == card_name:
+                Player.move_card(index, src, dst)
+                break
+        else:
+            raise MissingCardError
 
     def action(self, card_name: str) -> None:
         if self.state != State.ACTION:

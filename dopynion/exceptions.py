@@ -6,13 +6,17 @@ class AddPlayerDuringGameError(InvalidCommandError):
     pass
 
 
-class InvalidActionError(Exception):
+class InvalidActionError(InvalidCommandError):
     pass
 
 
-class UnknownActionError(Exception):
+class UnknownActionError(InvalidCommandError):
     pass
 
 
-class ActionDuringBuyError(Exception):
+class ActionDuringBuyError(InvalidCommandError):
+    pass
+
+
+class MissingCardError(InvalidCommandError):
     pass

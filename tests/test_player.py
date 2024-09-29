@@ -4,6 +4,7 @@ from dopynion.cards import Copper, Estate
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
+    MissingCardError,
     UnknownActionError,
 )
 from dopynion.player import Player, State
@@ -56,3 +57,18 @@ def test_move_card() -> None:
     Player.move_card(1, src, dst)
     assert src == [Estate, Estate, Estate]
     assert dst == [Estate, Copper, Copper]
+
+
+def test_move_card_by_name() -> None:
+    src = [Estate, Copper, Estate, Estate]
+    dst = [Estate, Copper]
+    Player.move_card_by_name("Copper", src, dst)
+    assert src == [Estate, Estate, Estate]
+    assert dst == [Estate, Copper, Copper]
+
+
+def test_move_card_by_name_error() -> None:
+    src = [Estate, Copper, Estate, Estate]
+    dst = [Estate, Copper]
+    with pytest.raises(MissingCardError):
+        Player.move_card_by_name("Village", src, dst)
