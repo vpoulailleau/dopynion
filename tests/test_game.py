@@ -41,9 +41,9 @@ def test_initial_money() -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
-    assert len(game.buyable_cards["Gold"]) == 30
-    assert len(game.buyable_cards["Silver"]) == 40
-    assert len(game.buyable_cards["Copper"]) == 60 - 7 * 2
+    assert len(game.stock["Gold"]) == 30
+    assert len(game.stock["Silver"]) == 40
+    assert len(game.stock["Copper"]) == 60 - 7 * 2
 
 
 def test_initial_estates_2_players() -> None:
@@ -51,8 +51,8 @@ def test_initial_estates_2_players() -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
-    assert len(game.buyable_cards["Estate"]) == 8
-    assert len(game.buyable_cards["Duchy"]) == 8
+    assert len(game.stock["Estate"]) == 8
+    assert len(game.stock["Duchy"]) == 8
     assert len(game.provinces) == 8
 
 
@@ -62,8 +62,8 @@ def test_initial_estates_3_players() -> None:
     game.add_player(Player("2"))
     game.add_player(Player("3"))
     game.start()
-    assert len(game.buyable_cards["Estate"]) == 12
-    assert len(game.buyable_cards["Duchy"]) == 12
+    assert len(game.stock["Estate"]) == 12
+    assert len(game.stock["Duchy"]) == 12
     assert len(game.provinces) == 12
 
 

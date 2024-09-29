@@ -74,7 +74,7 @@ class Player:
             )
 
     def buy(self, card_name: str) -> None:
-        source = self.game.buyable_cards.get(card_name, [])
+        source = self.game.stock.get(card_name, [])
         if not source:
             raise InvalidBuyError(card_name)
         card = source[0]

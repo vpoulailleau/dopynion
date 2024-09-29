@@ -25,7 +25,7 @@ class Game:
     def __init__(self) -> None:
         self.players: list[Player] = []
         self.started = False
-        self.buyable_cards: dict[str, list[type[Card]]] = {
+        self.stock: dict[str, list[type[Card]]] = {
             "Gold": [Gold] * 30,
             "Silver": [Silver] * 40,
             "Copper": [Copper] * 60,
@@ -42,7 +42,7 @@ class Game:
         if len(self.players) < MAX_NB_PLAYERS:
             self.players.append(player)
             player.game = self
-            self.buyable_cards["Copper"] = self.buyable_cards["Copper"][7:]
+            self.stock["Copper"] = self.stock["Copper"][7:]
         else:
             msg = f"At most {MAX_NB_PLAYERS} players"
             raise InvalidCommandError(msg)
@@ -50,8 +50,8 @@ class Game:
     def start(self) -> None:
         self.started = True
         if len(self.players) <= 2:  # noqa: PLR2004
-            self.buyable_cards["Estate"] = self.buyable_cards["Estate"][:8]
-            self.buyable_cards["Duchy"] = self.buyable_cards["Duchy"][:8]
+            self.stock["Estate"] = self.stock["Estate"][:8]
+            self.stock["Duchy"] = self.stock["Duchy"][:8]
             self.provinces = self.provinces[:8]
             self.curses = self.curses[:10]
         elif len(self.players) == 3:  # noqa: PLR2004
