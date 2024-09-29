@@ -29,8 +29,8 @@ class Game:
             "Gold": [Gold] * 30,
             "Silver": [Silver] * 40,
             "Copper": [Copper] * 60,
+            "Estate": [Estate] * 12,
         }
-        self.estates: list[type[Estate]] = [Estate] * 12
         self.duchies: list[type[Duchy]] = [Duchy] * 12
         self.provinces: list[type[Province]] = [Province] * 12
         self.curses: list[type[Curse]] = [Curse] * 30
@@ -50,7 +50,7 @@ class Game:
     def start(self) -> None:
         self.started = True
         if len(self.players) <= 2:  # noqa: PLR2004
-            self.estates = self.estates[:8]
+            self.buyable_cards["Estate"] = self.buyable_cards["Estate"][:8]
             self.duchies = self.duchies[:8]
             self.provinces = self.provinces[:8]
             self.curses = self.curses[:10]
