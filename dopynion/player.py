@@ -74,8 +74,8 @@ class Player:
         if not any(str(card) == card_name for card in self.hand):
             raise InvalidActionError(card_name)
         action()
-        # TODO pop card from hand
         self.actions_left -= 1
+        self.move_card_by_name(card_name, self.hand, self.played_cards)
         self._check_for_action_to_buy_transition()
 
     def _action_smithy(self) -> None:

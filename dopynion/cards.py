@@ -11,6 +11,7 @@ class ClassNameRepr(type):
 
 class Card(metaclass=ClassNameRepr):
     name = "Unknown"
+    cost = 10_000
     is_kingdom = True
     is_action = False
 
@@ -64,6 +65,7 @@ class Smithy(Card):
     is_action = True
 
 
+# WARNING: has to be at the end of the module
 kingdom_cards: list[type[Card]] = [
     class_
     for _, class_ in inspect.getmembers(sys.modules[__name__], inspect.isclass)
