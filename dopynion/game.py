@@ -67,7 +67,6 @@ class Game:
             self.stock[card_type.__name__] = [card_type] * 10
             # TODO pour jardin c'est particulier, cf bas de la page 2
             # TODO possible_kingdoms.remove(card_type)
-        print(self.stock)
 
     @staticmethod
     def move_card(index: int, src: list[type[Card]], dst: list[type[Card]]) -> None:
