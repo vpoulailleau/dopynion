@@ -20,3 +20,11 @@ class ActionDuringBuyError(InvalidCommandError):
 
 class MissingCardError(InvalidCommandError):
     pass
+
+
+class InvalidBuyError(InvalidCommandError):
+    pass
+
+
+class NotEnoughMoneyError(InvalidCommandError):
+    pass

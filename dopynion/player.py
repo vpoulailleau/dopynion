@@ -5,6 +5,8 @@ from dopynion.cards import Card, Copper, Estate
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
+    InvalidBuyError,
+    NotEnoughMoneyError,
     UnknownActionError,
 )
 
@@ -30,6 +32,7 @@ class Player:
         self.state = State.ACTION
         self.actions_left: int = 0
         self.buys_left: int = 0
+        self.money: int = 0
 
     def _check_for_action_to_buy_transition(self) -> None:
         if not any(card.is_action for card in self.hand) or not self.actions_left:
@@ -46,6 +49,7 @@ class Player:
         self.state = State.ACTION
         self.actions_left = 1
         self.buys_left = 1
+        self.money = 0
         self._check_for_action_to_buy_transition()
 
     def end_turn(self) -> None:
@@ -55,6 +59,33 @@ class Player:
         self.hand = self.deck[-5:]
         self.deck = self.deck[:-5]
         self.state = State.ADJUST
+
+    def _prepare_money(self, money: int) -> None:
+        money_cards = [card for card in self.hand if card.is_money]
+        money_cards.sort(key=lambda card: card.cost, reverse=True)
+        while self.money < money:
+            if not money_cards:
+                break
+            self.money += money_cards[0].money
+            self.game.move_card_by_name(
+                money_cards[0].__name__,
+                self.hand,
+                self.played_cards,
+            )
+
+    def buy(self, card_name: str) -> None:
+        source = self.game.buyable_cards.get(card_name, [])
+        if not source:
+            raise InvalidBuyError(card_name)
+        card = source[0]
+        self._prepare_money(card.cost)
+        if self.money >= card.cost:
+            self.money -= card.cost
+            self.game.move_card(0, source, self.discard)
+            self.buys_left -= 1
+        else:
+            raise NotEnoughMoneyError
+        self._check_for_buy_to_adjust_transition()
 
     def action(self, card_name: str) -> None:
         if self.state != State.ACTION:
