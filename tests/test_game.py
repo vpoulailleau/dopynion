@@ -52,7 +52,7 @@ def test_initial_estates_2_players() -> None:
     game.add_player(Player("2"))
     game.start()
     assert len(game.buyable_cards["Estate"]) == 8
-    assert len(game.duchies) == 8
+    assert len(game.buyable_cards["Duchy"]) == 8
     assert len(game.provinces) == 8
 
 
@@ -63,7 +63,7 @@ def test_initial_estates_3_players() -> None:
     game.add_player(Player("3"))
     game.start()
     assert len(game.buyable_cards["Estate"]) == 12
-    assert len(game.duchies) == 12
+    assert len(game.buyable_cards["Duchy"]) == 12
     assert len(game.provinces) == 12
 
 

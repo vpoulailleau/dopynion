@@ -30,8 +30,8 @@ class Game:
             "Silver": [Silver] * 40,
             "Copper": [Copper] * 60,
             "Estate": [Estate] * 12,
+            "Duchy": [Duchy] * 12,
         }
-        self.duchies: list[type[Duchy]] = [Duchy] * 12
         self.provinces: list[type[Province]] = [Province] * 12
         self.curses: list[type[Curse]] = [Curse] * 30
         self.kingdoms: dict[type[Card], int] = {}
@@ -51,7 +51,7 @@ class Game:
         self.started = True
         if len(self.players) <= 2:  # noqa: PLR2004
             self.buyable_cards["Estate"] = self.buyable_cards["Estate"][:8]
-            self.duchies = self.duchies[:8]
+            self.buyable_cards["Duchy"] = self.buyable_cards["Duchy"][:8]
             self.provinces = self.provinces[:8]
             self.curses = self.curses[:10]
         elif len(self.players) == 3:  # noqa: PLR2004
