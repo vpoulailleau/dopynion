@@ -1,5 +1,7 @@
+import inspect
 import random
 
+import dopynion.cards
 from dopynion.cards import (
     Card,
     Copper,
@@ -9,7 +11,6 @@ from dopynion.cards import (
     Gold,
     Province,
     Silver,
-    kingdom_cards,
 )
 from dopynion.constants import MAX_NB_PLAYERS
 from dopynion.exceptions import (
@@ -53,7 +54,13 @@ class Game:
             self.curses = self.curses[:10]
         elif len(self.players) == 3:  # noqa: PLR2004
             self.curses = self.curses[:20]
-        possible_kingdoms = kingdom_cards.copy()
+        possible_kingdoms: list[type[Card]] = [
+            class_
+            for _, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)
+            if issubclass(class_, Card)
+            and class_.name != "Unknown"
+            and class_.is_kingdom
+        ]
         for _ in range(10):
             card_type = random.choice(possible_kingdoms)  # noqa: S311
             self.kingdoms[card_type] = 10

@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import inspect
-import sys
-
 
 class ClassNameRepr(type):
     def __repr__(cls) -> str:
@@ -12,6 +9,7 @@ class ClassNameRepr(type):
 class Card(metaclass=ClassNameRepr):
     name = "Unknown"
     cost = 10_000
+    money = 0
     is_action = False
     is_kingdom = True
     is_money = False
@@ -28,6 +26,7 @@ class Card(metaclass=ClassNameRepr):
 
 class Copper(Card):
     name = "Cuivre"
+    money = 1
     is_kingdom = False
     is_money = True
 
@@ -49,6 +48,7 @@ class Estate(Card):
 
 class Gold(Card):
     name = "Or"
+    money = 3
     is_kingdom = False
     is_money = True
 
@@ -60,6 +60,7 @@ class Province(Card):
 
 class Silver(Card):
     name = "Argent"
+    money = 2
     is_kingdom = False
     is_money = True
 
@@ -67,11 +68,3 @@ class Silver(Card):
 class Smithy(Card):
     name = "Forgeron"
     is_action = True
-
-
-# WARNING: has to be at the end of the module
-kingdom_cards: list[type[Card]] = [
-    class_
-    for _, class_ in inspect.getmembers(sys.modules[__name__], inspect.isclass)
-    if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_kingdom
-]
