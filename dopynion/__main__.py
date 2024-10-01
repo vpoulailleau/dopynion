@@ -13,8 +13,14 @@ game.add_player(player3)
 game.start()
 
 player1.start_turn()
-print(player1.hand)
 player1.buy(CardName.SMITHY)
-print(player1.hand)
-print(player1.discard)
 player1.end_turn()
+
+for _ in range(5):
+    print("#" * 80)
+    player1.start_turn()
+    print(player1)
+    if CardName.SMITHY in player1.hand:
+        player1.action(CardName.SMITHY)
+    print(player1)
+    player1.end_turn()
