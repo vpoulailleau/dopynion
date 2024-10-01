@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, ClassVar
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from dopynion.player.player import Player
+    from dopynion.player import Player
 
 
 class CardName(StrEnum):  # Create with a metaclass
@@ -103,7 +103,12 @@ class Silver(Card):
 class Smithy(Card):
     name = "Forgeron"
     is_action = True
-    cost = 1  # TODO mettre la bonne valeur
+    cost = 4
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        for _ in range(3):
+            player.hand.append(player.take_one_card_from_deck())
 
 
 actions_card_name: set[CardName] = {

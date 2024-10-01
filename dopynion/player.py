@@ -30,13 +30,16 @@ class Player:
         self.discard = CardContainer()
         self.played_cards = CardContainer()
         self.actions_left: int = 0
-        self.buys_left: int = 0
+        self.purchases_left: int = 0
         self.money: int = 0
         self.state = State.ACTION
         self._adjust()
 
     def __repr__(self) -> str:
         ret = f"{self.name}\n"
+        ret += f" - actions left: {self.actions_left}, "
+        ret += f"purchases left: {self.purchases_left}, "
+        ret += f"money left: {self.money}\n"
         ret += f" - hand: {self.hand}\n"
         ret += f" - played cards: {self.played_cards}\n"
         ret += f" - discard: {self.discard}\n"
@@ -48,14 +51,14 @@ class Player:
             self.state = State.BUY
 
     def _check_for_buy_to_adjust_transition(self) -> None:
-        if not self.hand.contains_money() or not self.buys_left:
-            self.buys_left = 0
+        if not self.hand.contains_money() or not self.purchases_left:
+            self.purchases_left = 0
             self.state = State.ADJUST
 
     def start_turn(self) -> None:
         self.state = State.ACTION
         self.actions_left = 1
-        self.buys_left = 1
+        self.purchases_left = 1
         self.money = 0
         self._check_for_action_to_buy_transition()
 
@@ -96,7 +99,7 @@ class Player:
             self.money -= card.cost
             self.game.stock.remove(card_name)
             self.discard.append(card_name)
-            self.buys_left -= 1
+            self.purchases_left -= 1
         else:
             raise NotEnoughMoneyError
         self._check_for_buy_to_adjust_transition()
@@ -106,7 +109,10 @@ class Player:
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
             raise InvalidActionError(card_name)
-        Card.types[card_name].action(self)
+        try:
+            Card.types[card_name].action(self)
+        except NotImplementedError as err:
+            raise InvalidActionError(card_name) from err
         self.actions_left -= 1
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
