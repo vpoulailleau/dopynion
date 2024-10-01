@@ -1,10 +1,8 @@
 import pytest
 
-from dopynion.cards import Copper, Estate
 from dopynion.exceptions import (
     AddPlayerDuringGameError,
     InvalidCommandError,
-    MissingCardError,
 )
 from dopynion.game import Game
 from dopynion.player import Player
@@ -92,26 +90,3 @@ def test_initial_malediction_4_players() -> None:
     game.add_player(Player("4"))
     game.start()
     assert game.curse_qty == 30
-
-
-def test_move_card() -> None:
-    src = [Estate, Copper, Estate, Estate]
-    dst = [Estate, Copper]
-    Game.move_card(1, src, dst)
-    assert src == [Estate, Estate, Estate]
-    assert dst == [Estate, Copper, Copper]
-
-
-def test_move_card_by_name() -> None:
-    src = [Estate, Copper, Estate, Estate]
-    dst = [Estate, Copper]
-    Game.move_card_by_name("Copper", src, dst)
-    assert src == [Estate, Estate, Estate]
-    assert dst == [Estate, Copper, Copper]
-
-
-def test_move_card_by_name_error() -> None:
-    src = [Estate, Copper, Estate, Estate]
-    dst = [Estate, Copper]
-    with pytest.raises(MissingCardError):
-        Game.move_card_by_name("Village", src, dst)

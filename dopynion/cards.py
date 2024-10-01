@@ -5,7 +5,10 @@ import random
 import sys
 from collections import defaultdict
 from enum import StrEnum
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class CardName(StrEnum):  # Create with a metaclass
@@ -99,6 +102,8 @@ actions_card_name: set[CardName] = {
     if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_action
 }
 
+money_card_name: set[CardName] = {CardName.COPPER, CardName.SILVER, CardName.GOLD}
+
 
 class CardContainer:
     """Storage for card."""
@@ -137,10 +142,17 @@ class CardContainer:
 
     def contains_money(self) -> bool:
         return any(
-            card_name in {CardName.COPPER, CardName.SILVER, CardName.GOLD}
+            card_name in money_card_name
             for card_name, qty in self._quantities.items()
             if qty > 0
         )
+
+    def money_cards(self) -> CardContainer:
+        ret = CardContainer()
+        for card_name, qty in self._quantities.items():
+            if card_name in money_card_name:
+                ret.append_several(qty, card_name)
+        return ret
 
     def pop(self, index: int = -1) -> CardName:
         card_name = self._cards.pop(index)
@@ -152,3 +164,9 @@ class CardContainer:
 
     def __len__(self) -> int:
         return len(self._cards)
+
+    def quantity(self, card_name: CardName) -> int:
+        return self._quantities.get(card_name, 0)
+
+    def sort(self, key: Callable, *, reverse: bool = False) -> None:
+        self._cards.sort(key=key, reverse=reverse)

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from dopynion.cards import CardContainer, CardName
+from dopynion.cards import Card, CardContainer, CardName
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
@@ -62,31 +62,26 @@ class Player:
         self.state = State.ADJUST
 
     def _prepare_money(self, money: int) -> None:
-        money_cards = [card for card in self.hand if card.is_money]
-        money_cards.sort(key=lambda card: card.cost, reverse=True)
+        money_cards = self.hand.money_cards()
+        money_cards.sort(key=lambda card_name: Card.types[card_name].money)
         while self.money < money:
             if not money_cards:
                 break
-            self.money += money_cards[0].money
-            self.game.move_card_by_name(
-                money_cards[0].__name__,
-                self.hand,
-                self.deleteme,
-            )
-            card = self.deleteme.pop()
-            self.played_cards.append(CardName[card.__name__.upper()])
+            money_card = money_cards.pop(0)
+            self.money += Card.types[money_card].money
+            self.hand.remove(money_card)
+            self.played_cards.append(money_card)
 
-    def buy(self, card_name: str) -> None:
-        source = self.game.stock.get(card_name, [])
-        if not source:
+    def buy(self, card_name: CardName) -> None:
+        quantity = getattr(self.game.stock, card_name + "_qty")
+        if not quantity:
             raise InvalidBuyError(card_name)
-        card = source[0]
+        card = Card.types[card_name]
         self._prepare_money(card.cost)
         if self.money >= card.cost:
             self.money -= card.cost
-            self.game.move_card(0, source, self.deleteme)
-            card = self.deleteme.pop()
-            self.discard.append(CardName[card.__name__.upper()])
+            self.game.stock.remove(card_name)
+            self.discard.append(card_name)
             self.buys_left -= 1
         else:
             raise NotEnoughMoneyError

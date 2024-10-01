@@ -7,7 +7,6 @@ from dopynion.constants import MAX_NB_PLAYERS
 from dopynion.exceptions import (
     AddPlayerDuringGameError,
     InvalidCommandError,
-    MissingCardError,
 )
 from dopynion.player import Player
 
@@ -16,18 +15,18 @@ class Game:
     def __init__(self) -> None:
         self.players: list[Player] = []
         self.started = False
-        self._stock = CardContainer()
-        self._stock.append_several(30, CardName.GOLD)
-        self._stock.append_several(40, CardName.SILVER)
-        self._stock.append_several(60, CardName.COPPER)
-        self._stock.append_several(12, CardName.ESTATE)
-        self._stock.append_several(12, CardName.DUCHY)
-        self._stock.append_several(12, CardName.PROVINCE)
-        self._stock.append_several(30, CardName.CURSE)
+        self.stock = CardContainer()
+        self.stock.append_several(30, CardName.GOLD)
+        self.stock.append_several(40, CardName.SILVER)
+        self.stock.append_several(60, CardName.COPPER)
+        self.stock.append_several(12, CardName.ESTATE)
+        self.stock.append_several(12, CardName.DUCHY)
+        self.stock.append_several(12, CardName.PROVINCE)
+        self.stock.append_several(30, CardName.CURSE)
 
     def __getattr__(self, name: str) -> int:
         if name.endswith("_qty"):
-            return getattr(self._stock, name)
+            return getattr(self.stock, name)
         raise AttributeError
 
     def add_player(self, player: Player) -> None:
@@ -59,23 +58,6 @@ class Game:
         ]
         for _ in range(10):
             card_name = random.choice(possible_kingdoms)  # noqa: S311
-            self._stock.append_several(10, card_name.lower())
+            self.stock.append_several(10, card_name.lower())
             # TODO pour jardin c'est particulier, cf bas de la page 2
             # TODO possible_kingdoms.remove(card_name)
-
-    @staticmethod
-    def move_card(index: int, src: list[type[Card]], dst: list[type[Card]]) -> None:
-        dst.append(src.pop(index))
-
-    @staticmethod
-    def move_card_by_name(
-        card_name: str,
-        src: list[type[Card]],
-        dst: list[type[Card]],
-    ) -> None:
-        for index, card in enumerate(src):
-            if card.__name__ == card_name:
-                Game.move_card(index, src, dst)
-                break
-        else:
-            raise MissingCardError
