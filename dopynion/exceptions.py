@@ -10,10 +10,6 @@ class InvalidActionError(InvalidCommandError):
     pass
 
 
-class UnknownActionError(InvalidCommandError):
-    pass
-
-
 class ActionDuringBuyError(InvalidCommandError):
     pass
 

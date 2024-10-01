@@ -6,7 +6,6 @@ from dopynion.exceptions import (
     InvalidActionError,
     InvalidBuyError,
     NotEnoughMoneyError,
-    UnknownActionError,
 )
 
 if TYPE_CHECKING:
@@ -35,6 +34,13 @@ class Player:
         self.money: int = 0
         self.state = State.ACTION
         self._adjust()
+
+    def __repr__(self) -> str:
+        ret = f"{self.name}\n"
+        ret += f" - hand: {self.hand}\n"
+        ret += f" - played cards: {self.played_cards}\n"
+        ret += f" - discard: {self.discard}\n"
+        return ret
 
     def _check_for_action_to_buy_transition(self) -> None:
         if not self.hand.contains_action() or not self.actions_left:
@@ -98,20 +104,10 @@ class Player:
     def action(self, card_name: CardName) -> None:
         if self.state != State.ACTION:
             raise ActionDuringBuyError(card_name)
-        try:
-            action = getattr(self, f"_action_{card_name}")
-        except AttributeError as err:
-            raise UnknownActionError(card_name) from err
         if card_name not in self.hand:
             raise InvalidActionError(card_name)
-        action()
+        Card.types[card_name].action(self)
         self.actions_left -= 1
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
         self._check_for_action_to_buy_transition()
-
-    def _action_smithy(self) -> None:
-        pass
-
-    def _action_village(self) -> None:
-        pass
