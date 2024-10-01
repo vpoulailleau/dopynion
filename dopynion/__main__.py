@@ -1,4 +1,5 @@
 # example of execution
+from dopynion.cards import CardName
 from dopynion.game import Game
 from dopynion.player import Player
 
@@ -12,4 +13,8 @@ game.add_player(player3)
 game.start()
 
 player1.start_turn()
-player1.action("Smithy")
+print(player1.hand)
+player1.buy(CardName.SMITHY)
+print(player1.hand)
+print(player1.discard)
+player1.end_turn()

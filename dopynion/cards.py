@@ -94,6 +94,7 @@ class Silver(Card):
 class Smithy(Card):
     name = "Forgeron"
     is_action = True
+    cost = 1  # TODO mettre la bonne valeur
 
 
 actions_card_name: set[CardName] = {
@@ -117,6 +118,9 @@ class CardContainer:
             card_name = attribute[:-4]
             return self._quantities[CardName[card_name.upper()]]
         raise AttributeError
+
+    def __repr__(self) -> str:
+        return str(self._cards)
 
     def append(self, card_name: CardName) -> None:
         self._cards.append(card_name)
