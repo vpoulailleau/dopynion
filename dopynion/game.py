@@ -2,7 +2,7 @@ import inspect
 import random
 
 import dopynion.cards
-from dopynion.cards import Card
+from dopynion.cards import Card, CardContainer, CardName
 from dopynion.constants import MAX_NB_PLAYERS
 from dopynion.exceptions import (
     AddPlayerDuringGameError,
@@ -16,20 +16,18 @@ class Game:
     def __init__(self) -> None:
         self.players: list[Player] = []
         self.started = False
-        self.stock: dict[str, int] = {
-            "Gold": 30,
-            "Silver": 40,
-            "Copper": 60,
-            "Estate": 12,
-            "Duchy": 12,
-            "Province": 12,
-            "Curse": 30,
-        }
+        self._stock = CardContainer()
+        self._stock.append_several(30, CardName.GOLD)
+        self._stock.append_several(40, CardName.SILVER)
+        self._stock.append_several(60, CardName.COPPER)
+        self._stock.append_several(12, CardName.ESTATE)
+        self._stock.append_several(12, CardName.DUCHY)
+        self._stock.append_several(12, CardName.PROVINCE)
+        self._stock.append_several(30, CardName.CURSE)
 
     def __getattr__(self, name: str) -> int:
         if name.endswith("_qty"):
-            card_name = name[:-4]
-            return self.stock[Card.types[card_name].__name__]
+            return getattr(self._stock, name)
         raise AttributeError
 
     def add_player(self, player: Player) -> None:
@@ -52,18 +50,18 @@ class Game:
             self.curse_qty = 10
         elif len(self.players) == 3:  # noqa: PLR2004
             self.curse_qty = 20
-        possible_kingdoms: list[type[Card]] = [
-            class_
-            for _, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)
+        possible_kingdoms: list[str] = [
+            name
+            for name, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)
             if issubclass(class_, Card)
             and class_.name != "Unknown"
             and class_.is_kingdom
         ]
         for _ in range(10):
-            card_type = random.choice(possible_kingdoms)  # noqa: S311
-            self.stock[card_type.__name__] = 10
+            card_name = random.choice(possible_kingdoms)  # noqa: S311
+            self._stock.append_several(10, card_name.lower())
             # TODO pour jardin c'est particulier, cf bas de la page 2
-            # TODO possible_kingdoms.remove(card_type)
+            # TODO possible_kingdoms.remove(card_name)
 
     @staticmethod
     def move_card(index: int, src: list[type[Card]], dst: list[type[Card]]) -> None:

@@ -1,6 +1,18 @@
 from __future__ import annotations
 
+from collections import defaultdict
+from enum import StrEnum
 from typing import ClassVar
+
+
+class CardName(StrEnum):  # Create with a metaclass
+    COPPER = "copper"
+    CURSE = "curse"
+    DUCHY = "duchy"
+    ESTATE = "estate"
+    GOLD = "gold"
+    PROVINCE = "province"
+    SILVER = "silver"
 
 
 class ClassNameRepr(type):
@@ -74,3 +86,25 @@ class Silver(Card):
 class Smithy(Card):
     name = "Forgeron"
     is_action = True
+
+
+class CardContainer:
+    """Storage for card."""
+
+    def __init__(self) -> None:
+        self._quantities: dict[str, int] = defaultdict(int)
+        self._cards: list[CardName] = []
+
+    def __getattr__(self, attribute: str) -> int:
+        if attribute.endswith("_qty"):
+            card_name = attribute[:-4]
+            return self._quantities[card_name]
+        raise AttributeError
+
+    def append(self, card_name: CardName) -> None:
+        self._cards.append(card_name)
+        self._quantities[card_name] += 1
+
+    def append_several(self, qty: int, card_name: CardName) -> None:
+        for _ in range(qty):
+            self.append(card_name)
