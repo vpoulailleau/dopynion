@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, ClassVar
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from dopynion.player.player import Player
+
 
 class CardName(StrEnum):  # Create with a metaclass
     COPPER = "copper"
@@ -21,6 +23,9 @@ class CardName(StrEnum):  # Create with a metaclass
     SILVER = "silver"
     SMITHY = "smithy"
     VILLAGE = "village"
+
+    def __repr__(self) -> str:
+        return self.value.title()
 
 
 class ClassNameRepr(type):
@@ -48,6 +53,10 @@ class Card(metaclass=ClassNameRepr):
 
     def __repr__(self) -> str:
         return self.name
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        raise NotImplementedError
 
 
 class Copper(Card):
