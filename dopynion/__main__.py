@@ -11,13 +11,11 @@ game.add_player(player1)
 game.add_player(player2)
 game.add_player(player3)
 game.start()
-
-player1.start_turn()
-player1.buy(CardName.SMITHY)
-player1.end_turn()
+print(game.stock)
 
 for _ in range(5):
     print("#" * 80)
+    print(game.stock._quantities)  # noqa: SLF001
     player1.start_turn()
     print(player1)
     if CardName.SMITHY in player1.hand:
