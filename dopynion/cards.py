@@ -69,16 +69,19 @@ class Copper(Card):
 
 class Curse(Card):
     name = "Malédiction"
+    cost = 0
     is_kingdom = False
 
 
 class Duchy(Card):
     name = "Duché"
+    cost = 5
     is_kingdom = False
 
 
 class Estate(Card):
     name = "Domaine"
+    cost = 2
     is_kingdom = False
 
 
@@ -92,6 +95,7 @@ class Gold(Card):
 
 class Province(Card):
     name = "Province"
+    cost = 8
     is_kingdom = False
 
 
@@ -105,8 +109,8 @@ class Silver(Card):
 
 class Smithy(Card):
     name = "Forgeron"
-    is_action = True
     cost = 4
+    is_action = True
 
     @classmethod
     def action(cls, player: Player) -> None:
