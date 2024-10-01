@@ -93,11 +93,11 @@ class Smithy(Card):
     is_action = True
 
 
-actions_card_name: list[CardName] = [
+actions_card_name: set[CardName] = {
     name.lower()
     for name, class_ in inspect.getmembers(sys.modules[__name__], inspect.isclass)
     if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_action
-]
+}
 
 
 class CardContainer:
