@@ -1,6 +1,6 @@
 import pytest
 
-from dopynion.cards import Copper, Estate
+from dopynion.cards import CardName
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
@@ -11,14 +11,13 @@ from dopynion.player import Player, State
 
 def test_initial_deck() -> None:
     player = Player("Toto")
-    assert len(player.deck) == 10
-    assert sum(card == Copper for card in player.deck) == 7
-    assert sum(card == Estate for card in player.deck) == 3
+    assert len(player.deck) + len(player.hand) == 10
+    assert player.deck.copper_qty + player.hand.copper_qty == 7
+    assert player.deck.estate_qty + player.hand.estate_qty == 3
 
 
 def test_make_hand_enough_cards_in_deck() -> None:
     player = Player("toto")
-    player.start_turn()
     assert len(player.hand) == 5
     assert len(player.deck) == 5
 
@@ -39,7 +38,7 @@ def test_invalid_action() -> None:
     player = Player("toto")
     player.start_turn()
     with pytest.raises(ActionDuringBuyError):
-        player.action("Smithy")
+        player.action(CardName.SMITHY)
 
 
 def test_invalid_action_when_no_corresponding_card() -> None:
@@ -47,4 +46,4 @@ def test_invalid_action_when_no_corresponding_card() -> None:
     player.start_turn()
     player.state = State.ACTION
     with pytest.raises(InvalidActionError):
-        player.action("Village")
+        player.action(CardName.VILLAGE)
