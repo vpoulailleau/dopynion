@@ -57,8 +57,18 @@ class Player:
         self._adjust()
 
     def _adjust(self) -> None:
-        for _ in range(5):
+        self.played_cards.empty_to(self.discard)
+        self.hand.empty_to(self.discard)
+        nb_cards_to_take_in_deck = 5
+        while nb_cards_to_take_in_deck and self.deck:
             self.hand.append(self.deck.pop(0))
+            nb_cards_to_take_in_deck -= 1
+        if nb_cards_to_take_in_deck:
+            self.discard.empty_to(self.deck)
+            self.deck.shuffle()
+            while nb_cards_to_take_in_deck and self.deck:
+                self.hand.append(self.deck.pop(0))
+                nb_cards_to_take_in_deck -= 1
         self.state = State.ADJUST
 
     def _prepare_money(self, money: int) -> None:

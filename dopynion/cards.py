@@ -174,3 +174,8 @@ class CardContainer:
 
     def sort(self, key: Callable, *, reverse: bool = False) -> None:
         self._cards.sort(key=key, reverse=reverse)
+
+    def empty_to(self, other: CardContainer) -> None:
+        while self:
+            card_name = self.pop(0)
+            other.append(card_name)
