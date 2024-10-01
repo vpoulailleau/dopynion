@@ -61,6 +61,7 @@ class Card(metaclass=ClassNameRepr):
 
 class Copper(Card):
     name = "Cuivre"
+    cost = 0
     money = 1
     is_kingdom = False
     is_money = True
@@ -83,6 +84,7 @@ class Estate(Card):
 
 class Gold(Card):
     name = "Or"
+    cost = 6
     money = 3
     is_kingdom = False
     is_money = True
@@ -95,6 +97,7 @@ class Province(Card):
 
 class Silver(Card):
     name = "Argent"
+    cost = 4
     money = 2
     is_kingdom = False
     is_money = True
