@@ -56,19 +56,17 @@ class Player:
     def end_turn(self) -> None:
         self._adjust()
 
+    def take_one_card_from_deck(self) -> CardName:
+        if not self.deck:
+            self.discard.empty_to(self.deck)
+            self.deck.shuffle()
+        return self.deck.pop(0)
+
     def _adjust(self) -> None:
         self.played_cards.empty_to(self.discard)
         self.hand.empty_to(self.discard)
-        nb_cards_to_take_in_deck = 5
-        while nb_cards_to_take_in_deck and self.deck:
-            self.hand.append(self.deck.pop(0))
-            nb_cards_to_take_in_deck -= 1
-        if nb_cards_to_take_in_deck:
-            self.discard.empty_to(self.deck)
-            self.deck.shuffle()
-            while nb_cards_to_take_in_deck and self.deck:
-                self.hand.append(self.deck.pop(0))
-                nb_cards_to_take_in_deck -= 1
+        for _ in range(5):
+            self.hand.append(self.take_one_card_from_deck())
         self.state = State.ADJUST
 
     def _prepare_money(self, money: int) -> None:
