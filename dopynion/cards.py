@@ -179,6 +179,13 @@ class CardContainer:
                 ret.append_several(qty, card_name)
         return ret
 
+    def money(self) -> int:
+        return (
+            1 * self._quantities.get(CardName.COPPER, 0)
+            + 2 * self._quantities.get(CardName.SILVER, 0)
+            + 3 * self._quantities.get(CardName.GOLD, 0)
+        )
+
     def pop(self, index: int = -1) -> CardName:
         card_name = self._cards.pop(index)
         self._quantities[card_name] -= 1
