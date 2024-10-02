@@ -34,7 +34,7 @@ class ClassNameRepr(type):
 
 
 class Card(metaclass=ClassNameRepr):
-    types: ClassVar[dict[str, type[Card]]] = {}
+    types: ClassVar[dict[CardName, type[Card]]] = {}
     name = "Unknown"
     cost = 10_000
     money = 0
@@ -43,7 +43,7 @@ class Card(metaclass=ClassNameRepr):
     is_money = False
 
     def __init_subclass__(cls) -> None:
-        Card.types[cls.__name__.lower()] = cls
+        Card.types[CardName[cls.__name__.upper()]] = cls
 
     def __eq__(self, other: object) -> bool:
         return isinstance(self, other) or self.__class__ is other
