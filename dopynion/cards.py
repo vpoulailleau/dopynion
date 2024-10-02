@@ -15,14 +15,19 @@ if TYPE_CHECKING:
 
 class CardName(StrEnum):  # Create with a metaclass
     COPPER = "copper"
+    COUNCILROOM = "councilroom"
     CURSE = "curse"
     DUCHY = "duchy"
     ESTATE = "estate"
+    FESTIVAL = "festival"
     GOLD = "gold"
+    LABORATORY = "laboratory"
+    MARKET = "market"
     PROVINCE = "province"
     SILVER = "silver"
     SMITHY = "smithy"
     VILLAGE = "village"
+    WOODCUTTER = "woodcutter"
 
     def __repr__(self) -> str:
         return self.value.title()
@@ -67,6 +72,18 @@ class Copper(Card):
     is_money = True
 
 
+class CouncilRoom(Card):
+    name = "Chambre du conseil"
+    cost = 5
+    is_action = True
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        for _ in range(4):
+            player.hand.append(player.take_one_card_from_deck())
+        player.purchases_left += 1
+
+
 class Curse(Card):
     name = "Malédiction"
     cost = 0
@@ -85,12 +102,49 @@ class Estate(Card):
     is_kingdom = False
 
 
+class Festival(Card):
+    name = "Festival"
+    cost = 5
+    is_action = True
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        player.actions_left += 2
+        player.purchases_left += 1
+        player.money += 2
+
+
 class Gold(Card):
     name = "Or"
     cost = 6
     money = 3
     is_kingdom = False
     is_money = True
+
+
+class Laboratory(Card):
+    name = "Laboratoire"
+    cost = 5
+    is_action = True
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        for _ in range(2):
+            player.hand.append(player.take_one_card_from_deck())
+        player.actions_left += 1
+
+
+class Market(Card):
+    name = "Marché"
+    cost = 5
+    is_action = True
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        player.hand.append(player.take_one_card_from_deck())
+        player.actions_left += 1
+        player.purchases_left += 1
+        player.money += 1
 
 
 class Province(Card):
@@ -116,6 +170,28 @@ class Smithy(Card):
     def action(cls, player: Player) -> None:
         for _ in range(3):
             player.hand.append(player.take_one_card_from_deck())
+
+
+class Village(Card):
+    name = "Village"
+    cost = 3
+    is_action = True
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        player.hand.append(player.take_one_card_from_deck())
+        player.actions_left += 2
+
+
+class Woodcutter(Card):
+    name = "Bucheron"
+    cost = 3
+    is_action = True
+
+    @classmethod
+    def action(cls, player: Player) -> None:
+        player.purchases_left += 1
+        player.money += 2
 
 
 actions_card_name: set[CardName] = {
