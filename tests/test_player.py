@@ -4,7 +4,6 @@ from dopynion.cards import CardName
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
-    UnknownActionError,
 )
 from dopynion.player import Player, State
 
@@ -30,7 +29,7 @@ def test_unknown_action() -> None:
     player = Player("toto")
     player.start_turn()
     player.state = State.ACTION
-    with pytest.raises(UnknownActionError):
+    with pytest.raises(InvalidActionError):
         player.action("FooBar")
 
 
