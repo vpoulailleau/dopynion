@@ -179,6 +179,7 @@ class CardContainer:
                 ret.append_several(qty, card_name)
         return ret
 
+    @property
     def money(self) -> int:
         return (
             1 * self._quantities.get(CardName.COPPER, 0)

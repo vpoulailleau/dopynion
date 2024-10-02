@@ -94,14 +94,13 @@ class Player:
         if not quantity:
             raise InvalidBuyError(card_name)
         card = Card.types[card_name]
-        self._prepare_money(card.cost)
-        if self.money >= card.cost:
-            self.money -= card.cost
-            self.game.stock.remove(card_name)
-            self.discard.append(card_name)
-            self.purchases_left -= 1
-        else:
+        if self.money + self.hand.money < card.cost:
             raise NotEnoughMoneyError
+        self._prepare_money(card.cost)
+        self.money -= card.cost
+        self.game.stock.remove(card_name)
+        self.discard.append(card_name)
+        self.purchases_left -= 1
         self._check_for_buy_to_adjust_transition()
 
     def action(self, card_name: CardName) -> None:
