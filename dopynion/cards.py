@@ -165,6 +165,14 @@ class CardContainer:
             if qty > 0
         )
 
+    @property
+    def action_cards(self) -> CardContainer:
+        ret = CardContainer()
+        for card_name, qty in self._quantities.items():
+            if card_name in actions_card_name:
+                ret.append_several(qty, card_name)
+        return ret
+
     def contains_money(self) -> bool:
         return any(
             card_name in money_card_name
@@ -172,6 +180,7 @@ class CardContainer:
             if qty > 0
         )
 
+    @property
     def money_cards(self) -> CardContainer:
         ret = CardContainer()
         for card_name, qty in self._quantities.items():
@@ -197,6 +206,9 @@ class CardContainer:
 
     def __len__(self) -> int:
         return len(self._cards)
+
+    def __getitem__(self, index: int) -> CardName:
+        return self._cards[index]
 
     def quantity(self, card_name: CardName) -> int:
         return self._quantities.get(card_name, 0)

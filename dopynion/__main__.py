@@ -1,5 +1,8 @@
 # example of execution
-from dopynion.cards import CardName
+
+import random
+
+from dopynion.cards import Card, CardName
 from dopynion.game import Game
 from dopynion.player import Player
 
@@ -11,14 +14,26 @@ game.add_player(player1)
 game.add_player(player2)
 game.add_player(player3)
 game.start()
-print(game.stock)
 
 for _ in range(5):
     print("#" * 80)
-    print(game.stock._quantities)  # noqa: SLF001
+    print(dict(game.stock._quantities))  # noqa: SLF001
     player1.start_turn()
     print(player1)
-    if CardName.SMITHY in player1.hand:
-        player1.action(CardName.SMITHY)
-    print(player1)
+
+    while player1.actions_left and player1.hand.contains_action():
+        actions = player1.hand.action_cards
+        player1.action(random.choice(actions))  # noqa: S311
+        print(player1)
+
+    while player1.purchases_left and player1.hand.contains_money():
+        money = player1.hand.money
+        buyables: list[CardName] = [
+            card_name
+            for card_name, class_ in Card.types.items()
+            if class_.cost <= money
+        ]
+        player1.buy(random.choice(buyables))  # noqa: S311
+        print(player1)
+
     player1.end_turn()

@@ -79,7 +79,7 @@ class Player:
         self.state = State.ADJUST
 
     def _prepare_money(self, money: int) -> None:
-        money_cards = self.hand.money_cards()
+        money_cards = self.hand.money_cards
         money_cards.sort(key=lambda card_name: Card.types[card_name].money)
         while self.money < money:
             if not money_cards:
@@ -90,6 +90,7 @@ class Player:
             self.played_cards.append(money_card)
 
     def buy(self, card_name: CardName) -> None:
+        print(f"> BUY {card_name} [{self.name}]")
         quantity = getattr(self.game.stock, card_name + "_qty")
         if not quantity:
             raise InvalidBuyError(card_name)
@@ -104,6 +105,7 @@ class Player:
         self._check_for_buy_to_adjust_transition()
 
     def action(self, card_name: CardName) -> None:
+        print(f"> ACTION {card_name} [{self.name}]")
         if self.state != State.ACTION:
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
