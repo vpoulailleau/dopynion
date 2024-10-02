@@ -15,7 +15,9 @@ game.add_player(player2)
 game.add_player(player3)
 game.start()
 
-for _ in range(5):
+for turn in range(50):
+    print("#" * 80)
+    print(f"# turn {turn}")
     print("#" * 80)
     print(dict(game.stock._quantities))  # noqa: SLF001
     player1.start_turn()
@@ -31,7 +33,7 @@ for _ in range(5):
         buyables: list[CardName] = [
             card_name
             for card_name, class_ in Card.types.items()
-            if class_.cost <= money
+            if class_.cost <= money and card_name in game.stock
         ]
         player1.buy(random.choice(buyables))  # noqa: S311
         print(player1)

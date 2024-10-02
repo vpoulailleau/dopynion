@@ -36,12 +36,13 @@ class Player:
         self._adjust()
 
     def __repr__(self) -> str:
-        ret = f"{self.name}\n"
+        ret = f"Player: {self.name}\n"
         ret += f" - actions left: {self.actions_left}, "
         ret += f"purchases left: {self.purchases_left}, "
-        ret += f"money left: {self.money}\n"
+        ret += f"money left: {self.money + self.hand.money}\n"
         ret += f" - hand: {self.hand}\n"
         ret += f" - played cards: {self.played_cards}\n"
+        ret += f" - deck: {self.deck}\n"
         ret += f" - discard: {self.discard}\n"
         return ret
 
