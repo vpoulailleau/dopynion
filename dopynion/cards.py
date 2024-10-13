@@ -298,6 +298,8 @@ class CardContainer:
         while self:
             card_name = self.pop(0)
             other.append(card_name)
+        self._quantities.clear()
+        self._cards.clear()
 
     @property
     def three_empty_piles(self) -> bool:
