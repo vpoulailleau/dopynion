@@ -7,6 +7,8 @@ from collections import defaultdict
 from enum import StrEnum
 from typing import TYPE_CHECKING, ClassVar
 
+from dopynion.data_model import Cards
+
 if TYPE_CHECKING:
     from collections.abc import Callable
 
@@ -296,3 +298,11 @@ class CardContainer:
         while self:
             card_name = self.pop(0)
             other.append(card_name)
+
+    @property
+    def state(self) -> Cards:
+        return Cards(
+            quantities={
+                card_name: qty for card_name, qty in self._quantities.items() if qty > 0
+            },
+        )

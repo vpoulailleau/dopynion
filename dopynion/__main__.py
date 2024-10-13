@@ -19,9 +19,9 @@ for turn in range(50):
     print("#" * 80)
     print(f"# turn {turn}")
     print("#" * 80)
-    print(dict(game.stock._quantities))  # noqa: SLF001
+    print(game.state)
     player1.start_turn()
-    print(player1)
+    print(player1.state)
 
     while player1.actions_left and player1.hand.contains_action():
         actions = player1.hand.action_cards

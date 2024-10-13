@@ -28,7 +28,7 @@ def test_make_hand_not_enough_cards_in_deck() -> None:
 def test_unknown_action() -> None:
     player = Player("toto")
     player.start_turn()
-    player.state = State.ACTION
+    player.state_machine = State.ACTION
     with pytest.raises(InvalidActionError):
         player.action("FooBar")
 
@@ -43,6 +43,6 @@ def test_invalid_action() -> None:
 def test_invalid_action_when_no_corresponding_card() -> None:
     player = Player("toto")
     player.start_turn()
-    player.state = State.ACTION
+    player.state_machine = State.ACTION
     with pytest.raises(InvalidActionError):
         player.action(CardName.VILLAGE)

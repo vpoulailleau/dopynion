@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from dopynion.cards import Card, CardContainer, CardName
+from dopynion.data_model import Player as PlayerData
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
@@ -32,7 +33,8 @@ class Player:
         self.actions_left: int = 0
         self.purchases_left: int = 0
         self.money: int = 0
-        self.state = State.ACTION
+        self.playing = False
+        self.state_machine = State.ACTION
         self._adjust()
 
     def __repr__(self) -> str:
@@ -49,15 +51,16 @@ class Player:
     def _check_for_action_to_buy_transition(self) -> None:
         if not self.hand.contains_action() or not self.actions_left:
             self.actions_left = 0
-            self.state = State.BUY
+            self.state_machine = State.BUY
 
     def _check_for_buy_to_adjust_transition(self) -> None:
         if not self.hand.contains_money() or not self.purchases_left:
             self.purchases_left = 0
-            self.state = State.ADJUST
+            self.state_machine = State.ADJUST
 
     def start_turn(self) -> None:
-        self.state = State.ACTION
+        self.playing = True
+        self.state_machine = State.ACTION
         self.actions_left = 1
         self.purchases_left = 1
         self.money = 0
@@ -65,6 +68,7 @@ class Player:
 
     def end_turn(self) -> None:
         self._adjust()
+        self.playing = False
 
     def take_one_card_from_deck(self) -> CardName:
         if not self.deck:
@@ -77,7 +81,7 @@ class Player:
         self.hand.empty_to(self.discard)
         for _ in range(5):
             self.hand.append(self.take_one_card_from_deck())
-        self.state = State.ADJUST
+        self.state_machine = State.ADJUST
 
     def _prepare_money(self, money: int) -> None:
         money_cards = self.hand.money_cards
@@ -107,7 +111,7 @@ class Player:
 
     def action(self, card_name: CardName) -> None:
         print(f"> ACTION {card_name} [{self.name}]")
-        if self.state != State.ACTION:
+        if self.state_machine != State.ACTION:
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
             raise InvalidActionError(card_name)
@@ -119,3 +123,10 @@ class Player:
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
         self._check_for_action_to_buy_transition()
+
+    @property
+    def state(self) -> PlayerData:
+        state = PlayerData(name=self.name, hand=None)
+        if self.playing:
+            state.hand = self.hand.state
+        return state

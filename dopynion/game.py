@@ -4,6 +4,7 @@ import random
 import dopynion.cards
 from dopynion.cards import Card, CardContainer, CardName
 from dopynion.constants import MAX_NB_PLAYERS
+from dopynion.data_model import Game as GameData
 from dopynion.exceptions import (
     AddPlayerDuringGameError,
     InvalidCommandError,
@@ -63,3 +64,15 @@ class Game:
             self.stock.append_several(10, card_name)
             # TODO pour jardin c'est particulier, cf bas de la page 2
             possible_kingdoms.remove(card_name)
+
+    @property
+    def finished(self) -> bool:
+        return False  # TODO
+
+    @property
+    def state(self) -> GameData:
+        return GameData(
+            finished=self.finished,
+            players=[player.state for player in self.players],
+            stock=self.stock.state,
+        )
