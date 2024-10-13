@@ -119,8 +119,10 @@ class Player:
         if self.state_machine != State.ACTION:
             logging.debug(self.state_machine)
             logging.debug("actions_left %d", self.actions_left)
+            logging.debug(self.state)
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
+            logging.debug(self.state)
             raise InvalidActionError(card_name)
         try:
             Card.types[card_name].action(self)
