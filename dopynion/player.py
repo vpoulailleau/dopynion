@@ -1,3 +1,4 @@
+import logging
 from typing import TYPE_CHECKING
 
 from dopynion.cards import Card, CardContainer, CardName
@@ -52,13 +53,16 @@ class Player:
         if not self.hand.contains_action() or not self.actions_left:
             self.actions_left = 0
             self.state_machine = State.BUY
+            logging.debug("go from action to buy")
 
     def _check_for_buy_to_adjust_transition(self) -> None:
         if not self.hand.contains_money() or not self.purchases_left:
             self.purchases_left = 0
             self.state_machine = State.ADJUST
+            logging.debug("go from buy to adjust")
 
     def start_turn(self) -> None:
+        logging.info("start turn (%s, %d)", self.name, id(self))
         self.playing = True
         self.state_machine = State.ACTION
         self.actions_left = 1
@@ -69,6 +73,7 @@ class Player:
     def end_turn(self) -> None:
         self._adjust()
         self.playing = False
+        logging.info("end turn")
 
     def take_one_card_from_deck(self) -> CardName:
         if not self.deck:
@@ -95,7 +100,7 @@ class Player:
             self.played_cards.append(money_card)
 
     def buy(self, card_name: CardName) -> None:
-        print(f"> BUY {card_name} [{self.name}]")
+        logging.info("> BUY %s", card_name)
         quantity = getattr(self.game.stock, card_name + "_qty")
         if not quantity:
             raise InvalidBuyError(card_name)
@@ -110,8 +115,10 @@ class Player:
         self._check_for_buy_to_adjust_transition()
 
     def action(self, card_name: CardName) -> None:
-        print(f"> ACTION {card_name} [{self.name}]")
+        logging.info("> ACTION %s", card_name)
         if self.state_machine != State.ACTION:
+            logging.debug(self.state_machine)
+            logging.debug("actions_left %d", self.actions_left)
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
             raise InvalidActionError(card_name)

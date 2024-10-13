@@ -1,10 +1,23 @@
 # example of execution
 
+import logging
 import random
 
 from dopynion.cards import Card, CardName
 from dopynion.game import Game
 from dopynion.player import Player
+
+logging.basicConfig(
+    filename="game.log",
+    encoding="utf-8",
+    level=logging.DEBUG,
+    format=(
+        "%(asctime)s [%(levelname)-8s] %(filename)20s(%(lineno)3s):"
+        "%(funcName)-20s :: %(message)s"
+    ),
+    datefmt="%m/%d/%Y %H:%M:%S",
+)
+logging.info("Launching server")
 
 game = Game()
 player1 = Player("Foo")
