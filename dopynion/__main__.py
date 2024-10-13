@@ -15,7 +15,9 @@ game.add_player(player2)
 game.add_player(player3)
 game.start()
 
-for turn in range(50):
+turn = 0
+while not game.finished:
+    turn += 1
     print("#" * 80)
     print(f"# turn {turn}")
     print("#" * 80)

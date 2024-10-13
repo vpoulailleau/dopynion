@@ -40,6 +40,9 @@ unfixable = []
     "INP001",  #  Add an `__init__.py`
 ]
 
+[tool.ruff.lint.pylint]
+max-public-methods = 30
+
 [tool.ruff.format]
 preview = true
 quote-style = "double"

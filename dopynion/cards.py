@@ -300,9 +300,10 @@ class CardContainer:
             other.append(card_name)
 
     @property
+    def three_empty_piles(self) -> bool:
+        nb_piles = 3
+        return sum(1 for qty in self._quantities.values() if qty == 0) >= nb_piles
+
+    @property
     def state(self) -> Cards:
-        return Cards(
-            quantities={
-                card_name: qty for card_name, qty in self._quantities.items() if qty > 0
-            },
-        )
+        return Cards(quantities=self._quantities.copy())

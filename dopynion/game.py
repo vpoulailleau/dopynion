@@ -67,7 +67,7 @@ class Game:
 
     @property
     def finished(self) -> bool:
-        return False  # TODO
+        return (self.stock.province_qty == 0) or self.stock.three_empty_piles
 
     @property
     def state(self) -> GameData:
