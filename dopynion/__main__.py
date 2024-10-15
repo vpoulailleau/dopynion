@@ -2,6 +2,7 @@
 
 import logging
 import random
+from pprint import pprint
 
 from dopynion.cards import Card, CardName
 from dopynion.game import Game
@@ -54,3 +55,5 @@ while not game.finished:
         print(player1)
 
     player1.end_turn()
+
+pprint(game.score())  # noqa: T203

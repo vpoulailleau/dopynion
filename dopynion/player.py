@@ -139,3 +139,19 @@ class Player:
         if self.playing:
             state.hand = self.hand.state
         return state
+
+    def score(self) -> dict:
+        cards = self.hand + self.discard + self.deck
+        ret = {}
+        ret["province_qty"] = cards.province_qty
+        ret["duchy_qty"] = cards.duchy_qty
+        ret["estate_qty"] = cards.estate_qty
+        ret["curse_qty"] = cards.curse_qty
+        # TODO garden
+        ret["score"] = (
+            ret["province_qty"] * 6
+            + ret["duchy_qty"] * 3
+            + ret["estate_qty"] * 1
+            - ret["curse_qty"] * 1
+        )
+        return ret

@@ -221,6 +221,14 @@ class CardContainer:
     def __repr__(self) -> str:
         return str(self._cards)
 
+    def __add__(self, other: CardContainer) -> CardContainer:
+        ret = CardContainer()
+        for card_name in self:
+            ret.append(card_name)
+        for card_name in other:
+            ret.append(card_name)
+        return ret
+
     def append(self, card_name: CardName) -> None:
         self._cards.append(card_name)
         self._quantities[card_name] += 1

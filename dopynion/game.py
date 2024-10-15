@@ -1,4 +1,5 @@
 import inspect
+import operator
 import random
 
 import dopynion.cards
@@ -76,3 +77,13 @@ class Game:
             players=[player.state for player in self.players],
             stock=self.stock.state,
         )
+
+    def score(self) -> dict:
+        ret = {player.name: player.score() for player in self.players}
+        leaderboard = [
+            (player.name, ret[player.name]["score"])
+            for player in reversed(self.players)
+        ]
+        leaderboard.sort(key=operator.itemgetter(1), reverse=True)
+        ret["leaderboard"] = leaderboard
+        return ret
