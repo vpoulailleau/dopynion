@@ -62,7 +62,7 @@ class Player:
             logging.debug("go from buy to adjust")
 
     def start_turn(self) -> None:
-        logging.info("start turn (%s, %d)", self.name, id(self))
+        logging.debug("start turn (%s, %d)", self.name, id(self))
         self.playing = True
         self.state_machine = State.ACTION
         self.actions_left = 1
@@ -73,7 +73,7 @@ class Player:
     def end_turn(self) -> None:
         self._adjust()
         self.playing = False
-        logging.info("end turn")
+        logging.debug("end turn")
 
     def take_one_card_from_deck(self) -> CardName:
         if not self.deck:
@@ -100,7 +100,7 @@ class Player:
             self.played_cards.append(money_card)
 
     def buy(self, card_name: CardName) -> None:
-        logging.info("> BUY %s", card_name)
+        logging.debug("> BUY %s", card_name)
         quantity = getattr(self.game.stock, card_name + "_qty")
         if not quantity:
             raise InvalidBuyError(card_name)
@@ -115,7 +115,7 @@ class Player:
         self._check_for_buy_to_adjust_transition()
 
     def action(self, card_name: CardName) -> None:
-        logging.info("> ACTION %s", card_name)
+        logging.debug("> ACTION %s", card_name)
         if self.state_machine != State.ACTION:
             logging.debug(self.state_machine)
             logging.debug("actions_left %d", self.actions_left)
