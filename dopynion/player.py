@@ -56,7 +56,7 @@ class Player:
             logging.debug("go from action to buy")
 
     def _check_for_buy_to_adjust_transition(self) -> None:
-        if not self.hand.contains_money() or not self.purchases_left:
+        if not self.purchases_left:
             self.purchases_left = 0
             self.state_machine = State.ADJUST
             logging.debug("go from buy to adjust")
