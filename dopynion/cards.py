@@ -157,7 +157,7 @@ class Province(Card):
 
 class Silver(Card):
     name = "Argent"
-    cost = 4
+    cost = 3
     money = 2
     is_kingdom = False
     is_money = True
