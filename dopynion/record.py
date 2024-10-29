@@ -28,5 +28,9 @@ class Record:
 
     def add_action(self, action: str, player: Player) -> None:
         turn = self._game_record.turns[-1]
-        action_record = ActionRecord(action=action, player=player.state, score=0)
+        action_record = ActionRecord(
+            action=action,
+            player=player.state,
+            score=player.score()["score"],
+        )
         turn.actions.append(action_record)
