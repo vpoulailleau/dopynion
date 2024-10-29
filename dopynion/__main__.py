@@ -56,5 +56,11 @@ while not game.finished:
 
     player1.end_turn()
 
+    player2.start_turn()
+    player2.end_turn()
+
+    player3.start_turn()
+    player3.end_turn()
+
 pprint(game.score())  # noqa: T203
 game.save()
