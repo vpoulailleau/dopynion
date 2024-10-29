@@ -84,6 +84,10 @@ class CouncilRoom(Card):
         for _ in range(4):
             player.hand.append(player.take_one_card_from_deck())
         player.purchases_left += 1
+        for other_player in player.game.players:
+            if other_player == player:
+                continue
+            other_player.hand.append(other_player.take_one_card_from_deck())
 
 
 class Curse(Card):
