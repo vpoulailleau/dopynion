@@ -20,6 +20,10 @@ class Record:
         self._game_record = GameRecord(date=now)
         self.save()
 
+    @staticmethod
+    def load(path: Path) -> GameRecord:
+        return GameRecord.model_validate_json(path.read_text(encoding="utf-8"))
+
     def save(self) -> None:
         self._file.write_text(self._game_record.model_dump_json(indent=None))
 
