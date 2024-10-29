@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Cards(BaseModel):
@@ -18,5 +18,20 @@ class Game(BaseModel):
     stock: Cards
 
 
+class ActionRecord(BaseModel):
+    action: str
+    player: Player
+    score: int
+
+
+class PlayerTurnRecord(BaseModel):
+    actions: list[ActionRecord] = Field(default_factory=list)
+
+
+class TurnRecord(BaseModel):
+    players: list[PlayerTurnRecord] = Field(default_factory=list)
+
+
 class GameRecord(BaseModel):
     date: datetime
+    turns: list[TurnRecord] = Field(default_factory=list)
