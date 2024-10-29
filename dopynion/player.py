@@ -72,6 +72,7 @@ class Player:
         self._check_for_action_to_buy_transition()
 
     def end_turn(self) -> None:
+        self.game.record.add_action("END OF TURN", self)
         self._adjust()
         self.playing = False
         logging.debug("end turn")
@@ -102,6 +103,7 @@ class Player:
 
     def buy(self, card_name: CardName) -> None:
         logging.debug("> BUY %s", card_name)
+        self.game.record.add_action(f"BUY {card_name}", self)
         quantity = getattr(self.game.stock, card_name + "_qty")
         if not quantity:
             raise InvalidBuyError(card_name)
@@ -114,10 +116,10 @@ class Player:
         self.discard.append(card_name)
         self.purchases_left -= 1
         self._check_for_buy_to_adjust_transition()
-        self.game.record.add_action(f"BUY {card_name}", self)
 
     def action(self, card_name: CardName) -> None:
         logging.debug("> ACTION %s", card_name)
+        self.game.record.add_action(f"ACTION {card_name}", self)
         if self.state_machine != State.ACTION:
             logging.debug(self.state_machine)
             logging.debug("actions_left %d", self.actions_left)
@@ -134,7 +136,6 @@ class Player:
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
         self._check_for_action_to_buy_transition()
-        self.game.record.add_action(f"ACTION {card_name}", self)
 
     @property
     def state(self) -> PlayerData:
