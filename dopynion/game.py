@@ -11,10 +11,12 @@ from dopynion.exceptions import (
     InvalidCommandError,
 )
 from dopynion.player import Player
+from dopynion.record import Record
 
 
 class Game:
     def __init__(self) -> None:
+        self.record = Record()
         self.players: list[Player] = []
         self.started = False
         self.stock = CardContainer()
