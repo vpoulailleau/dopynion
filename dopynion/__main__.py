@@ -57,3 +57,4 @@ while not game.finished:
     player1.end_turn()
 
 pprint(game.score())  # noqa: T203
+game.save()

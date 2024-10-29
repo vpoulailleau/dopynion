@@ -28,10 +28,6 @@ class PlayerTurnRecord(BaseModel):
     actions: list[ActionRecord] = Field(default_factory=list)
 
 
-class TurnRecord(BaseModel):
-    players: list[PlayerTurnRecord] = Field(default_factory=list)
-
-
 class GameRecord(BaseModel):
     date: datetime
-    turns: list[TurnRecord] = Field(default_factory=list)
+    turns: list[PlayerTurnRecord] = Field(default_factory=list)

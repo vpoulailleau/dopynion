@@ -63,6 +63,7 @@ class Player:
 
     def start_turn(self) -> None:
         logging.debug("start turn (%s, %d)", self.name, id(self))
+        self.game.record.start_turn()
         self.playing = True
         self.state_machine = State.ACTION
         self.actions_left = 1
@@ -113,6 +114,7 @@ class Player:
         self.discard.append(card_name)
         self.purchases_left -= 1
         self._check_for_buy_to_adjust_transition()
+        self.game.record.add_action(f"BUY {card_name}", self)
 
     def action(self, card_name: CardName) -> None:
         logging.debug("> ACTION %s", card_name)
@@ -132,6 +134,7 @@ class Player:
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
         self._check_for_action_to_buy_transition()
+        self.game.record.add_action(f"ACTION {card_name}", self)
 
     @property
     def state(self) -> PlayerData:

@@ -1,7 +1,8 @@
 import datetime
 from pathlib import Path
 
-from dopynion.data_model import GameRecord
+from dopynion.data_model import ActionRecord, GameRecord, PlayerTurnRecord
+from dopynion.player import Player
 
 records_dir = Path.cwd() / "games"
 records_dir.mkdir(parents=True, exist_ok=True)
@@ -21,3 +22,11 @@ class Record:
 
     def save(self) -> None:
         self._file.write_text(self._game_record.model_dump_json(indent=4))
+
+    def start_turn(self) -> None:
+        self._game_record.turns.append(PlayerTurnRecord())
+
+    def add_action(self, action: str, player: Player) -> None:
+        turn = self._game_record.turns[-1]
+        action_record = ActionRecord(action=action, player=player.state, score=0)
+        turn.actions.append(action_record)

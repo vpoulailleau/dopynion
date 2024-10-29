@@ -89,3 +89,6 @@ class Game:
         leaderboard.sort(key=operator.itemgetter(1), reverse=True)
         ret["leaderboard"] = leaderboard
         return ret
+
+    def save(self) -> None:
+        self.record.save()
