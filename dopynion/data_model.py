@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -14,3 +16,7 @@ class Game(BaseModel):
     finished: bool
     players: list[Player]
     stock: Cards
+
+
+class GameRecord(BaseModel):
+    date: datetime
