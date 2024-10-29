@@ -21,7 +21,7 @@ class Record:
         self.save()
 
     def save(self) -> None:
-        self._file.write_text(self._game_record.model_dump_json(indent=4))
+        self._file.write_text(self._game_record.model_dump_json(indent=None))
 
     def start_turn(self) -> None:
         self._game_record.turns.append(PlayerTurnRecord())
