@@ -51,6 +51,7 @@ class Card(metaclass=ClassNameRepr):
     more_cards_from_deck = 0
     more_purchases = 0
     more_actions = 0
+    more_money = 0
 
     def __init_subclass__(cls) -> None:
         Card.types[CardName[cls.__name__.upper()]] = cls
@@ -70,6 +71,7 @@ class Card(metaclass=ClassNameRepr):
             player.hand.append(player.take_one_card_from_deck())
         player.purchases_left += cls.more_purchases
         player.actions_left += cls.more_actions
+        player.money += cls.more_money
 
         cls._action(player)
 
@@ -125,10 +127,7 @@ class Festival(Card):
     is_action = True
     more_purchases = 1
     more_actions = 2
-
-    @classmethod
-    def action(cls, player: Player) -> None:
-        player.money += 2
+    more_money = 2
 
 
 class Gold(Card):
@@ -154,10 +153,7 @@ class Market(Card):
     more_cards_from_deck = 1
     more_purchases = 1
     more_actions = 1
-
-    @classmethod
-    def action(cls, player: Player) -> None:
-        player.money += 1
+    more_money = 1
 
 
 class Province(Card):
@@ -194,10 +190,7 @@ class Woodcutter(Card):
     cost = 3
     is_action = True
     more_purchases = 1
-
-    @classmethod
-    def action(cls, player: Player) -> None:
-        player.money += 2
+    more_money = 2
 
 
 actions_card_name: set[CardName] = {
