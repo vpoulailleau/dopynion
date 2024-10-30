@@ -49,6 +49,7 @@ class Card(metaclass=ClassNameRepr):
     is_kingdom = True
     is_money = False
     more_cards_from_deck = 0
+    more_purchases = 0
 
     def __init_subclass__(cls) -> None:
         Card.types[CardName[cls.__name__.upper()]] = cls
@@ -66,6 +67,7 @@ class Card(metaclass=ClassNameRepr):
     def action(cls, player: Player) -> None:
         for _ in range(cls.more_cards_from_deck):
             player.hand.append(player.take_one_card_from_deck())
+        player.purchases_left += cls.more_purchases
 
         cls._action(player)
 
@@ -87,10 +89,10 @@ class CouncilRoom(Card):
     cost = 5
     is_action = True
     more_cards_from_deck = 4
+    more_purchases = 1
 
     @classmethod
     def action(cls, player: Player) -> None:
-        player.purchases_left += 1
         for other_player in player.game.players:
             if other_player == player:
                 continue
@@ -119,11 +121,11 @@ class Festival(Card):
     name = "Festival"
     cost = 5
     is_action = True
+    more_purchases = 1
 
     @classmethod
     def action(cls, player: Player) -> None:
         player.actions_left += 2
-        player.purchases_left += 1
         player.money += 2
 
 
@@ -151,11 +153,11 @@ class Market(Card):
     cost = 5
     is_action = True
     more_cards_from_deck = 1
+    more_purchases = 1
 
     @classmethod
     def action(cls, player: Player) -> None:
         player.actions_left += 1
-        player.purchases_left += 1
         player.money += 1
 
 
@@ -195,10 +197,10 @@ class Woodcutter(Card):
     name = "Bucheron"
     cost = 3
     is_action = True
+    more_purchases = 1
 
     @classmethod
     def action(cls, player: Player) -> None:
-        player.purchases_left += 1
         player.money += 2
 
 
