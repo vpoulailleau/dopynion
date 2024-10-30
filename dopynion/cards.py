@@ -50,6 +50,7 @@ class Card(metaclass=ClassNameRepr):
     is_money = False
     more_cards_from_deck = 0
     more_purchases = 0
+    more_actions = 0
 
     def __init_subclass__(cls) -> None:
         Card.types[CardName[cls.__name__.upper()]] = cls
@@ -68,6 +69,7 @@ class Card(metaclass=ClassNameRepr):
         for _ in range(cls.more_cards_from_deck):
             player.hand.append(player.take_one_card_from_deck())
         player.purchases_left += cls.more_purchases
+        player.actions_left += cls.more_actions
 
         cls._action(player)
 
@@ -122,10 +124,10 @@ class Festival(Card):
     cost = 5
     is_action = True
     more_purchases = 1
+    more_actions = 2
 
     @classmethod
     def action(cls, player: Player) -> None:
-        player.actions_left += 2
         player.money += 2
 
 
@@ -142,10 +144,7 @@ class Laboratory(Card):
     cost = 5
     is_action = True
     more_cards_from_deck = 2
-
-    @classmethod
-    def action(cls, player: Player) -> None:
-        player.actions_left += 1
+    more_actions = 1
 
 
 class Market(Card):
@@ -154,10 +153,10 @@ class Market(Card):
     is_action = True
     more_cards_from_deck = 1
     more_purchases = 1
+    more_actions = 1
 
     @classmethod
     def action(cls, player: Player) -> None:
-        player.actions_left += 1
         player.money += 1
 
 
@@ -187,10 +186,7 @@ class Village(Card):
     cost = 3
     is_action = True
     more_cards_from_deck = 1
-
-    @classmethod
-    def action(cls, player: Player) -> None:
-        player.actions_left += 2
+    more_actions = 2
 
 
 class Woodcutter(Card):
