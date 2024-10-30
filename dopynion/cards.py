@@ -52,6 +52,7 @@ class Card(metaclass=ClassNameRepr):
     more_purchases = 0
     more_actions = 0
     more_money = 0
+    victory_points = 0
 
     def __init_subclass__(cls) -> None:
         Card.types[CardName[cls.__name__.upper()]] = cls
@@ -107,18 +108,21 @@ class Curse(Card):
     name = "Malédiction"
     cost = 0
     is_kingdom = False
+    victory_points = -1
 
 
 class Duchy(Card):
     name = "Duché"
     cost = 5
     is_kingdom = False
+    victory_points = 3
 
 
 class Estate(Card):
     name = "Domaine"
     cost = 2
     is_kingdom = False
+    victory_points = 1
 
 
 class Festival(Card):
@@ -160,6 +164,7 @@ class Province(Card):
     name = "Province"
     cost = 8
     is_kingdom = False
+    victory_points = 6
 
 
 class Silver(Card):

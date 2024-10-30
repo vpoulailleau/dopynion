@@ -139,7 +139,8 @@ class Player:
 
     @property
     def state(self) -> PlayerData:
-        state = PlayerData(name=self.name, hand=None)
+        score = self.score()["score"]
+        state = PlayerData(name=self.name, hand=None, score=score)
         if self.playing:
             state.hand = self.hand.state
         return state
@@ -152,10 +153,5 @@ class Player:
         ret["estate_qty"] = cards.estate_qty
         ret["curse_qty"] = cards.curse_qty
         # TODO garden
-        ret["score"] = (
-            ret["province_qty"] * 6
-            + ret["duchy_qty"] * 3
-            + ret["estate_qty"] * 1
-            - ret["curse_qty"] * 1
-        )
+        ret["score"] = sum(Card.types[card_name].victory_points for card_name in cards)
         return ret

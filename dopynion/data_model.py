@@ -10,6 +10,7 @@ class Cards(BaseModel):
 class Player(BaseModel):
     name: str
     hand: Cards | None
+    score: int
 
 
 class Game(BaseModel):
