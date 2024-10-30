@@ -96,7 +96,7 @@ class CouncilRoom(Card):
     more_purchases = 1
 
     @classmethod
-    def action(cls, player: Player) -> None:
+    def _action(cls, player: Player) -> None:
         for other_player in player.game.players:
             if other_player == player:
                 continue
