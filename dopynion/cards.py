@@ -48,6 +48,7 @@ class Card(metaclass=ClassNameRepr):
     is_action = False
     is_kingdom = True
     is_money = False
+    more_cards_from_deck = 0
 
     def __init_subclass__(cls) -> None:
         Card.types[CardName[cls.__name__.upper()]] = cls
@@ -63,7 +64,14 @@ class Card(metaclass=ClassNameRepr):
 
     @classmethod
     def action(cls, player: Player) -> None:
-        raise NotImplementedError
+        for _ in range(cls.more_cards_from_deck):
+            player.hand.append(player.take_one_card_from_deck())
+
+        cls._action(player)
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        pass
 
 
 class Copper(Card):
@@ -78,11 +86,10 @@ class CouncilRoom(Card):
     name = "Chambre du conseil"
     cost = 5
     is_action = True
+    more_cards_from_deck = 4
 
     @classmethod
     def action(cls, player: Player) -> None:
-        for _ in range(4):
-            player.hand.append(player.take_one_card_from_deck())
         player.purchases_left += 1
         for other_player in player.game.players:
             if other_player == player:
@@ -132,11 +139,10 @@ class Laboratory(Card):
     name = "Laboratoire"
     cost = 5
     is_action = True
+    more_cards_from_deck = 2
 
     @classmethod
     def action(cls, player: Player) -> None:
-        for _ in range(2):
-            player.hand.append(player.take_one_card_from_deck())
         player.actions_left += 1
 
 
@@ -144,10 +150,10 @@ class Market(Card):
     name = "Marché"
     cost = 5
     is_action = True
+    more_cards_from_deck = 1
 
     @classmethod
     def action(cls, player: Player) -> None:
-        player.hand.append(player.take_one_card_from_deck())
         player.actions_left += 1
         player.purchases_left += 1
         player.money += 1
@@ -171,21 +177,17 @@ class Smithy(Card):
     name = "Forgeron"
     cost = 4
     is_action = True
-
-    @classmethod
-    def action(cls, player: Player) -> None:
-        for _ in range(3):
-            player.hand.append(player.take_one_card_from_deck())
+    more_cards_from_deck = 3
 
 
 class Village(Card):
     name = "Village"
     cost = 3
     is_action = True
+    more_cards_from_deck = 1
 
     @classmethod
     def action(cls, player: Player) -> None:
-        player.hand.append(player.take_one_card_from_deck())
         player.actions_left += 2
 
 
