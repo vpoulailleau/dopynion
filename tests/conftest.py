@@ -1,5 +1,6 @@
 import pytest
 
+from dopynion.cards import CardName
 from dopynion.game import Game
 from dopynion.player import Player
 
@@ -23,4 +24,12 @@ def _game() -> Game:
 def _player(game: Game) -> Player:
     player = Player("toto")
     game.add_player(player)
+    game.start()
+    return player
+
+
+@pytest.fixture(name="player_with_action_card")
+def _player_with_action_card(player: Player) -> Player:
+    player.hand.pop(0)
+    player.hand.append(CardName.FESTIVAL)
     return player

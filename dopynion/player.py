@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from dopynion.cards import Card, CardContainer, CardName
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
     import dopynion.game
 
 
-class State:
+class State(Enum):
     ACTION = 1
     BUY = 2
     ADJUST = 3
@@ -35,7 +36,7 @@ class Player:
         self.purchases_left: int = 0
         self.money: int = 0
         self.playing = False
-        self.state_machine = State.ACTION
+        self.state_machine: State = State.ACTION
         self._adjust()
 
     def __repr__(self) -> str:
@@ -121,17 +122,14 @@ class Player:
         logging.debug("> ACTION %s", card_name)
         self.game.record.add_action(f"ACTION {card_name}", self)
         if self.state_machine != State.ACTION:
-            logging.debug(self.state_machine)
             logging.debug("actions_left %d", self.actions_left)
+            logging.debug(self.state_machine.name)
             logging.debug(self.state)
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
             logging.debug(self.state)
             raise InvalidActionError(card_name)
-        try:
-            Card.types[card_name].action(self)
-        except NotImplementedError as err:
-            raise InvalidActionError(card_name) from err
+        Card.types[card_name].action(self)
         self.actions_left -= 1
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
