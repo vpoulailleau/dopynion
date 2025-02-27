@@ -1,6 +1,7 @@
 import inspect
 import operator
 import random
+from collections.abc import Callable
 
 import dopynion.cards
 from dopynion.cards import Card, CardContainer, CardName
@@ -11,12 +12,11 @@ from dopynion.exceptions import (
     InvalidCommandError,
 )
 from dopynion.player import Player
-from dopynion.record import Record
 
 
 class Game:
-    def __init__(self) -> None:
-        self.record = Record()
+    def __init__(self, record_factory: Callable) -> None:
+        self.record = record_factory()
         self.players: list[Player] = []
         self.started = False
         self.stock = CardContainer()

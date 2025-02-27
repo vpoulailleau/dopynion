@@ -7,6 +7,7 @@ from pprint import pprint
 from dopynion.cards import Card, CardName
 from dopynion.game import Game
 from dopynion.player import Player
+from dopynion.record import Record
 
 logging.basicConfig(
     filename="game.log",
@@ -20,7 +21,7 @@ logging.basicConfig(
 )
 logging.info("Launching server")
 
-game = Game()
+game = Game(record_factory=Record)
 player1 = Player("Foo")
 player2 = Player("Bar")
 player3 = Player("Baz")

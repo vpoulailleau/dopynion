@@ -8,23 +8,35 @@ from dopynion.game import Game
 from dopynion.player import Player
 
 
-def test_can_add_player() -> None:
-    game = Game()
+@pytest.fixture(name="game")
+def _game() -> Game:
+    class TestRecord:
+        def save(self) -> None:
+            pass
+
+        def start_turn(self) -> None:
+            pass
+
+        def add_action(self, action: str, player: Player) -> None:
+            pass
+
+    return Game(record_factory=TestRecord)
+
+
+def test_can_add_player(game: Game) -> None:
     game.add_player(Player("player 1"))
     game.start()
     assert len(game.players) == 1
 
 
-def test_cannot_add_player_on_started_game() -> None:
-    game = Game()
+def test_cannot_add_player_on_started_game(game: Game) -> None:
     game.add_player(Player("player 1"))
     game.start()
     with pytest.raises(AddPlayerDuringGameError):
         game.add_player(Player("2"))
 
 
-def test_max_nb_players() -> None:
-    game = Game()
+def test_max_nb_players(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.add_player(Player("3"))
@@ -34,8 +46,7 @@ def test_max_nb_players() -> None:
     game.start()
 
 
-def test_initial_money() -> None:
-    game = Game()
+def test_initial_money(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
@@ -44,8 +55,7 @@ def test_initial_money() -> None:
     assert game.copper_qty == 60 - 7 * 2
 
 
-def test_initial_estates_2_players() -> None:
-    game = Game()
+def test_initial_estates_2_players(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
@@ -54,8 +64,7 @@ def test_initial_estates_2_players() -> None:
     assert game.province_qty == 8
 
 
-def test_initial_estates_3_players() -> None:
-    game = Game()
+def test_initial_estates_3_players(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.add_player(Player("3"))
@@ -65,16 +74,14 @@ def test_initial_estates_3_players() -> None:
     assert game.province_qty == 12
 
 
-def test_initial_malediction_2_players() -> None:
-    game = Game()
+def test_initial_malediction_2_players(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
     assert game.curse_qty == 10
 
 
-def test_initial_malediction_3_players() -> None:
-    game = Game()
+def test_initial_malediction_3_players(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.add_player(Player("3"))
@@ -82,8 +89,7 @@ def test_initial_malediction_3_players() -> None:
     assert game.curse_qty == 20
 
 
-def test_initial_malediction_4_players() -> None:
-    game = Game()
+def test_initial_malediction_4_players(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.add_player(Player("3"))
