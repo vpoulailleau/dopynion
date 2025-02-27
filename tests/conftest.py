@@ -17,3 +17,10 @@ def _game() -> Game:
             pass
 
     return Game(record_factory=TestRecord)
+
+
+@pytest.fixture(name="player")
+def _player(game: Game) -> Player:
+    player = Player("toto")
+    game.add_player(player)
+    return player
