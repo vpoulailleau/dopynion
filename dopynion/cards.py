@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
 
 class CardName(StrEnum):  # Create with a metaclass
+    ADVENTURER = "adventurer"
     COPPER = "copper"
     COUNCILROOM = "councilroom"
     CURSE = "curse"
@@ -79,6 +80,24 @@ class Card(metaclass=ClassNameRepr):
     @classmethod
     def _action(cls, player: Player) -> None:
         pass
+
+
+class Adventurer(Card):
+    name = "Aventurier"
+    cost = 6
+    is_action = True
+    nb_treasure_cards = 2
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        nb_kept_cards = 0
+        while nb_kept_cards < cls.nb_treasure_cards:
+            card_name = player.take_one_card_from_deck()
+            if Card.types[card_name].is_money:
+                nb_kept_cards += 1
+                player.hand.append(card_name)
+            else:
+                player.discard.append(card_name)
 
 
 class Copper(Card):
