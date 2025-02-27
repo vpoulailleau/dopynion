@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class CardName(StrEnum):  # Create with a metaclass
     ADVENTURER = "adventurer"
+    BUREAUCRAT = "bureaucrat"
     COPPER = "copper"
     COUNCILROOM = "councilroom"
     CURSE = "curse"
@@ -55,8 +56,12 @@ class Card(metaclass=ClassNameRepr):
     more_money = 0
     victory_points = 0
 
+    @classmethod
+    def card_name(cls) -> CardName:
+        return CardName[cls.__name__.upper()]
+
     def __init_subclass__(cls) -> None:
-        Card.types[CardName[cls.__name__.upper()]] = cls
+        Card.types[cls.card_name()] = cls
 
     def __eq__(self, other: object) -> bool:
         return isinstance(self, other) or self.__class__ is other
@@ -98,6 +103,26 @@ class Adventurer(Card):
                 player.hand.append(card_name)
             else:
                 player.discard.append(card_name)
+
+
+class Bureaucrat(Card):
+    name = "Bureaucrate"
+    cost = 4
+    is_action = True
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        silver = Silver.card_name()
+        if silver in player.game.stock:
+            player.deck.prepend(silver)
+            player.game.stock.remove(silver)
+        for other_player in player.game.players:
+            if other_player == player:
+                continue
+            victory_cards = other_player.hand.victory_cards
+            if victory_cards:
+                other_player.deck.prepend(victory_cards[0])
+                other_player.hand.remove(victory_cards[0])
 
 
 class Copper(Card):
@@ -250,6 +275,11 @@ class CardContainer:
             ret.append(card_name)
         return ret
 
+    def prepend(self, card_name: CardName) -> None:
+        """Insert next card to be played."""
+        self._cards.insert(0, card_name)
+        self._quantities[card_name] += 1
+
     def append(self, card_name: CardName) -> None:
         self._cards.append(card_name)
         self._quantities[card_name] += 1
@@ -271,6 +301,14 @@ class CardContainer:
             for card_name, qty in self._quantities.items()
             if qty > 0
         )
+
+    @property
+    def victory_cards(self) -> CardContainer:
+        ret = CardContainer()
+        for card_name, qty in self._quantities.items():
+            if Card.types[card_name].victory_points:
+                ret.append_several(qty, card_name)
+        return ret
 
     @property
     def action_cards(self) -> CardContainer:
