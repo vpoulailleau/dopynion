@@ -1,3 +1,5 @@
+import pytest
+
 from dopynion.cards import CardName
 from dopynion.player import Player
 
@@ -38,16 +40,36 @@ def test_adventurer(player_with_action_card: Player) -> None:
     assert CardName.COPPER not in player.hand
 
 
-def test_festival(player_with_action_card: Player) -> None:
+@pytest.mark.parametrize(
+    ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
+    [
+        (CardName.FESTIVAL, 1, 2, 2, 0),
+        (CardName.LABORATORY, 0, 1, 0, 2),
+        (CardName.MARKET, 1, 1, 1, 1),
+        (CardName.SMITHY, 0, 0, 0, 3),
+        (CardName.VILLAGE, 0, 2, 0, 1),
+        (CardName.WOODCUTTER, 1, 0, 2, 0),
+    ],
+)
+def test_basic_cards(
+    player_with_action_card: Player,
+    card_name: CardName,
+    more_purchase: int,
+    more_actions: int,
+    more_money: int,
+    more_cards: int,
+) -> None:
     player = player_with_action_card
-    player.hand.append(CardName.FESTIVAL)
+    player.hand.append(card_name)
     player.start_turn()
     old_purchases_left = player.purchases_left
     old_actions_left = player.actions_left
     old_money = player.money
+    old_nb_cards = len(player.hand)
 
-    player.action(CardName.FESTIVAL)
+    player.action(card_name)
 
-    assert player.purchases_left == old_purchases_left + 1
-    assert player.actions_left == (old_actions_left - 1) + 2
-    assert player.money == old_money + 2
+    assert player.purchases_left == old_purchases_left + more_purchase
+    assert player.actions_left == (old_actions_left - 1) + more_actions
+    assert player.money == old_money + more_money
+    assert len(player.hand) == (old_nb_cards - 1) + more_cards
