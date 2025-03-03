@@ -1,6 +1,6 @@
 import pytest
 
-from dopynion.cards import CardName
+from dopynion.cards import CardName, Village
 from dopynion.player import Player
 
 
@@ -74,3 +74,8 @@ def test_basic_cards(  # noqa: PLR0913, PLR0917
     assert player.actions_left == (old_actions_left - 1) + more_actions
     assert player.money == old_money + more_money
     assert len(player.hand) == (old_nb_cards - 1) + more_cards
+
+
+def test_card_coverage() -> None:
+    card = Village()
+    print(card, card == Village, hash(card))
