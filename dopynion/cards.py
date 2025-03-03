@@ -289,8 +289,8 @@ class CardContainer:
             self.append(card_name)
 
     def remove(self, card_name: CardName) -> None:
-        self._quantities[card_name] -= 1
         self._cards.remove(card_name)
+        self._quantities[card_name] -= 1
 
     def shuffle(self) -> None:
         random.shuffle(self._cards)

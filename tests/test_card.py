@@ -1,6 +1,7 @@
 import pytest
 
 from dopynion.cards import CardName, Village
+from dopynion.game import Game
 from dopynion.player import Player
 
 
@@ -38,6 +39,101 @@ def test_adventurer(player_with_action_card: Player) -> None:
     assert CardName.GOLD in player.hand
     assert CardName.SILVER in player.hand
     assert CardName.COPPER not in player.hand
+
+
+def test_bureaucrat_enemy_with_victory_cards(game: Game) -> None:
+    player = Player("toto")
+    enemy = Player("tata")
+    game.add_player(player)
+    game.add_player(enemy)
+    game.start()
+
+    # hand building
+    while player.hand:
+        player.hand.pop()
+    player.hand.append_several(5, CardName.BUREAUCRAT)
+
+    while enemy.hand:
+        enemy.hand.pop()
+    enemy.hand.append_several(5, CardName.DUCHY)
+
+    while enemy.deck:
+        enemy.deck.pop()
+
+    player.start_turn()
+
+    player.action(CardName.BUREAUCRAT)
+
+    assert len(enemy.hand) == 4
+    assert enemy.deck[0] == CardName.DUCHY
+
+
+def test_bureaucrat_enemy_without_victory_cards(game: Game) -> None:
+    player = Player("toto")
+    enemy = Player("tata")
+    game.add_player(player)
+    game.add_player(enemy)
+    game.start()
+
+    # hand building
+    while player.hand:
+        player.hand.pop()
+    player.hand.append_several(5, CardName.BUREAUCRAT)
+
+    while enemy.hand:
+        enemy.hand.pop()
+    enemy.hand.append_several(5, CardName.GOLD)
+
+    while enemy.deck:
+        enemy.deck.pop()
+
+    player.start_turn()
+
+    player.action(CardName.BUREAUCRAT)
+
+    assert len(enemy.hand) == 5
+    assert not enemy.deck
+
+
+def test_bureaucrat_with_silver(game: Game) -> None:
+    player = Player("toto")
+    game.add_player(player)
+    game.start()
+
+    # hand building
+    while player.hand:
+        player.hand.pop()
+    player.hand.append_several(5, CardName.BUREAUCRAT)
+
+    player.start_turn()
+
+    player.action(CardName.BUREAUCRAT)
+
+    assert len(player.hand) == 4
+    assert player.deck[0] == CardName.SILVER
+
+
+def test_bureaucrat_without_silver(game: Game) -> None:
+    player = Player("toto")
+    game.add_player(player)
+    game.start()
+    while CardName.SILVER in game.stock:
+        game.stock.remove(CardName.SILVER)
+
+    # hand building
+    while player.hand:
+        player.hand.pop()
+    player.hand.append_several(5, CardName.BUREAUCRAT)
+
+    while player.deck:
+        player.deck.pop()
+
+    player.start_turn()
+
+    player.action(CardName.BUREAUCRAT)
+
+    assert len(player.hand) == 4
+    assert not player.deck
 
 
 @pytest.mark.parametrize(
