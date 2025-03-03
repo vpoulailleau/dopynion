@@ -276,6 +276,10 @@ class CardContainer:
             ret.append(card_name)
         return ret
 
+    def clear(self) -> None:
+        self._quantities.clear()
+        self._cards.clear()
+
     def prepend(self, card_name: CardName) -> None:
         """Insert next card to be played."""
         self._cards.insert(0, card_name)

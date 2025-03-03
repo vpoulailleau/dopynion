@@ -28,6 +28,14 @@ def _player(game: Game) -> Player:
     return player
 
 
+@pytest.fixture(name="empty_player")
+def _empty_player(player: Player) -> Player:
+    player.hand.clear()
+    player.discard.clear()
+    player.deck.clear()
+    return player
+
+
 @pytest.fixture(name="player_with_action_card")
 def _player_with_action_card(player: Player) -> Player:
     player.hand.pop(0)

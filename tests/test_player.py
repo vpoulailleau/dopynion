@@ -44,22 +44,19 @@ def test_invalid_action_when_no_corresponding_card(player: Player) -> None:
         player.action(CardName.VILLAGE)
 
 
-def test_discard_invalid_card(player: Player) -> None:
-    player.start_turn()
-    while player.hand:
-        player.hand.pop()
+def test_discard_invalid_card(empty_player: Player) -> None:
+    player = empty_player
     player.hand.append_several(5, CardName.CELLAR)
+    player.start_turn()
+
     with pytest.raises(InvalidDiscardError):
         player.discard_one_card_from_hand(CardName.VILLAGE)
 
 
-def test_discard_valid_card(player: Player) -> None:
-    player.start_turn()
-    while player.hand:
-        player.hand.pop()
-    while player.discard:
-        player.discard.pop()
+def test_discard_valid_card(empty_player: Player) -> None:
+    player = empty_player
     player.hand.append_several(5, CardName.CELLAR)
+    player.start_turn()
 
     player.discard_one_card_from_hand(CardName.CELLAR)
 
