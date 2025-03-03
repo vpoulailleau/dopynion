@@ -172,6 +172,6 @@ def test_basic_cards(  # noqa: PLR0913, PLR0917
     assert len(player.hand) == (old_nb_cards - 1) + more_cards
 
 
-def test_card_coverage() -> None:
+def test_card_coverage(player: Player) -> None:
     card = Village()
-    print(card, card == Village, hash(card))
+    print(card, card == Village, hash(card), player.hand)
