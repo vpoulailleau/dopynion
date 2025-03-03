@@ -8,14 +8,10 @@ from dopynion.player import Player
 def test_adventurer(player_with_action_card: Player) -> None:
     player = player_with_action_card
 
-    # hand building
-    while player.hand:
-        player.hand.pop()
+    player.hand.clear()
     player.hand.append_several(5, CardName.ADVENTURER)
 
-    # deck building
-    while player.deck:
-        player.deck.pop()
+    player.deck.clear()
     player.deck.append(CardName.ADVENTURER)
     player.deck.append(CardName.BUREAUCRAT)
     player.deck.append(CardName.GOLD)
@@ -48,17 +44,12 @@ def test_bureaucrat_enemy_with_victory_cards(game: Game) -> None:
     game.add_player(enemy)
     game.start()
 
-    # hand building
-    while player.hand:
-        player.hand.pop()
+    player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
 
-    while enemy.hand:
-        enemy.hand.pop()
+    enemy.deck.clear()
+    enemy.hand.clear()
     enemy.hand.append_several(5, CardName.DUCHY)
-
-    while enemy.deck:
-        enemy.deck.pop()
 
     player.start_turn()
 
@@ -75,17 +66,12 @@ def test_bureaucrat_enemy_without_victory_cards(game: Game) -> None:
     game.add_player(enemy)
     game.start()
 
-    # hand building
-    while player.hand:
-        player.hand.pop()
+    player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
 
-    while enemy.hand:
-        enemy.hand.pop()
+    enemy.deck.clear()
+    enemy.hand.clear()
     enemy.hand.append_several(5, CardName.GOLD)
-
-    while enemy.deck:
-        enemy.deck.pop()
 
     player.start_turn()
 
@@ -101,8 +87,7 @@ def test_bureaucrat_with_silver(game: Game) -> None:
     game.start()
 
     # hand building
-    while player.hand:
-        player.hand.pop()
+    player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
 
     player.start_turn()
@@ -121,12 +106,9 @@ def test_bureaucrat_without_silver(game: Game) -> None:
         game.stock.remove(CardName.SILVER)
 
     # hand building
-    while player.hand:
-        player.hand.pop()
+    player.deck.clear()
+    player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
-
-    while player.deck:
-        player.deck.pop()
 
     player.start_turn()
 
