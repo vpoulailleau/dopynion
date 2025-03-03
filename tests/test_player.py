@@ -6,7 +6,7 @@ from dopynion.exceptions import (
     InvalidActionError,
     InvalidDiscardError,
 )
-from dopynion.player import Player, State
+from dopynion.player import Player
 
 
 def test_initial_deck(player: Player) -> None:
@@ -24,9 +24,9 @@ def test_make_hand_not_enough_cards_in_deck() -> None:
     pass  # TODO add the test
 
 
-def test_unknown_action(player: Player) -> None:
+def test_unknown_action(player_with_action_card: Player) -> None:
+    player = player_with_action_card
     player.start_turn()
-    player.state_machine = State.ACTION
     with pytest.raises(InvalidActionError):
         player.action("FooBar")
 
@@ -37,9 +37,11 @@ def test_invalid_action(player: Player) -> None:
         player.action(CardName.SMITHY)
 
 
-def test_invalid_action_when_no_corresponding_card(player: Player) -> None:
+def test_invalid_action_when_no_corresponding_card(
+    player_with_action_card: Player,
+) -> None:
+    player = player_with_action_card
     player.start_turn()
-    player.state_machine = State.ACTION
     with pytest.raises(InvalidActionError):
         player.action(CardName.VILLAGE)
 
