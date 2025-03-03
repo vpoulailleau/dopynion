@@ -41,3 +41,13 @@ def _player_with_action_card(player: Player) -> Player:
     player.hand.pop(0)
     player.hand.append(CardName.FESTIVAL)
     return player
+
+
+@pytest.fixture(name="game_with_two_players")
+def _game_with_two_players(game: Game) -> tuple[Game, Player, Player]:
+    player = Player("toto")
+    enemy = Player("tata")
+    game.add_player(player)
+    game.add_player(enemy)
+    game.start()
+    return game, player, enemy

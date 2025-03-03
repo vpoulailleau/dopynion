@@ -37,12 +37,10 @@ def test_adventurer(player_with_action_card: Player) -> None:
     assert CardName.COPPER not in player.hand
 
 
-def test_bureaucrat_enemy_with_victory_cards(game: Game) -> None:
-    player = Player("toto")
-    enemy = Player("tata")
-    game.add_player(player)
-    game.add_player(enemy)
-    game.start()
+def test_bureaucrat_enemy_with_victory_cards(
+    game_with_two_players: tuple[Game, Player, Player],
+) -> None:
+    _, player, enemy = game_with_two_players
 
     player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
@@ -59,12 +57,10 @@ def test_bureaucrat_enemy_with_victory_cards(game: Game) -> None:
     assert enemy.deck[0] == CardName.DUCHY
 
 
-def test_bureaucrat_enemy_without_victory_cards(game: Game) -> None:
-    player = Player("toto")
-    enemy = Player("tata")
-    game.add_player(player)
-    game.add_player(enemy)
-    game.start()
+def test_bureaucrat_enemy_without_victory_cards(
+    game_with_two_players: tuple[Game, Player, Player],
+) -> None:
+    _, player, enemy = game_with_two_players
 
     player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
@@ -81,12 +77,7 @@ def test_bureaucrat_enemy_without_victory_cards(game: Game) -> None:
     assert not enemy.deck
 
 
-def test_bureaucrat_with_silver(game: Game) -> None:
-    player = Player("toto")
-    game.add_player(player)
-    game.start()
-
-    # hand building
+def test_bureaucrat_with_silver(player: Player) -> None:
     player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
 
@@ -98,14 +89,13 @@ def test_bureaucrat_with_silver(game: Game) -> None:
     assert player.deck[0] == CardName.SILVER
 
 
-def test_bureaucrat_without_silver(game: Game) -> None:
-    player = Player("toto")
-    game.add_player(player)
-    game.start()
+def test_bureaucrat_without_silver(
+    game_with_two_players: tuple[Game, Player, Player],
+) -> None:
+    game, player, _ = game_with_two_players
     while CardName.SILVER in game.stock:
         game.stock.remove(CardName.SILVER)
 
-    # hand building
     player.deck.clear()
     player.hand.clear()
     player.hand.append_several(5, CardName.BUREAUCRAT)
