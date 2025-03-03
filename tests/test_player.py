@@ -4,6 +4,7 @@ from dopynion.cards import CardName
 from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
+    InvalidDiscardError,
 )
 from dopynion.player import Player, State
 
@@ -41,3 +42,26 @@ def test_invalid_action_when_no_corresponding_card(player: Player) -> None:
     player.state_machine = State.ACTION
     with pytest.raises(InvalidActionError):
         player.action(CardName.VILLAGE)
+
+
+def test_discard_invalid_card(player: Player) -> None:
+    player.start_turn()
+    while player.hand:
+        player.hand.pop()
+    player.hand.append_several(5, CardName.CELLAR)
+    with pytest.raises(InvalidDiscardError):
+        player.discard_one_card_from_hand(CardName.VILLAGE)
+
+
+def test_discard_valid_card(player: Player) -> None:
+    player.start_turn()
+    while player.hand:
+        player.hand.pop()
+    while player.discard:
+        player.discard.pop()
+    player.hand.append_several(5, CardName.CELLAR)
+
+    player.discard_one_card_from_hand(CardName.CELLAR)
+
+    assert len(player.discard) == 1
+    assert len(player.hand) == 4

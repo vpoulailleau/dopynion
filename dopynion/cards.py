@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 class CardName(StrEnum):  # Create with a metaclass
     ADVENTURER = "adventurer"
     BUREAUCRAT = "bureaucrat"
+    CELLAR = "cellar"
     COPPER = "copper"
     COUNCILROOM = "councilroom"
     CURSE = "curse"

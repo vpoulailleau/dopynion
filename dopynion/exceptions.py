@@ -24,3 +24,7 @@ class InvalidBuyError(InvalidCommandError):
 
 class NotEnoughMoneyError(InvalidCommandError):
     pass
+
+
+class InvalidDiscardError(InvalidCommandError):
+    pass

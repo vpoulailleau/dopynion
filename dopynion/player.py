@@ -8,6 +8,7 @@ from dopynion.exceptions import (
     ActionDuringBuyError,
     InvalidActionError,
     InvalidBuyError,
+    InvalidDiscardError,
     NotEnoughMoneyError,
 )
 
@@ -153,3 +154,10 @@ class Player:
         # TODO garden
         ret["score"] = sum(Card.types[card_name].victory_points for card_name in cards)
         return ret
+
+    def discard_one_card_from_hand(self, card_name: CardName) -> None:
+        if card_name not in self.hand:
+            msg = f"{card_name} not in player hand"
+            raise InvalidDiscardError(msg)
+        self.hand.remove(card_name)
+        self.discard.append(card_name)
