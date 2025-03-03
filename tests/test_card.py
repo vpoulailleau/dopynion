@@ -43,6 +43,7 @@ def test_adventurer(player_with_action_card: Player) -> None:
 @pytest.mark.parametrize(
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [
+        (CardName.COUNCILROOM, 1, 0, 0, 4),
         (CardName.FESTIVAL, 1, 2, 2, 0),
         (CardName.LABORATORY, 0, 1, 0, 2),
         (CardName.MARKET, 1, 1, 1, 1),
@@ -51,7 +52,7 @@ def test_adventurer(player_with_action_card: Player) -> None:
         (CardName.WOODCUTTER, 1, 0, 2, 0),
     ],
 )
-def test_basic_cards(
+def test_basic_cards(  # noqa: PLR0913, PLR0917
     player_with_action_card: Player,
     card_name: CardName,
     more_purchase: int,
