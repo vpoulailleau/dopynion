@@ -1,4 +1,5 @@
 import logging
+from abc import ABC, abstractmethod
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -22,6 +23,25 @@ class State(Enum):
     ADJUST = 3
 
 
+class PlayerHooks(ABC):
+    @abstractmethod
+    def confirm_discard_card_from_hand(
+        self,
+        card_name: CardName,
+        hand: CardContainer,
+    ) -> bool:
+        pass
+
+
+class DefaultPlayerHooks(PlayerHooks):
+    def confirm_discard_card_from_hand(  # noqa: PLR6301
+        self,
+        _card_name: CardName,
+        _hand: CardContainer,
+    ) -> bool:
+        return False
+
+
 class Player:
     def __init__(self, name: str) -> None:
         self.game: dopynion.game.Game = None
@@ -38,6 +58,7 @@ class Player:
         self.money: int = 0
         self.playing = False
         self.state_machine: State = State.ACTION
+        self.hooks: PlayerHooks = DefaultPlayerHooks()
         self._adjust()
 
     def __repr__(self) -> str:
@@ -130,10 +151,10 @@ class Player:
         if card_name not in self.hand:
             logging.debug(self.state)
             raise InvalidActionError(card_name)
-        Card.types[card_name].action(self)
         self.actions_left -= 1
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
+        Card.types[card_name].action(self)
         self._check_for_action_to_buy_transition()
 
     @property

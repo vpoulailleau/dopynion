@@ -1,8 +1,8 @@
 import pytest
 
-from dopynion.cards import CardName, Village
+from dopynion.cards import CardContainer, CardName, Village
 from dopynion.game import Game
-from dopynion.player import Player
+from dopynion.player import DefaultPlayerHooks, Player
 
 
 def test_adventurer(empty_player: Player) -> None:
@@ -107,14 +107,27 @@ def test_bureaucrat_without_silver(
 
 
 def test_cellar(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def confirm_discard_card_from_hand(
+            self,
+            card_name: CardName,
+            hand: CardContainer,
+        ) -> bool:
+            self.nb_cards += 1
+            return self.nb_cards < 3
+
     player = empty_player
     player.hand.append_several(5, CardName.CELLAR)
     player.deck.append_several(2, CardName.GOLD)
+    player.hooks = Hooks()
 
     player.start_turn()
 
     player.action(CardName.CELLAR)
-    # TODO il manque un truc pour virer 2 cartes
 
     assert len(player.hand) == 4
     assert player.hand.gold_qty == 2
@@ -124,6 +137,7 @@ def test_cellar(empty_player: Player) -> None:
 @pytest.mark.parametrize(
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [
+        (CardName.CELLAR, 0, 1, 0, 0),
         (CardName.COUNCILROOM, 1, 0, 0, 4),
         (CardName.FESTIVAL, 1, 2, 2, 0),
         (CardName.LABORATORY, 0, 1, 0, 2),

@@ -126,6 +126,24 @@ class Bureaucrat(Card):
                 other_player.hand.remove(victory_cards[0])
 
 
+class Cellar(Card):
+    name = "Cave"
+    cost = 2
+    is_action = True
+    more_actions = 1
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        nb_discarded_cards = 0
+        for card_name in player.hand.copy():
+            if player.hooks.confirm_discard_card_from_hand(card_name, player.hand):
+                player.hand.remove(card_name)
+                player.discard.append(card_name)
+                nb_discarded_cards += 1
+        for _ in range(nb_discarded_cards):
+            player.hand.append(player.take_one_card_from_deck())
+
+
 class Copper(Card):
     name = "Cuivre"
     cost = 0
@@ -279,6 +297,12 @@ class CardContainer:
     def clear(self) -> None:
         self._quantities.clear()
         self._cards.clear()
+
+    def copy(self) -> CardContainer:
+        new = CardContainer()
+        new._quantities = self._quantities.copy()  # noqa: SLF001
+        new._cards = self._cards.copy()  # noqa: SLF001
+        return new
 
     def prepend(self, card_name: CardName) -> None:
         """Insert next card to be played."""
