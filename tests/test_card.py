@@ -5,13 +5,11 @@ from dopynion.game import Game
 from dopynion.player import Player
 
 
-def test_adventurer(player_with_action_card: Player) -> None:
-    player = player_with_action_card
+def test_adventurer(empty_player: Player) -> None:
+    player = empty_player
 
-    player.hand.clear()
     player.hand.append_several(5, CardName.ADVENTURER)
 
-    player.deck.clear()
     player.deck.append(CardName.ADVENTURER)
     player.deck.append(CardName.BUREAUCRAT)
     player.deck.append(CardName.GOLD)
@@ -77,8 +75,8 @@ def test_bureaucrat_enemy_without_victory_cards(
     assert not enemy.deck
 
 
-def test_bureaucrat_with_silver(player: Player) -> None:
-    player.hand.clear()
+def test_bureaucrat_with_silver(empty_player: Player) -> None:
+    player = empty_player
     player.hand.append_several(5, CardName.BUREAUCRAT)
 
     player.start_turn()
@@ -106,6 +104,21 @@ def test_bureaucrat_without_silver(
 
     assert len(player.hand) == 4
     assert not player.deck
+
+
+def test_cellar(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.CELLAR)
+    player.deck.append_several(2, CardName.GOLD)
+
+    player.start_turn()
+
+    player.action(CardName.CELLAR)
+    # TODO il manque un truc pour virer 2 cartes
+
+    assert len(player.hand) == 4
+    assert player.hand.gold_qty == 2
+    assert len(player.discard) == 2
 
 
 @pytest.mark.parametrize(
