@@ -1,6 +1,6 @@
 import pytest
 
-from dopynion.cards import CardContainer, CardName, Village
+from dopynion.cards import Card, CardContainer, CardName, Village
 from dopynion.game import Game
 from dopynion.player import DefaultPlayerHooks, Player
 
@@ -138,6 +138,7 @@ def test_cellar(empty_player: Player) -> None:
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [
         (CardName.CELLAR, 0, 1, 0, 0),
+        (CardName.CHANCELLOR, 0, 0, 2, 0),
         (CardName.COUNCILROOM, 1, 0, 0, 4),
         (CardName.FESTIVAL, 1, 2, 2, 0),
         (CardName.LABORATORY, 0, 1, 0, 2),
@@ -165,6 +166,7 @@ def test_basic_cards(  # noqa: PLR0913, PLR0917
 
     player.action(card_name)
 
+    assert Card.types[card_name].is_action
     assert player.purchases_left == old_purchases_left + more_purchase
     assert player.actions_left == (old_actions_left - 1) + more_actions
     assert player.money == old_money + more_money
