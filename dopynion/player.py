@@ -32,6 +32,10 @@ class PlayerHooks(ABC):
     ) -> bool:
         pass
 
+    @abstractmethod
+    def confirm_discard_deck(self) -> bool:
+        pass
+
 
 class DefaultPlayerHooks(PlayerHooks):
     def confirm_discard_card_from_hand(  # noqa: PLR6301
@@ -39,6 +43,9 @@ class DefaultPlayerHooks(PlayerHooks):
         _card_name: CardName,
         _hand: CardContainer,
     ) -> bool:
+        return False
+
+    def confirm_discard_deck(self) -> bool:  # noqa: PLR6301
         return False
 
 

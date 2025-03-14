@@ -134,6 +134,25 @@ def test_cellar(empty_player: Player) -> None:
     assert len(player.discard) == 2
 
 
+def test_chancellor_dont_discard_deck(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def confirm_discard_deck(self) -> bool:  # noqa: PLR6301
+            return False
+
+    player = empty_player
+    player.hand.append_several(5, CardName.CHANCELLOR)
+    player.deck.append_several(3, CardName.GOLD)
+    player.hooks = Hooks()
+
+    player.start_turn()
+
+    player.action(CardName.CHANCELLOR)
+
+    assert len(player.hand) == 4
+    assert len(player.deck) == 3
+    assert len(player.discard) == 0
+
+
 @pytest.mark.parametrize(
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [
