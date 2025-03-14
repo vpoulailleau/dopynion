@@ -19,6 +19,7 @@ class CardName(StrEnum):  # Create with a metaclass
     ADVENTURER = "adventurer"
     BUREAUCRAT = "bureaucrat"
     CELLAR = "cellar"
+    CHANCELLOR = "chancellor"
     COPPER = "copper"
     COUNCILROOM = "councilroom"
     CURSE = "curse"
@@ -142,6 +143,13 @@ class Cellar(Card):
                 nb_discarded_cards += 1
         for _ in range(nb_discarded_cards):
             player.hand.append(player.take_one_card_from_deck())
+
+
+class Chancellor(Card):
+    name = "Chancelier"
+    cost = 3
+    is_action = True
+    more_money = 2
 
 
 class Copper(Card):
