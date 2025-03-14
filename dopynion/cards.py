@@ -151,6 +151,11 @@ class Chancellor(Card):
     is_action = True
     more_money = 2
 
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        if player.hooks.confirm_discard_deck():
+            player.deck.empty_to(player.discard)
+
 
 class Copper(Card):
     name = "Cuivre"
