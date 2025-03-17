@@ -227,6 +227,20 @@ def test_chapel_discard_as_many_cards_as_possible_that_is_four(
     assert len(player.discard) == 4
 
 
+def test_council_room(game_with_two_players: tuple[Game, Player, Player]) -> None:
+    _, player, enemy = game_with_two_players
+    player.hand.clear()
+    player.hand.append_several(5, CardName.COUNCILROOM)
+    enemy.hand.clear()
+
+    player.start_turn()
+
+    player.action(CardName.COUNCILROOM)
+
+    assert len(player.hand) == 4 + Card.types[CardName.COUNCILROOM].more_cards_from_deck
+    assert len(enemy.hand) == 1
+
+
 @pytest.mark.parametrize(
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [
