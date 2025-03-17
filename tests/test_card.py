@@ -172,6 +172,61 @@ def test_chancellor_discard_deck(empty_player: Player) -> None:
     assert len(player.discard) == 3
 
 
+def test_chapel_discard_two_cards(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def confirm_discard_card_from_hand(
+            self,
+            card_name: CardName,
+            hand: CardContainer,
+        ) -> bool:
+            self.nb_cards += 1
+            return self.nb_cards < 3
+
+    player = empty_player
+    player.hand.append_several(5, CardName.CHAPEL)
+    player.hooks = Hooks()
+
+    player.start_turn()
+
+    player.action(CardName.CHAPEL)
+
+    assert len(player.hand) == 2
+    assert len(player.deck) == 0
+    assert len(player.discard) == 2
+
+
+def test_chapel_discard_as_many_cards_as_possible_that_is_four(
+    empty_player: Player,
+) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def confirm_discard_card_from_hand(  # noqa: PLR6301
+            self,
+            card_name: CardName,
+            hand: CardContainer,
+        ) -> bool:
+            return True
+
+    player = empty_player
+    player.hand.append_several(15, CardName.CHAPEL)
+    player.hooks = Hooks()
+
+    player.start_turn()
+
+    player.action(CardName.CHAPEL)
+
+    assert len(player.hand) == 10
+    assert len(player.deck) == 0
+    assert len(player.discard) == 4
+
+
 @pytest.mark.parametrize(
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [

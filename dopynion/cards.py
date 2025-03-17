@@ -5,7 +5,7 @@ import random
 import sys
 from collections import defaultdict
 from enum import StrEnum
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING, ClassVar, Final
 
 from dopynion.data_model import Cards
 
@@ -20,6 +20,7 @@ class CardName(StrEnum):  # Create with a metaclass
     BUREAUCRAT = "bureaucrat"
     CELLAR = "cellar"
     CHANCELLOR = "chancellor"
+    CHAPEL = "chapel"
     COPPER = "copper"
     COUNCILROOM = "councilroom"
     CURSE = "curse"
@@ -155,6 +156,24 @@ class Chancellor(Card):
     def _action(cls, player: Player) -> None:
         if player.hooks.confirm_discard_deck():
             player.deck.empty_to(player.discard)
+
+
+class Chapel(Card):
+    name = "Chapelle"
+    cost = 2
+    is_action = True
+    max_discarded_cards: Final[int] = 4
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        nb_discarded_cards = 0
+        for card_name in player.hand.copy():
+            if player.hooks.confirm_discard_card_from_hand(card_name, player.hand):
+                player.hand.remove(card_name)
+                player.discard.append(card_name)
+                nb_discarded_cards += 1
+            if nb_discarded_cards >= cls.max_discarded_cards:
+                break
 
 
 class Copper(Card):
