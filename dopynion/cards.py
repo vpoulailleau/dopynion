@@ -119,9 +119,7 @@ class Bureaucrat(Card):
         if silver in player.game.stock:
             player.deck.prepend(silver)
             player.game.stock.remove(silver)
-        for other_player in player.game.players:
-            if other_player == player:
-                continue
+        for other_player in player.other_players():
             victory_cards = other_player.hand.victory_cards
             if victory_cards:
                 other_player.deck.prepend(victory_cards[0])
@@ -193,9 +191,7 @@ class CouncilRoom(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        for other_player in player.game.players:
-            if other_player == player:
-                continue
+        for other_player in player.other_players():
             other_player.hand.append(other_player.take_one_card_from_deck())
 
 

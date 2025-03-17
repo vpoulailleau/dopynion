@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -14,6 +16,8 @@ from dopynion.exceptions import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
+
     import dopynion.game
 
 
@@ -189,3 +193,8 @@ class Player:
             raise InvalidDiscardError(msg)
         self.hand.remove(card_name)
         self.discard.append(card_name)
+
+    def other_players(self) -> Generator[Player, None, None]:
+        for other_player in self.game.players:
+            if other_player != self:
+                yield other_player
