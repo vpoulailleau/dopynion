@@ -28,6 +28,7 @@ class CardName(StrEnum):  # Create with a metaclass
     ESTATE = "estate"
     FEAST = "feast"
     FESTIVAL = "festival"
+    GARDENS = "gardens"
     GOLD = "gold"
     LABORATORY = "laboratory"
     MARKET = "market"
@@ -247,6 +248,12 @@ class Festival(Card):
     more_purchases = 1
     more_actions = 2
     more_money = 2
+
+
+class Gardens(Card):
+    name = "Jardins"
+    cost = 4
+    is_kingdom = True
 
 
 class Gold(Card):

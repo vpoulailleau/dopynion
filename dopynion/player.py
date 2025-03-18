@@ -196,8 +196,10 @@ class Player:
         ret["duchy_qty"] = cards.duchy_qty
         ret["estate_qty"] = cards.estate_qty
         ret["curse_qty"] = cards.curse_qty
-        # TODO garden
-        ret["score"] = sum(Card.types[card_name].victory_points for card_name in cards)
+        ret["gardens_qty"] = cards.gardens_qty
+        ret["score"] = sum(
+            Card.types[card_name].victory_points for card_name in cards
+        ) + cards.gardens_qty * (len(cards) // 10)
         return ret
 
     def discard_one_card_from_hand(self, card_name: CardName) -> None:

@@ -53,6 +53,8 @@ class Game:
             self.curse_qty = 10
         elif len(self.players) == 3:  # noqa: PLR2004
             self.curse_qty = 20
+        elif len(self.players) == 4:  # noqa: PLR2004
+            self.curse_qty = 30
         possible_kingdoms: list[CardName] = [
             name.lower()
             for name, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)
@@ -64,8 +66,10 @@ class Game:
             if not possible_kingdoms:
                 break  # TODO à virer quand on aura plus de 10 possibles
             card_name = random.choice(possible_kingdoms)  # noqa: S311
-            self.stock.append_several(10, card_name)
-            # TODO pour jardin c'est particulier, cf bas de la page 2
+            if card_name == CardName.GARDENS:
+                self.stock.append_several(self.duchy_qty, card_name)
+            else:
+                self.stock.append_several(10, card_name)
             possible_kingdoms.remove(card_name)
 
     @property

@@ -286,6 +286,26 @@ def test_council_room(game_with_two_players: tuple[Game, Player, Player]) -> Non
     assert len(enemy.hand) == 1
 
 
+def test_gardens_score_39_cards(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(2, CardName.GARDENS)
+    player.deck.append_several(37, CardName.COPPER)
+
+    score = player.score()
+    assert score["gardens_qty"] == 2
+    assert score["score"] == 6
+
+
+def test_gardens_score_40_cards(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(2, CardName.GARDENS)
+    player.deck.append_several(38, CardName.COPPER)
+
+    score = player.score()
+    assert score["gardens_qty"] == 2
+    assert score["score"] == 8
+
+
 @pytest.mark.parametrize(
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [
