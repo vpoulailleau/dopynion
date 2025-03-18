@@ -32,7 +32,7 @@ class PlayerHooks(ABC):
     def confirm_discard_card_from_hand(
         self,
         card_name: CardName,
-        hand: CardContainer,
+        hand: list[CardName],
     ) -> bool:
         pass
 
@@ -47,12 +47,20 @@ class PlayerHooks(ABC):
     ) -> CardName:
         pass
 
+    @abstractmethod
+    def skip_card_reception_in_hand(
+        self,
+        card_name: CardName,
+        hand: list[CardName],
+    ) -> bool:
+        pass
+
 
 class DefaultPlayerHooks(PlayerHooks):
     def confirm_discard_card_from_hand(  # noqa: PLR6301
         self,
         _card_name: CardName,
-        _hand: CardContainer,
+        _hand: list[CardName],
     ) -> bool:
         return False
 
@@ -64,6 +72,13 @@ class DefaultPlayerHooks(PlayerHooks):
         possible_cards: list[CardName],
     ) -> CardName:
         return possible_cards[0]
+
+    def skip_card_reception_in_hand(  # noqa: PLR6301
+        self,
+        _card_name: CardName,
+        _hand: list[CardName],
+    ) -> bool:
+        return False
 
 
 class Player:

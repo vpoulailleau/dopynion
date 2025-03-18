@@ -306,6 +306,36 @@ def test_gardens_score_40_cards(empty_player: Player) -> None:
     assert score["score"] == 8
 
 
+def test_library(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        nb_max_skip = 3
+
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def skip_card_reception_in_hand(
+            self,
+            _card_name: CardName,
+            _hand: list[CardName],
+        ) -> bool:
+            self.nb_cards += 1
+            return self.nb_cards <= self.nb_max_skip
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.deck.append_several(7, CardName.VILLAGE)
+    player.deck.append_several(50, CardName.COPPER)
+    player.hand.append(CardName.GOLD)
+    player.hand.append(CardName.LIBRARY)
+    player.start_turn()
+
+    player.action(CardName.LIBRARY)
+
+    assert len(player.hand) == 7
+    assert len(player.discard) == player.hooks.nb_max_skip
+
+
 @pytest.mark.parametrize(
     ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
     [

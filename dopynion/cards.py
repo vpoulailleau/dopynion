@@ -31,6 +31,7 @@ class CardName(StrEnum):  # Create with a metaclass
     GARDENS = "gardens"
     GOLD = "gold"
     LABORATORY = "laboratory"
+    LIBRARY = "library"
     MARKET = "market"
     PROVINCE = "province"
     SILVER = "silver"
@@ -138,7 +139,10 @@ class Cellar(Card):
     def _action(cls, player: Player) -> None:
         nb_discarded_cards = 0
         for card_name in player.hand.copy():
-            if player.hooks.confirm_discard_card_from_hand(card_name, player.hand):
+            if player.hooks.confirm_discard_card_from_hand(
+                card_name,
+                list(player.hand),
+            ):
                 player.hand.remove(card_name)
                 player.discard.append(card_name)
                 nb_discarded_cards += 1
@@ -168,7 +172,10 @@ class Chapel(Card):
     def _action(cls, player: Player) -> None:
         nb_discarded_cards = 0
         for card_name in player.hand.copy():
-            if player.hooks.confirm_discard_card_from_hand(card_name, player.hand):
+            if player.hooks.confirm_discard_card_from_hand(
+                card_name,
+                list(player.hand),
+            ):
                 player.hand.remove(card_name)
                 player.discard.append(card_name)
                 nb_discarded_cards += 1
@@ -270,6 +277,31 @@ class Laboratory(Card):
     is_action = True
     more_cards_from_deck = 2
     more_actions = 1
+
+
+class Library(Card):
+    name = "Bibliothèque"
+    cost = 5
+    is_action = True
+    max_hand_size: Final[int] = 7
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        skipped_cards = CardContainer()
+        while len(player.hand) < cls.max_hand_size and (
+            len(player.deck) + len(player.discard) > 0
+        ):
+            card_name = player.take_one_card_from_deck()
+            if not Card.types[card_name].is_action:
+                player.hand.append(card_name)
+            elif player.hooks.skip_card_reception_in_hand(
+                card_name,
+                list(player.hand),
+            ):
+                skipped_cards.append(card_name)
+            else:
+                player.hand.append(card_name)
+        skipped_cards.empty_to(player.discard)
 
 
 class Market(Card):
