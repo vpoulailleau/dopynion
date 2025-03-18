@@ -227,6 +227,51 @@ def test_chapel_discard_as_many_cards_as_possible_that_is_four(
     assert len(player.discard) == 4
 
 
+def test_feast_trash(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.FEAST)
+    player.start_turn()
+
+    player.action(CardName.FEAST)
+
+    assert len(player.played_cards) == 0
+
+
+def test_feast_trash_good_cardname(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(4, CardName.FEAST)
+    player.hand.append(CardName.FESTIVAL)
+    player.start_turn()
+    player.action(CardName.FESTIVAL)
+
+    player.action(CardName.FEAST)
+
+    assert len(player.played_cards) == 1
+    assert CardName.FESTIVAL in player.played_cards
+
+
+def test_feast_choose_a_card(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def choose_card_to_receive_in_discard(  # noqa: PLR6301
+            self,
+            possible_cards: list[CardName],
+        ) -> CardName:
+            return possible_cards[0]
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append_several(5, CardName.FEAST)
+    player.start_turn()
+
+    player.action(CardName.FEAST)
+
+    assert len(player.discard) == 1
+
+
 def test_council_room(game_with_two_players: tuple[Game, Player, Player]) -> None:
     _, player, enemy = game_with_two_players
     player.hand.clear()

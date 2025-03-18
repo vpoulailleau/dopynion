@@ -26,6 +26,7 @@ class CardName(StrEnum):  # Create with a metaclass
     CURSE = "curse"
     DUCHY = "duchy"
     ESTATE = "estate"
+    FEAST = "feast"
     FESTIVAL = "festival"
     GOLD = "gold"
     LABORATORY = "laboratory"
@@ -214,6 +215,29 @@ class Estate(Card):
     cost = 2
     is_kingdom = False
     victory_points = 1
+
+
+class Feast(Card):
+    name = "Festin"
+    cost = 4
+    is_action = True
+    max_new_card_cost: Final[int] = 5
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        player.played_cards.pop()
+        possible_cards = [
+            card_name
+            for card_name in player.game.stock
+            if player.game.stock.quantity(card_name)
+            and Card.types[card_name].cost <= cls.max_new_card_cost
+        ]
+        if possible_cards:
+            choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
+                possible_cards,
+            )
+            player.game.stock.remove(choosen_card_name)
+            player.discard.append(choosen_card_name)
 
 
 class Festival(Card):
