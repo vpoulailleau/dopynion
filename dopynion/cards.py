@@ -283,12 +283,12 @@ class Library(Card):
     name = "Bibliothèque"
     cost = 5
     is_action = True
-    max_hand_size: Final[int] = 7
+    target_hand_size: Final[int] = 7
 
     @classmethod
     def _action(cls, player: Player) -> None:
         skipped_cards = CardContainer()
-        while len(player.hand) < cls.max_hand_size and (
+        while len(player.hand) < cls.target_hand_size and (
             len(player.deck) + len(player.discard) > 0
         ):
             card_name = player.take_one_card_from_deck()
