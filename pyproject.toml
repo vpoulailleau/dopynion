@@ -58,7 +58,7 @@ dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8"]
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = "-vvv --cov=dopynion --cov-branch --cov-report=term --cov-report html"
-log_cli = true
+log_cli = false
 log_cli_level = "DEBUG"
 
 [tool.setuptools]
