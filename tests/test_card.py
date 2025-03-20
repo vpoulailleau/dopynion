@@ -385,6 +385,46 @@ def test_mine_trash_copper(empty_player: Player) -> None:
     assert player.hand[0] == CardName.SILVER
 
 
+def test_mine_trash_silver(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def trash_money_card_for_better_money_card(  # noqa: PLR6301
+            self,
+            _money_in_hand: list[CardName],
+        ) -> CardName | None:
+            return CardName.SILVER
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append(CardName.SILVER)
+    player.hand.append(CardName.MINE)
+    player.start_turn()
+
+    player.action(CardName.MINE)
+
+    assert len(player.hand) == 1
+    assert player.hand[0] == CardName.GOLD
+
+
+def test_mine_trash_gold(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def trash_money_card_for_better_money_card(  # noqa: PLR6301
+            self,
+            _money_in_hand: list[CardName],
+        ) -> CardName | None:
+            return CardName.GOLD
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append(CardName.GOLD)
+    player.hand.append(CardName.MINE)
+    player.start_turn()
+
+    player.action(CardName.MINE)
+
+    assert len(player.hand) == 1
+    assert player.hand[0] == CardName.GOLD
+
+
 # TODO trash don't exist
 # TODO check dans les hooks quand ils piochent dans une liste que l'élément choisi est
 # bien dans la liste

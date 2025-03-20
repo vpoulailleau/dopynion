@@ -347,9 +347,9 @@ class Mine(Card):
             possible_money_cards = [
                 card_name
                 for card_name in player.game.stock
-                if player.game.stock.quantity(card_name)
-                and (class_ := Card.types[card_name]).is_money
-                and class_.cost <= Card.types[trashed_card].money + 3
+                if (class_ := Card.types[card_name]).is_money
+                and class_.cost <= Card.types[trashed_card].cost + 3
+                and player.game.stock.quantity(card_name)
             ]
             if possible_money_cards:
                 best_money = max(
