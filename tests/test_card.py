@@ -338,6 +338,21 @@ def test_library(empty_player: Player) -> None:
     assert len(player.discard) == player.hooks.nb_max_skip
 
 
+def test_militia(game_with_two_players: tuple[Game, Player, Player]) -> None:
+    _, player, enemy = game_with_two_players
+    player.hand.clear()
+    player.hand.append_several(5, CardName.MILITIA)
+    enemy.hand.clear()
+    enemy.hand.append_several(5, CardName.MILITIA)
+
+    player.start_turn()
+
+    player.action(CardName.MILITIA)
+
+    assert len(player.hand) == 4
+    assert len(enemy.hand) == 3
+
+
 @dataclass
 class CardParameter:
     card_name: CardName

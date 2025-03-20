@@ -320,6 +320,16 @@ class Militia(Card):
     cost = 4
     is_action = True
     more_money = 2
+    enemy_hand_size_left: Final[int] = 3
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for other_player in player.other_players():
+            while len(other_player.hand) > cls.enemy_hand_size_left:
+                removed_card = other_player.hooks.discard_card_from_hand(
+                    list(other_player.hand),
+                )
+                other_player.hand.remove(removed_card)
 
 
 class Province(Card):
