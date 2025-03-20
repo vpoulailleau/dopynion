@@ -344,6 +344,19 @@ class Mine(Card):
         trashed_card = player.hooks.trash_money_card_for_better_money_card(money_cards)
         if trashed_card is not None:
             player.hand.remove(trashed_card)
+            possible_money_cards = [
+                card_name
+                for card_name in player.game.stock
+                if player.game.stock.quantity(card_name)
+                and (class_ := Card.types[card_name]).is_money
+                and class_.cost <= Card.types[trashed_card].money + 3
+            ]
+            if possible_money_cards:
+                best_money = max(
+                    possible_money_cards,
+                    key=lambda card_name: Card.types[card_name].money,
+                )
+                player.hand.append(best_money)
 
 
 class Province(Card):
