@@ -350,15 +350,39 @@ class CardParameter:
 @pytest.mark.parametrize(
     ("card_param"),
     [
-        CardParameter(CardName.CELLAR, 0, 1, more_money=0, more_cards=0),
-        CardParameter(CardName.CHANCELLOR, 0, 0, more_money=2, more_cards=0),
-        CardParameter(CardName.COUNCILROOM, 1, 0, more_money=0, more_cards=4),
-        CardParameter(CardName.FESTIVAL, 1, 2, more_money=2, more_cards=0),
-        CardParameter(CardName.LABORATORY, 0, 1, 0, more_cards=2),
-        CardParameter(CardName.MARKET, 1, 1, more_money=1, more_cards=1),
-        CardParameter(CardName.SMITHY, 0, 0, more_money=0, more_cards=3),
-        CardParameter(CardName.VILLAGE, 0, 2, more_money=0, more_cards=1),
-        CardParameter(CardName.WOODCUTTER, 1, 0, more_money=2, more_cards=0),
+        CardParameter(CardName.CELLAR, 0, more_actions=1, more_money=0, more_cards=0),
+        CardParameter(
+            CardName.CHANCELLOR,
+            0,
+            more_actions=0,
+            more_money=2,
+            more_cards=0,
+        ),
+        CardParameter(
+            CardName.COUNCILROOM,
+            1,
+            more_actions=0,
+            more_money=0,
+            more_cards=4,
+        ),
+        CardParameter(CardName.FESTIVAL, 1, more_actions=2, more_money=2, more_cards=0),
+        CardParameter(
+            CardName.LABORATORY,
+            0,
+            more_actions=1,
+            more_money=0,
+            more_cards=2,
+        ),
+        CardParameter(CardName.MARKET, 1, more_actions=1, more_money=1, more_cards=1),
+        CardParameter(CardName.SMITHY, 0, more_actions=0, more_money=0, more_cards=3),
+        CardParameter(CardName.VILLAGE, 0, more_actions=2, more_money=0, more_cards=1),
+        CardParameter(
+            CardName.WOODCUTTER,
+            1,
+            more_actions=0,
+            more_money=2,
+            more_cards=0,
+        ),
     ],
 )
 def test_basic_cards(
