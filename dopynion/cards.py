@@ -33,6 +33,7 @@ class CardName(StrEnum):  # Create with a metaclass
     LABORATORY = "laboratory"
     LIBRARY = "library"
     MARKET = "market"
+    MILITIA = "militia"
     PROVINCE = "province"
     SILVER = "silver"
     SMITHY = "smithy"
@@ -312,6 +313,13 @@ class Market(Card):
     more_purchases = 1
     more_actions = 1
     more_money = 1
+
+
+class Militia(Card):
+    name = "Milice"
+    cost = 4
+    is_action = True
+    more_money = 2
 
 
 class Province(Card):

@@ -393,6 +393,13 @@ class CardParameter:
             more_cards=1,
         ),
         CardParameter(
+            CardName.MILITIA,
+            more_purchase=0,
+            more_actions=0,
+            more_money=2,
+            more_cards=0,
+        ),
+        CardParameter(
             CardName.SMITHY,
             more_purchase=0,
             more_actions=0,
