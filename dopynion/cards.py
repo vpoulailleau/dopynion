@@ -34,6 +34,7 @@ class CardName(StrEnum):  # Create with a metaclass
     LIBRARY = "library"
     MARKET = "market"
     MILITIA = "militia"
+    MINE = "mine"
     PROVINCE = "province"
     SILVER = "silver"
     SMITHY = "smithy"
@@ -330,6 +331,19 @@ class Militia(Card):
                     list(other_player.hand),
                 )
                 other_player.hand.remove(removed_card)
+
+
+class Mine(Card):
+    name = "Mine"
+    cost = 5
+    is_action = True
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        money_cards = list(set(player.hand.money_cards))
+        trashed_card = player.hooks.trash_money_card_for_better_money_card(money_cards)
+        if trashed_card is not None:
+            player.hand.remove(trashed_card)
 
 
 class Province(Card):

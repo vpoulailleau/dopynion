@@ -353,6 +353,18 @@ def test_militia(game_with_two_players: tuple[Game, Player, Player]) -> None:
     assert len(enemy.hand) == 3
 
 
+def test_mine_don_t_trash(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append(CardName.COPPER)
+    player.hand.append(CardName.MINE)
+    player.start_turn()
+
+    player.action(CardName.MINE)
+
+    assert len(player.hand) == 1
+    assert player.hand[0] == CardName.COPPER
+
+
 @dataclass
 class CardParameter:
     card_name: CardName

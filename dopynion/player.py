@@ -62,6 +62,13 @@ class PlayerHooks(ABC):
     ) -> bool:
         pass
 
+    @abstractmethod
+    def trash_money_card_for_better_money_card(
+        self,
+        money_in_hand: list[CardName],
+    ) -> CardName | None:
+        pass
+
 
 class DefaultPlayerHooks(PlayerHooks):
     def confirm_discard_card_from_hand(  # noqa: PLR6301
@@ -92,6 +99,12 @@ class DefaultPlayerHooks(PlayerHooks):
         _hand: list[CardName],
     ) -> bool:
         return False
+
+    def trash_money_card_for_better_money_card(  # noqa: PLR6301
+        self,
+        _money_in_hand: list[CardName],
+    ) -> CardName | None:
+        return None
 
 
 class Player:
