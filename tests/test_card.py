@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import pytest
 
 from dopynion.cards import Card, CardContainer, CardName, Village
@@ -336,43 +338,48 @@ def test_library(empty_player: Player) -> None:
     assert len(player.discard) == player.hooks.nb_max_skip
 
 
+@dataclass
+class CardParameter:
+    card_name: CardName
+    more_purchase: int
+    more_actions: int
+    more_money: int
+    more_cards: int
+
+
 @pytest.mark.parametrize(
-    ("card_name", "more_purchase", "more_actions", "more_money", "more_cards"),
+    ("card_param"),
     [
-        (CardName.CELLAR, 0, 1, 0, 0),
-        (CardName.CHANCELLOR, 0, 0, 2, 0),
-        (CardName.COUNCILROOM, 1, 0, 0, 4),
-        (CardName.FESTIVAL, 1, 2, 2, 0),
-        (CardName.LABORATORY, 0, 1, 0, 2),
-        (CardName.MARKET, 1, 1, 1, 1),
-        (CardName.SMITHY, 0, 0, 0, 3),
-        (CardName.VILLAGE, 0, 2, 0, 1),
-        (CardName.WOODCUTTER, 1, 0, 2, 0),
+        CardParameter(CardName.CELLAR, 0, 1, 0, 0),
+        CardParameter(CardName.CHANCELLOR, 0, 0, 2, 0),
+        CardParameter(CardName.COUNCILROOM, 1, 0, 0, 4),
+        CardParameter(CardName.FESTIVAL, 1, 2, 2, 0),
+        CardParameter(CardName.LABORATORY, 0, 1, 0, 2),
+        CardParameter(CardName.MARKET, 1, 1, 1, 1),
+        CardParameter(CardName.SMITHY, 0, 0, 0, 3),
+        CardParameter(CardName.VILLAGE, 0, 2, 0, 1),
+        CardParameter(CardName.WOODCUTTER, 1, 0, 2, 0),
     ],
 )
-def test_basic_cards(  # noqa: PLR0913, PLR0917
+def test_basic_cards(
     player_with_action_card: Player,
-    card_name: CardName,
-    more_purchase: int,
-    more_actions: int,
-    more_money: int,
-    more_cards: int,
+    card_param: CardParameter,
 ) -> None:
     player = player_with_action_card
-    player.hand.append(card_name)
+    player.hand.append(card_param.card_name)
     player.start_turn()
     old_purchases_left = player.purchases_left
     old_actions_left = player.actions_left
     old_money = player.money
     old_nb_cards = len(player.hand)
 
-    player.action(card_name)
+    player.action(card_param.card_name)
 
-    assert Card.types[card_name].is_action
-    assert player.purchases_left == old_purchases_left + more_purchase
-    assert player.actions_left == (old_actions_left - 1) + more_actions
-    assert player.money == old_money + more_money
-    assert len(player.hand) == (old_nb_cards - 1) + more_cards
+    assert Card.types[card_param.card_name].is_action
+    assert player.purchases_left == old_purchases_left + card_param.more_purchase
+    assert player.actions_left == (old_actions_left - 1) + card_param.more_actions
+    assert player.money == old_money + card_param.more_money
+    assert len(player.hand) == (old_nb_cards - 1) + card_param.more_cards
 
 
 def test_card_coverage(player: Player) -> None:
