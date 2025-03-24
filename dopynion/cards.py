@@ -41,6 +41,7 @@ class CardName(StrEnum):  # Create with a metaclass
     SILVER = "silver"
     SMITHY = "smithy"
     VILLAGE = "village"
+    WITCH = "witch"
     WOODCUTTER = "woodcutter"
 
     def __repr__(self) -> str:
@@ -433,6 +434,13 @@ class Village(Card):
     is_action = True
     more_cards_from_deck = 1
     more_actions = 2
+
+
+class Witch(Card):
+    name = "Sorcière"
+    cost = 5
+    is_action = True
+    more_cards_from_deck = 2
 
 
 class Woodcutter(Card):
