@@ -37,6 +37,7 @@ class CardName(StrEnum):  # Create with a metaclass
     MINE = "mine"
     MONEYLENDER = "moneylender"
     PROVINCE = "province"
+    REMODEL = "remodel"
     SILVER = "silver"
     SMITHY = "smithy"
     VILLAGE = "village"
@@ -383,6 +384,32 @@ class Province(Card):
     cost = 8
     is_kingdom = False
     victory_points = 6
+
+
+class Remodel(Card):
+    name = "Rénovation"
+    cost = 4
+    is_action = True
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        if not player.hand:
+            return
+        thrashed_card = player.hooks.discard_card_from_hand(list(player.hand))
+        player.hand.remove(thrashed_card)
+        possible_cards = [
+            card_name
+            for card_name in player.game.stock
+            if player.game.stock.quantity(card_name)
+            and Card.types[card_name].cost <= Card.types[thrashed_card].cost + 2
+        ]
+        print(possible_cards)
+        if possible_cards:
+            choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
+                possible_cards,
+            )
+            player.game.stock.remove(choosen_card_name)
+            player.discard.append(choosen_card_name)
 
 
 class Silver(Card):

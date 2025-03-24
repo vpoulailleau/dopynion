@@ -470,6 +470,43 @@ def test_money_lender_accept(empty_player: Player) -> None:
     assert len(player.hand) == 4 - 1 + 3
 
 
+def test_remodel(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def discard_card_from_hand(  # noqa: PLR6301
+            self,
+            _hand: list[CardName],
+        ) -> CardName:
+            return CardName.COPPER
+
+        def choose_card_to_receive_in_discard(  # noqa: PLR6301
+            self,
+            possible_cards: list[CardName],
+        ) -> CardName:
+            for card_name in possible_cards:
+                assert (
+                    Card.types[card_name].cost <= Card.types[CardName.COPPER].cost + 2
+                )
+            return possible_cards[0]
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append_several(1, CardName.COPPER)
+    player.hand.append_several(3, CardName.SILVER)
+    player.hand.append_several(1, CardName.REMODEL)
+    player.start_turn()
+
+    player.action(CardName.REMODEL)
+
+    assert len(player.deck) == 0
+    assert len(player.played_cards) == 1
+    assert len(player.hand) == 3
+    assert len(player.discard) == 1
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
