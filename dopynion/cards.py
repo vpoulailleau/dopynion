@@ -442,6 +442,13 @@ class Witch(Card):
     is_action = True
     more_cards_from_deck = 2
 
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for other_player in player.other_players():
+            if player.game.stock.curse_qty:
+                other_player.discard.append(CardName.CURSE)
+                player.game.stock.remove(CardName.CURSE)
+
 
 class Woodcutter(Card):
     name = "Bucheron"

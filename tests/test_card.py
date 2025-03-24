@@ -507,6 +507,22 @@ def test_remodel(empty_player: Player) -> None:
     assert len(player.discard) == 1
 
 
+def test_witch(game_with_two_players: tuple[Game, Player, Player]) -> None:
+    _, player, enemy = game_with_two_players
+    player.hand.clear()
+    player.hand.append_several(5, CardName.WITCH)
+    enemy.hand.clear()
+    enemy.hand.append_several(5, CardName.WITCH)
+
+    player.start_turn()
+
+    player.action(CardName.WITCH)
+
+    assert len(player.hand) == 4 + Card.types[CardName.WITCH].more_cards_from_deck
+    assert len(enemy.hand) == 5
+    assert CardName.CURSE in enemy.discard
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
