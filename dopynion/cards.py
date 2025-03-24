@@ -43,6 +43,7 @@ class CardName(StrEnum):  # Create with a metaclass
     VILLAGE = "village"
     WITCH = "witch"
     WOODCUTTER = "woodcutter"
+    WORKSHOP = "workshop"
 
     def __repr__(self) -> str:
         return self.value.title()
@@ -404,7 +405,6 @@ class Remodel(Card):
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost <= Card.types[thrashed_card].cost + 2
         ]
-        print(possible_cards)
         if possible_cards:
             choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
                 possible_cards,
@@ -456,6 +456,29 @@ class Woodcutter(Card):
     is_action = True
     more_purchases = 1
     more_money = 2
+
+
+class Workshop(Card):
+    name = "Atelier"
+    cost = 3
+    is_action = True
+    max_cost_of_received_card: Final[int] = 4
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        possible_cards = [
+            card_name
+            for card_name in player.game.stock
+            if player.game.stock.quantity(card_name)
+            and Card.types[card_name].cost <= cls.max_cost_of_received_card
+        ]
+        print(possible_cards)
+        if possible_cards:
+            choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
+                possible_cards,
+            )
+            player.game.stock.remove(choosen_card_name)
+            player.discard.append(choosen_card_name)
 
 
 actions_card_name: set[CardName] = {

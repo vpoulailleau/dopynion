@@ -523,6 +523,32 @@ def test_witch(game_with_two_players: tuple[Game, Player, Player]) -> None:
     assert CardName.CURSE in enemy.discard
 
 
+def test_workshop(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def choose_card_to_receive_in_discard(  # noqa: PLR6301
+            self,
+            possible_cards: list[CardName],
+        ) -> CardName:
+            for card_name in possible_cards:
+                assert Card.types[card_name].cost <= 4
+            return possible_cards[0]
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append_several(5, CardName.WORKSHOP)
+
+    player.start_turn()
+
+    player.action(CardName.WORKSHOP)
+
+    assert len(player.discard) == 1
+    assert len(player.hand) == 4
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
