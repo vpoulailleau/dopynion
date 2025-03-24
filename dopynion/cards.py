@@ -35,6 +35,7 @@ class CardName(StrEnum):  # Create with a metaclass
     MARKET = "market"
     MILITIA = "militia"
     MINE = "mine"
+    MONEYLENDER = "moneylender"
     PROVINCE = "province"
     SILVER = "silver"
     SMITHY = "smithy"
@@ -357,6 +358,12 @@ class Mine(Card):
                     key=lambda card_name: Card.types[card_name].money,
                 )
                 player.hand.append(best_money)
+
+
+class MoneyLender(Card):
+    name = "Prêteur sur gages"
+    cost = 4
+    is_action = True
 
 
 class Province(Card):

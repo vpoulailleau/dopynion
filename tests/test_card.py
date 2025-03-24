@@ -430,6 +430,18 @@ def test_mine_trash_gold(empty_player: Player) -> None:
 # bien dans la liste
 
 
+def test_money_lender_refuse(empty_player: Player) -> bool:
+    player = empty_player
+    player.hand.append_several(2, CardName.COPPER)
+    player.hand.append_several(3, CardName.MONEYLENDER)
+    player.start_turn()
+
+    player.action(CardName.MONEYLENDER)
+
+    assert len(player.hand) == 4
+    assert player.hand.copper_qty == 2
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
