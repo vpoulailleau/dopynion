@@ -365,6 +365,18 @@ class MoneyLender(Card):
     cost = 4
     is_action = True
 
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        if player.hand.copper_qty >= 1 and player.hooks.confirm_discard_card_from_hand(
+            CardName.COPPER,
+            list(player.hand),
+        ):
+            player.hand.remove(CardName.COPPER)
+            for _ in range(3):
+                if player.game.stock.copper_qty:
+                    player.game.stock.remove(CardName.COPPER)
+                    player.hand.append(CardName.COPPER)
+
 
 class Province(Card):
     name = "Province"

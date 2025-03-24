@@ -430,7 +430,7 @@ def test_mine_trash_gold(empty_player: Player) -> None:
 # bien dans la liste
 
 
-def test_money_lender_refuse(empty_player: Player) -> bool:
+def test_money_lender_refuse(empty_player: Player) -> None:
     player = empty_player
     player.hand.append_several(2, CardName.COPPER)
     player.hand.append_several(3, CardName.MONEYLENDER)
@@ -440,6 +440,34 @@ def test_money_lender_refuse(empty_player: Player) -> bool:
 
     assert len(player.hand) == 4
     assert player.hand.copper_qty == 2
+
+
+def test_money_lender_accept(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def confirm_discard_card_from_hand(  # noqa: PLR6301
+            self,
+            card_name: CardName,
+            hand: CardContainer,
+        ) -> bool:
+            return True
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append_several(2, CardName.COPPER)
+    player.hand.append_several(3, CardName.MONEYLENDER)
+    player.start_turn()
+
+    player.action(CardName.MONEYLENDER)
+
+    assert len(player.deck) == 0
+    assert len(player.discard) == 0
+    assert len(player.played_cards) == 1
+    assert player.hand.copper_qty == 1 + 3
+    assert len(player.hand) == 4 - 1 + 3
 
 
 @dataclass
