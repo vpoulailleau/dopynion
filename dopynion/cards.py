@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+# TODO ajout robustesse sur action invalide
 class CardName(StrEnum):  # Create with a metaclass
     ADVENTURER = "adventurer"
     BUREAUCRAT = "bureaucrat"
@@ -628,4 +629,10 @@ class CardContainer:
 
     @property
     def state(self) -> Cards:
-        return Cards(quantities=self._quantities.copy())
+        return Cards(
+            quantities={
+                card_name: quantity
+                for card_name, quantity in self._quantities.items()
+                if quantity > 0
+            },
+        )

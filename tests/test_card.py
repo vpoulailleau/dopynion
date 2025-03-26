@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import pytest
 
 from dopynion.cards import Card, CardContainer, CardName, Village
+from dopynion.data_model import Cards
 from dopynion.game import Game
 from dopynion.player import DefaultPlayerHooks, Player
 
@@ -664,3 +665,11 @@ def test_basic_cards(
 def test_card_coverage(player: Player) -> None:
     card = Village()
     print(card, card == Village, hash(card), player.hand)
+
+
+def test_cards_quantities() -> None:
+    cards = CardContainer()
+    cards.append(CardName.VILLAGE)
+    cards.append(CardName.DUCHY)
+    cards.remove(CardName.VILLAGE)
+    assert cards.state == Cards(quantities={CardName.DUCHY: 1})
