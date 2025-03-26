@@ -20,6 +20,8 @@ if TYPE_CHECKING:
 
     import dopynion.game
 
+logger = logging.getLogger(__name__)
+
 
 class State(Enum):
     ACTION = 1
@@ -141,16 +143,16 @@ class Player:
         if not self.hand.contains_action() or not self.actions_left:
             self.actions_left = 0
             self.state_machine = State.BUY
-            logging.debug("go from action to buy")
+            logger.debug("go from action to buy")
 
     def _check_for_buy_to_adjust_transition(self) -> None:
         if not self.purchases_left:
             self.purchases_left = 0
             self.state_machine = State.ADJUST
-            logging.debug("go from buy to adjust")
+            logger.debug("go from buy to adjust")
 
     def start_turn(self) -> None:
-        logging.debug("start turn (%s, %d)", self.name, id(self))
+        logger.debug("start turn (%s, %d)", self.name, id(self))
         self.game.record.start_turn()
         self.playing = True
         self.state_machine = State.ACTION
@@ -163,7 +165,7 @@ class Player:
         self.game.record.add_action("END OF TURN", self)
         self._adjust()
         self.playing = False
-        logging.debug("end turn")
+        logger.debug("end turn")
 
     def take_one_card_from_deck(self) -> CardName:
         if not self.deck:
@@ -190,7 +192,7 @@ class Player:
             self.played_cards.append(money_card)
 
     def buy(self, card_name: CardName) -> None:
-        logging.debug("> BUY %s", card_name)
+        logger.debug("> BUY %s", card_name)
         self.game.record.add_action(f"BUY {card_name}", self)
         quantity = getattr(self.game.stock, card_name + "_qty")
         if not quantity:
@@ -206,15 +208,15 @@ class Player:
         self._check_for_buy_to_adjust_transition()
 
     def action(self, card_name: CardName) -> None:
-        logging.debug("> ACTION %s", card_name)
+        logger.debug("> ACTION %s", card_name)
         self.game.record.add_action(f"ACTION {card_name}", self)
         if self.state_machine != State.ACTION:
-            logging.debug("actions_left %d", self.actions_left)
-            logging.debug(self.state_machine.name)
-            logging.debug(self.state)
+            logger.debug("actions_left %d", self.actions_left)
+            logger.debug(self.state_machine.name)
+            logger.debug(self.state)
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
-            logging.debug(self.state)
+            logger.debug(self.state)
             raise InvalidActionError(card_name)
         self.actions_left -= 1
         self.hand.remove(card_name)

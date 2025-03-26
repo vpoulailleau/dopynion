@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 
     from dopynion.player import Player
 
+logger = logging.getLogger(__name__)
+
 
 class CardName(StrEnum):  # Create with a metaclass
     ADVENTURER = "adventurer"
@@ -474,7 +476,7 @@ class Workshop(Card):
             and Card.types[card_name].cost <= cls.max_cost_of_received_card
         ]
         possible_cards = list(set(possible_cards))
-        logging.debug(possible_cards)
+        logger.debug(possible_cards)
         if possible_cards:
             choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
                 possible_cards,
