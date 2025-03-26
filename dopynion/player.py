@@ -167,17 +167,21 @@ class Player:
         self.playing = False
         logger.debug("end turn")
 
-    def take_one_card_from_deck(self) -> CardName:
+    def take_one_card_from_deck(self) -> CardName | None:
         if not self.deck:
             self.discard.empty_to(self.deck)
             self.deck.shuffle()
+        if not self.deck:
+            return None
         return self.deck.pop(0)
 
     def _adjust(self) -> None:
         self.played_cards.empty_to(self.discard)
         self.hand.empty_to(self.discard)
         for _ in range(5):
-            self.hand.append(self.take_one_card_from_deck())
+            card_name = self.take_one_card_from_deck()
+            if card_name is not None:
+                self.hand.append(card_name)
         self.state_machine = State.ADJUST
 
     def _prepare_money(self, money: int) -> None:

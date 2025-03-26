@@ -91,7 +91,9 @@ class Card(metaclass=ClassNameRepr):
     @classmethod
     def action(cls, player: Player) -> None:
         for _ in range(cls.more_cards_from_deck):
-            player.hand.append(player.take_one_card_from_deck())
+            card_name = player.take_one_card_from_deck()
+            if card_name is not None:
+                player.hand.append(card_name)
         player.purchases_left += cls.more_purchases
         player.actions_left += cls.more_actions
         player.money += cls.more_money
@@ -114,6 +116,8 @@ class Adventurer(Card):
         nb_kept_cards = 0
         while nb_kept_cards < cls.nb_treasure_cards:
             card_name = player.take_one_card_from_deck()
+            if card_name is None:
+                break
             if Card.types[card_name].is_money:
                 nb_kept_cards += 1
                 player.hand.append(card_name)
@@ -157,7 +161,9 @@ class Cellar(Card):
                 player.discard.append(card_name)
                 nb_discarded_cards += 1
         for _ in range(nb_discarded_cards):
-            player.hand.append(player.take_one_card_from_deck())
+            card_name = player.take_one_card_from_deck()
+            if card_name is not None:
+                player.hand.append(card_name)
 
 
 class Chancellor(Card):
@@ -211,7 +217,9 @@ class CouncilRoom(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         for other_player in player.other_players():
-            other_player.hand.append(other_player.take_one_card_from_deck())
+            card_name = other_player.take_one_card_from_deck()
+            if card_name is not None:
+                other_player.hand.append(card_name)
 
 
 class Curse(Card):
@@ -298,10 +306,10 @@ class Library(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         skipped_cards = CardContainer()
-        while len(player.hand) < cls.target_hand_size and (
-            len(player.deck) + len(player.discard) > 0
-        ):
+        while len(player.hand) < cls.target_hand_size:
             card_name = player.take_one_card_from_deck()
+            if card_name is None:
+                break
             if not Card.types[card_name].is_action:
                 player.hand.append(card_name)
             elif player.hooks.skip_card_reception_in_hand(
