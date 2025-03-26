@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+import logging
 import random
 import sys
 from collections import defaultdict
@@ -472,7 +473,8 @@ class Workshop(Card):
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost <= cls.max_cost_of_received_card
         ]
-        print(possible_cards)
+        possible_cards = list(set(possible_cards))
+        logging.debug(possible_cards)
         if possible_cards:
             choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
                 possible_cards,
