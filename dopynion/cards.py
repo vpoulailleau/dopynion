@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, ClassVar, Final
 from dopynion.data_model import Cards
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterator
 
     from dopynion.player import Player
 
@@ -527,6 +527,18 @@ class CardContainer:
             ret.append(card_name)
         return ret
 
+    def __contains__(self, card_name: CardName) -> bool:
+        return self._quantities.get(card_name, 0) > 0
+
+    def __len__(self) -> int:
+        return len(self._cards)
+
+    def __getitem__(self, index: int) -> CardName:
+        return self._cards[index]
+
+    def __iter__(self) -> Iterator[CardName]:
+        return iter(self._cards)
+
     def clear(self) -> None:
         self._quantities.clear()
         self._cards.clear()
@@ -607,15 +619,6 @@ class CardContainer:
         card_name = self._cards.pop(index)
         self._quantities[card_name] -= 1
         return card_name
-
-    def __contains__(self, card_name: CardName) -> bool:
-        return self._quantities.get(card_name, 0) > 0
-
-    def __len__(self) -> int:
-        return len(self._cards)
-
-    def __getitem__(self, index: int) -> CardName:
-        return self._cards[index]
 
     def quantity(self, card_name: CardName) -> int:
         return self._quantities.get(card_name, 0)
