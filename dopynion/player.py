@@ -111,7 +111,7 @@ class DefaultPlayerHooks(PlayerHooks):
 
 class Player:
     def __init__(self, name: str) -> None:
-        self.game: dopynion.game.Game = None
+        self.game: dopynion.game.Game = None  # type: ignore[assignment]
         self.name = name
         self.deck = CardContainer()
         self.deck.append_several(7, CardName.COPPER)
