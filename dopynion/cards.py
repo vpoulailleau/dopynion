@@ -495,7 +495,7 @@ class Workshop(Card):
 
 
 actions_card_name: set[CardName] = {
-    name.lower()
+    CardName[name.upper()]
     for name, class_ in inspect.getmembers(sys.modules[__name__], inspect.isclass)
     if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_action
 }
