@@ -118,7 +118,7 @@ def test_cellar(empty_player: Player) -> None:
         def confirm_discard_card_from_hand(
             self,
             card_name: CardName,
-            hand: CardContainer,
+            hand: list[CardName],
         ) -> bool:
             self.nb_cards += 1
             return self.nb_cards < 3
@@ -184,7 +184,7 @@ def test_chapel_discard_two_cards(empty_player: Player) -> None:
         def confirm_discard_card_from_hand(
             self,
             card_name: CardName,
-            hand: CardContainer,
+            hand: list[CardName],
         ) -> bool:
             self.nb_cards += 1
             return self.nb_cards < 3
@@ -213,7 +213,7 @@ def test_chapel_discard_as_many_cards_as_possible_that_is_four(
         def confirm_discard_card_from_hand(  # noqa: PLR6301
             self,
             card_name: CardName,
-            hand: CardContainer,
+            hand: list[CardName],
         ) -> bool:
             return True
 
@@ -452,7 +452,7 @@ def test_money_lender_accept(empty_player: Player) -> None:
         def confirm_discard_card_from_hand(  # noqa: PLR6301
             self,
             card_name: CardName,
-            hand: CardContainer,
+            hand: list[CardName],
         ) -> bool:
             return True
 
