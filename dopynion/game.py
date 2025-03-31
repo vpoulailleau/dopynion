@@ -56,7 +56,7 @@ class Game:
         elif len(self.players) == 4:  # noqa: PLR2004
             self.curse_qty = 30
         possible_kingdoms: list[CardName] = [
-            name.lower()
+            CardName[name.upper()]
             for name, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)
             if issubclass(class_, Card)
             and class_.name != "Unknown"
