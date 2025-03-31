@@ -53,7 +53,7 @@ indent-style = "space"
 docstring-code-format = true
 
 [tool.uv]
-dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8"]
+dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8", "mypy"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
@@ -63,3 +63,6 @@ log_cli_level = "DEBUG"
 
 [tool.setuptools]
 packages = ["dopynion"]
+
+[tool.mypy]
+plugins = ['pydantic.mypy']
