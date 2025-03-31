@@ -28,7 +28,7 @@ def test_unknown_action(player_with_action_card: Player) -> None:
     player = player_with_action_card
     player.start_turn()
     with pytest.raises(InvalidActionError):
-        player.action("FooBar")
+        player.action("FooBar")  # type: ignore[arg-type]
 
 
 def test_invalid_action(player: Player) -> None:
