@@ -80,7 +80,7 @@ class Card(metaclass=ClassNameRepr):
         Card.types[cls.card_name()] = cls
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(self, other) or self.__class__ is other
+        return isinstance(self, type(other)) or self.__class__ is other
 
     def __hash__(self) -> int:
         return hash(self.name)
