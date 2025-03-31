@@ -161,9 +161,9 @@ class Cellar(Card):
                 player.discard.append(card_name)
                 nb_discarded_cards += 1
         for _ in range(nb_discarded_cards):
-            card_name = player.take_one_card_from_deck()
-            if card_name is not None:
-                player.hand.append(card_name)
+            discarded_card_name = player.take_one_card_from_deck()
+            if discarded_card_name is not None:
+                player.hand.append(discarded_card_name)
 
 
 class Chancellor(Card):
