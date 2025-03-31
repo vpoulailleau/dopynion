@@ -43,7 +43,7 @@ def play(player: Player, strategy: "Strategy") -> None:  # noqa: F821
         action = strategy.play(game.state)
         print(strategy.my_data)
         print(action)
-        card_name = action.split()[-1]
+        card_name = CardName[action.split()[-1].upper()]
         if action.startswith("ACTION"):
             player.action(card_name)
         elif action.startswith("BUY"):
