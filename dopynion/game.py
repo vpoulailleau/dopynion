@@ -39,7 +39,7 @@ class Game:
         if len(self.players) < MAX_NB_PLAYERS:
             self.players.append(player)
             player.game = self
-            self.copper_qty -= 7
+            self.copper_qty -= 7  # type: ignore[attr-defined]
         else:
             msg = f"At most {MAX_NB_PLAYERS} players"
             raise InvalidCommandError(msg)
