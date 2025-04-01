@@ -85,7 +85,7 @@ class Game:
         )
 
     def score(self) -> dict:
-        ret = {player.name: player.score() for player in self.players}
+        ret: dict = {player.name: player.score() for player in self.players}
         leaderboard = [
             (player.name, ret[player.name]["score"])
             for player in reversed(self.players)
