@@ -1,6 +1,6 @@
 [project]
 name = "dopynion"
-version = "0.2.2"
+version = "0.2.3"
 description = "Dopynion"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -63,6 +63,9 @@ log_cli_level = "DEBUG"
 
 [tool.setuptools]
 packages = ["dopynion"]
+
+[tool.setuptools.package-data]
+"dopynion" = ["py.typed"]
 
 [tool.mypy]
 plugins = ['pydantic.mypy']
