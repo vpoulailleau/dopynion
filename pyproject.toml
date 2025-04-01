@@ -12,6 +12,15 @@ omit = ["dopynion/__main__.py"]
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]
 
+[tool.mypy]
+plugins = ['pydantic.mypy']
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-vvv --cov=dopynion --cov-branch --cov-report=term --cov-report html"
+log_cli = false
+log_cli_level = "DEBUG"
+
 [tool.ruff]
 target-version = "py310"
 output-format = "concise"
@@ -52,20 +61,11 @@ quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
 
-[tool.uv]
-dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8", "mypy"]
-
-[tool.pytest.ini_options]
-minversion = "8.0"
-addopts = "-vvv --cov=dopynion --cov-branch --cov-report=term --cov-report html"
-log_cli = false
-log_cli_level = "DEBUG"
-
 [tool.setuptools]
 packages = ["dopynion"]
 
 [tool.setuptools.package-data]
 "dopynion" = ["py.typed"]
 
-[tool.mypy]
-plugins = ['pydantic.mypy']
+[tool.uv]
+dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8", "mypy"]
