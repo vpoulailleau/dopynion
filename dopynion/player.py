@@ -6,7 +6,7 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from dopynion.cards import Card, CardContainer, CardName
-from dopynion.data_model import CardNameAndHand
+from dopynion.data_model import CardList, CardNameAndHand
 from dopynion.data_model import Player as PlayerData
 from dopynion.exceptions import (
     ActionDuringBuyError,
@@ -41,7 +41,7 @@ class PlayerHooks(ABC):
     @abstractmethod
     def discard_card_from_hand(
         self,
-        hand: list[CardName],
+        hand: CardList,
     ) -> CardName:
         pass
 
@@ -52,7 +52,7 @@ class PlayerHooks(ABC):
     @abstractmethod
     def choose_card_to_receive_in_discard(
         self,
-        possible_cards: list[CardName],
+        possible_cards: CardList,
     ) -> CardName:
         pass
 
@@ -60,14 +60,14 @@ class PlayerHooks(ABC):
     def skip_card_reception_in_hand(
         self,
         card_name: CardName,
-        hand: list[CardName],
+        hand: CardList,
     ) -> bool:
         pass
 
     @abstractmethod
     def trash_money_card_for_better_money_card(
         self,
-        money_in_hand: list[CardName],
+        money_in_hand: CardList,
     ) -> CardName | None:
         pass
 
@@ -81,7 +81,7 @@ class DefaultPlayerHooks(PlayerHooks):
 
     def discard_card_from_hand(  # noqa: PLR6301
         self,
-        hand: list[CardName],
+        hand: CardList,
     ) -> CardName:
         return hand[0]
 
@@ -90,20 +90,20 @@ class DefaultPlayerHooks(PlayerHooks):
 
     def choose_card_to_receive_in_discard(  # noqa: PLR6301
         self,
-        possible_cards: list[CardName],
+        possible_cards: CardList,
     ) -> CardName:
         return possible_cards[0]
 
     def skip_card_reception_in_hand(  # noqa: PLR6301
         self,
         _card_name: CardName,
-        _hand: list[CardName],
+        _hand: CardList,
     ) -> bool:
         return False
 
     def trash_money_card_for_better_money_card(  # noqa: PLR6301
         self,
-        _money_in_hand: list[CardName],
+        _money_in_hand: CardList,
     ) -> CardName | None:
         return None
 

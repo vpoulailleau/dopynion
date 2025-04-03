@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pytest
 
 from dopynion.cards import Card, CardContainer, CardName, Village
-from dopynion.data_model import CardNameAndHand, Cards
+from dopynion.data_model import CardList, CardNameAndHand, Cards
 from dopynion.game import Game
 from dopynion.player import DefaultPlayerHooks, Player
 
@@ -258,7 +258,7 @@ def test_feast_choose_a_card(empty_player: Player) -> None:
 
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
-            possible_cards: list[CardName],
+            possible_cards: CardList,
         ) -> CardName:
             return possible_cards[0]
 
@@ -367,7 +367,7 @@ def test_mine_trash_copper(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
-            _money_in_hand: list[CardName],
+            _money_in_hand: CardList,
         ) -> CardName | None:
             return CardName.COPPER
 
@@ -387,7 +387,7 @@ def test_mine_trash_silver(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
-            _money_in_hand: list[CardName],
+            _money_in_hand: CardList,
         ) -> CardName | None:
             return CardName.SILVER
 
@@ -407,7 +407,7 @@ def test_mine_trash_gold(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
-            _money_in_hand: list[CardName],
+            _money_in_hand: CardList,
         ) -> CardName | None:
             return CardName.GOLD
 
@@ -475,13 +475,13 @@ def test_remodel(empty_player: Player) -> None:
 
         def discard_card_from_hand(  # noqa: PLR6301
             self,
-            _hand: list[CardName],
+            _hand: CardList,
         ) -> CardName:
             return CardName.COPPER
 
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
-            possible_cards: list[CardName],
+            possible_cards: CardList,
         ) -> CardName:
             for card_name in possible_cards:
                 assert (
@@ -528,7 +528,7 @@ def test_workshop(empty_player: Player) -> None:
 
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
-            possible_cards: list[CardName],
+            possible_cards: CardList,
         ) -> CardName:
             for card_name in possible_cards:
                 assert Card.types[card_name].cost <= 4
