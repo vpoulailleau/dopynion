@@ -267,7 +267,7 @@ def test_feast_choose_a_card(empty_player: Player) -> None:
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
             possible_cards: CardList,
-        ) -> CardName:
+        ) -> CardNameDataModel:
             return possible_cards[0]
 
     player = empty_player
@@ -376,7 +376,7 @@ def test_mine_trash_copper(empty_player: Player) -> None:
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
             _money_in_hand: CardList,
-        ) -> CardName | None:
+        ) -> CardNameDataModel | None:
             return CardName.COPPER
 
     player = empty_player
@@ -396,7 +396,7 @@ def test_mine_trash_silver(empty_player: Player) -> None:
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
             _money_in_hand: CardList,
-        ) -> CardName | None:
+        ) -> CardNameDataModel | None:
             return CardName.SILVER
 
     player = empty_player
@@ -416,7 +416,7 @@ def test_mine_trash_gold(empty_player: Player) -> None:
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
             _money_in_hand: CardList,
-        ) -> CardName | None:
+        ) -> CardNameDataModel | None:
             return CardName.GOLD
 
     player = empty_player
@@ -490,7 +490,7 @@ def test_remodel(empty_player: Player) -> None:
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
             possible_cards: CardList,
-        ) -> CardName:
+        ) -> CardNameDataModel:
             for card_name in possible_cards:
                 assert (
                     Card.types[card_name].cost <= Card.types[CardName.COPPER].cost + 2
@@ -537,7 +537,7 @@ def test_workshop(empty_player: Player) -> None:
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
             possible_cards: CardList,
-        ) -> CardName:
+        ) -> CardNameDataModel:
             for card_name in possible_cards:
                 assert Card.types[card_name].cost <= 4
             return possible_cards[0]

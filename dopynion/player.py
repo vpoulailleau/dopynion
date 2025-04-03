@@ -60,7 +60,7 @@ class PlayerHooks(ABC):
     def choose_card_to_receive_in_discard(
         self,
         possible_cards: CardList,
-    ) -> CardName:
+    ) -> CardNameDataModel:
         pass
 
     @abstractmethod
@@ -75,7 +75,7 @@ class PlayerHooks(ABC):
     def trash_money_card_for_better_money_card(
         self,
         money_in_hand: CardList,
-    ) -> CardName | None:
+    ) -> CardNameDataModel | None:
         pass
 
 
@@ -98,7 +98,7 @@ class DefaultPlayerHooks(PlayerHooks):
     def choose_card_to_receive_in_discard(  # noqa: PLR6301
         self,
         possible_cards: CardList,
-    ) -> CardName:
+    ) -> CardNameDataModel:
         return possible_cards[0]
 
     def skip_card_reception_in_hand(  # noqa: PLR6301
@@ -111,7 +111,7 @@ class DefaultPlayerHooks(PlayerHooks):
     def trash_money_card_for_better_money_card(  # noqa: PLR6301
         self,
         _money_in_hand: CardList,
-    ) -> CardName | None:
+    ) -> CardNameDataModel | None:
         return None
 
 
