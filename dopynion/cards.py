@@ -425,22 +425,32 @@ class Remodel(Card):
     def _action(cls, player: Player) -> None:
         if not player.hand:
             return
-        thrashed_card = player.hooks.discard_card_from_hand(
+        trashed_card = player.hooks.discard_card_from_hand(
             Hand(hand=list(player.hand)),
         )
-        player.hand.remove(thrashed_card)
-        possible_cards = [
-            card_name
-            for card_name in player.game.stock
-            if player.game.stock.quantity(card_name)
-            and Card.types[card_name].cost <= Card.types[thrashed_card].cost + 2
-        ]
+        try:
+            trashed_card_name = CardName[trashed_card.upper()]
+            player.hand.remove(trashed_card_name)
+            possible_cards: list[str] = [
+                card_name
+                for card_name in player.game.stock
+                if player.game.stock.quantity(card_name)
+                and Card.types[card_name].cost <= Card.types[trashed_card_name].cost + 2
+            ]
+        except Exception as e:
+            raise HookError(player) from e
         if possible_cards:
-            choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
+            choosen_card = player.hooks.choose_card_to_receive_in_discard(
+                # TODO partout où il y a des possible_cards, vérifier que la réponse est
+                # dans la liste
                 PossibleCards(possible_cards=possible_cards),
             )
-            player.game.stock.remove(choosen_card_name)
-            player.discard.append(choosen_card_name)
+            try:
+                choosen_card_name = CardName[choosen_card.upper()]
+                player.game.stock.remove(choosen_card_name)
+                player.discard.append(choosen_card_name)
+            except Exception as e:
+                raise HookError(player) from e
 
 
 class Silver(Card):
