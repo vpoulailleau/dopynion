@@ -348,7 +348,10 @@ class Militia(Card):
                 removed_card = other_player.hooks.discard_card_from_hand(
                     Hand(hand=list(other_player.hand)),
                 )
-                other_player.hand.remove(removed_card)
+                try:
+                    other_player.hand.remove(CardName[removed_card.upper()])
+                except Exception as e:
+                    raise HookError(player=other_player) from e
 
 
 class Mine(Card):
