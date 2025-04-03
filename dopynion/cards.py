@@ -264,11 +264,11 @@ class Feast(Card):
             and Card.types[card_name].cost <= cls.max_new_card_cost
         ]
         if possible_cards:
-            choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
+            chosen_card_name = player.hooks.choose_card_to_receive_in_discard(
                 PossibleCards(possible_cards=possible_cards),
             )
             try:
-                card_name = CardName[choosen_card_name.upper()]
+                card_name = CardName[chosen_card_name.upper()]
                 player.game.stock.remove(card_name)
                 player.discard.append(card_name)
             except Exception as e:
@@ -440,15 +440,15 @@ class Remodel(Card):
         except Exception as e:
             raise HookError(player) from e
         if possible_cards:
-            choosen_card = player.hooks.choose_card_to_receive_in_discard(
+            chosen_card = player.hooks.choose_card_to_receive_in_discard(
                 # TODO partout où il y a des possible_cards, vérifier que la réponse est
                 # dans la liste
                 PossibleCards(possible_cards=possible_cards),
             )
             try:
-                choosen_card_name = CardName[choosen_card.upper()]
-                player.game.stock.remove(choosen_card_name)
-                player.discard.append(choosen_card_name)
+                chosen_card_name = CardName[chosen_card.upper()]
+                player.game.stock.remove(chosen_card_name)
+                player.discard.append(chosen_card_name)
             except Exception as e:
                 raise HookError(player) from e
 
@@ -512,14 +512,18 @@ class Workshop(Card):
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost <= cls.max_cost_of_received_card
         ]
-        possible_cards = list(set(possible_cards))
+        possible_cards: list[str] = list(set(possible_cards))
         logger.debug(possible_cards)
         if possible_cards:
-            choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
+            chosen_card = player.hooks.choose_card_to_receive_in_discard(
                 PossibleCards(possible_cards=possible_cards),
             )
-            player.game.stock.remove(choosen_card_name)
-            player.discard.append(choosen_card_name)
+            try:
+                chosen_card_name = CardName[chosen_card.upper()]
+                player.game.stock.remove(chosen_card_name)
+                player.discard.append(chosen_card_name)
+            except Exception as e:
+                raise HookError(player) from e
 
 
 actions_card_name: set[CardName] = {
