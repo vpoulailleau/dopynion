@@ -9,6 +9,7 @@ from enum import StrEnum
 from typing import TYPE_CHECKING, ClassVar, Final
 
 from dopynion.data_model import CardNameAndHand, Cards, Hand
+from dopynion.exceptions import HookError
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -250,7 +251,7 @@ class Feast(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         player.played_cards.pop()
-        possible_cards = [
+        possible_cards: list[str] = [
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
@@ -260,8 +261,12 @@ class Feast(Card):
             choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
                 possible_cards,
             )
-            player.game.stock.remove(choosen_card_name)
-            player.discard.append(choosen_card_name)
+            try:
+                card_name = CardName[choosen_card_name.upper()]
+                player.game.stock.remove(card_name)
+                player.discard.append(card_name)
+            except Exception as e:
+                raise HookError(player) from e
 
 
 class Festival(Card):
