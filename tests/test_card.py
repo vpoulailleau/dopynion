@@ -493,7 +493,8 @@ def test_remodel(empty_player: Player) -> None:
         ) -> CardNameDataModel:
             for card_name in decision_input.possible_cards:
                 assert (
-                    Card.types[card_name].cost <= Card.types[CardName.COPPER].cost + 2
+                    Card.types[CardName[card_name.upper()]].cost
+                    <= Card.types[CardName.COPPER].cost + 2
                 )
             return decision_input.possible_cards[0]
 
@@ -539,7 +540,7 @@ def test_workshop(empty_player: Player) -> None:
             decision_input: PossibleCards,
         ) -> CardNameDataModel:
             for card_name in decision_input.possible_cards:
-                assert Card.types[card_name].cost <= 4
+                assert Card.types[CardName[card_name.upper()]].cost <= 4
             return decision_input.possible_cards[0]
 
     player = empty_player
