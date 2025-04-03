@@ -3,7 +3,6 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 CardName = str
-CardList = list[CardName]
 
 
 class Cards(BaseModel):
@@ -39,16 +38,16 @@ class GameRecord(BaseModel):
 
 class CardNameAndHand(BaseModel):
     card_name: CardName
-    hand: CardList
+    hand: list[CardName]
 
 
 class Hand(BaseModel):
-    hand: CardList
+    hand: list[CardName]
 
 
 class PossibleCards(BaseModel):
-    possible_cards: CardList
+    possible_cards: list[CardName]
 
 
 class MoneyCardsInHand(BaseModel):
-    money_in_hand: CardList
+    money_in_hand: list[CardName]
