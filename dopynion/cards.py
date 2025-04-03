@@ -367,19 +367,23 @@ class Mine(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        money_cards = list(set(player.hand.money_cards))
+        money_cards: list[str] = list(set(player.hand.money_cards))
         trashed_card = player.hooks.trash_money_card_for_better_money_card(
             MoneyCardsInHand(money_in_hand=money_cards),
         )
         if trashed_card is not None:
-            player.hand.remove(trashed_card)
-            possible_money_cards = [
-                card_name
-                for card_name in player.game.stock
-                if (class_ := Card.types[card_name]).is_money
-                and class_.cost <= Card.types[trashed_card].cost + 3
-                and player.game.stock.quantity(card_name)
-            ]
+            try:
+                trashed_card_name = CardName[trashed_card.upper()]
+                player.hand.remove(trashed_card_name)
+                possible_money_cards = [
+                    card_name
+                    for card_name in player.game.stock
+                    if (class_ := Card.types[card_name]).is_money
+                    and class_.cost <= Card.types[trashed_card_name].cost + 3
+                    and player.game.stock.quantity(card_name)
+                ]
+            except Exception as e:
+                raise HookError(player) from e
             if possible_money_cards:
                 best_money = max(
                     possible_money_cards,
