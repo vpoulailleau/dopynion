@@ -506,13 +506,13 @@ class Workshop(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        possible_cards = [
+        possible_cards: list[str] = [
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost <= cls.max_cost_of_received_card
         ]
-        possible_cards: list[str] = list(set(possible_cards))
+        possible_cards = list(set(possible_cards))
         logger.debug(possible_cards)
         if possible_cards:
             chosen_card = player.hooks.choose_card_to_receive_in_discard(
