@@ -8,7 +8,7 @@ from collections import defaultdict
 from enum import StrEnum
 from typing import TYPE_CHECKING, ClassVar, Final
 
-from dopynion.data_model import CardNameAndHand, Cards
+from dopynion.data_model import CardNameAndHand, Cards, Hand
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -342,7 +342,7 @@ class Militia(Card):
         for other_player in player.other_players():
             while len(other_player.hand) > cls.enemy_hand_size_left:
                 removed_card = other_player.hooks.discard_card_from_hand(
-                    list(other_player.hand),
+                    Hand(hand=list(other_player.hand)),
                 )
                 other_player.hand.remove(removed_card)
 
@@ -406,7 +406,9 @@ class Remodel(Card):
     def _action(cls, player: Player) -> None:
         if not player.hand:
             return
-        thrashed_card = player.hooks.discard_card_from_hand(list(player.hand))
+        thrashed_card = player.hooks.discard_card_from_hand(
+            Hand(hand=list(player.hand)),
+        )
         player.hand.remove(thrashed_card)
         possible_cards = [
             card_name

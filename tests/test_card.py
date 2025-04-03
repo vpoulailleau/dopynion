@@ -3,7 +3,15 @@ from dataclasses import dataclass
 import pytest
 
 from dopynion.cards import Card, CardContainer, CardName, Village
-from dopynion.data_model import CardList, CardNameAndHand, Cards
+from dopynion.data_model import (
+    CardList,
+    CardNameAndHand,
+    Cards,
+    Hand,
+)
+from dopynion.data_model import (
+    CardName as CardNameDataModel,
+)
 from dopynion.game import Game
 from dopynion.player import DefaultPlayerHooks, Player
 
@@ -475,8 +483,8 @@ def test_remodel(empty_player: Player) -> None:
 
         def discard_card_from_hand(  # noqa: PLR6301
             self,
-            _hand: CardList,
-        ) -> CardName:
+            _hand: Hand,
+        ) -> CardNameDataModel:
             return CardName.COPPER
 
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
