@@ -8,6 +8,7 @@ from dopynion.data_model import (
     CardNameAndHand,
     Cards,
     Hand,
+    PossibleCards,
 )
 from dopynion.data_model import (
     CardName as CardNameDataModel,
@@ -266,9 +267,9 @@ def test_feast_choose_a_card(empty_player: Player) -> None:
 
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
-            possible_cards: CardList,
+            decision_input: PossibleCards,
         ) -> CardNameDataModel:
-            return possible_cards[0]
+            return decision_input.possible_cards[0]
 
     player = empty_player
     player.hooks = Hooks()
@@ -488,13 +489,13 @@ def test_remodel(empty_player: Player) -> None:
 
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
-            possible_cards: CardList,
+            decision_input: PossibleCards,
         ) -> CardNameDataModel:
-            for card_name in possible_cards:
+            for card_name in decision_input.possible_cards:
                 assert (
                     Card.types[card_name].cost <= Card.types[CardName.COPPER].cost + 2
                 )
-            return possible_cards[0]
+            return decision_input.possible_cards[0]
 
     player = empty_player
     player.hooks = Hooks()
@@ -535,11 +536,11 @@ def test_workshop(empty_player: Player) -> None:
 
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
-            possible_cards: CardList,
+            decision_input: PossibleCards,
         ) -> CardNameDataModel:
-            for card_name in possible_cards:
+            for card_name in decision_input.possible_cards:
                 assert Card.types[card_name].cost <= 4
-            return possible_cards[0]
+            return decision_input.possible_cards[0]
 
     player = empty_player
     player.hooks = Hooks()

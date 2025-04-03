@@ -10,10 +10,9 @@ from dopynion.data_model import (
     CardList,
     CardNameAndHand,
     Hand,
+    PossibleCards,
 )
-from dopynion.data_model import (
-    CardName as CardNameDataModel,
-)
+from dopynion.data_model import CardName as CardNameDataModel
 from dopynion.data_model import Player as PlayerData
 from dopynion.exceptions import (
     ActionDuringBuyError,
@@ -59,7 +58,7 @@ class PlayerHooks(ABC):
     @abstractmethod
     def choose_card_to_receive_in_discard(
         self,
-        possible_cards: CardList,
+        decision_input: PossibleCards,
     ) -> CardNameDataModel:
         pass
 
@@ -96,9 +95,9 @@ class DefaultPlayerHooks(PlayerHooks):
 
     def choose_card_to_receive_in_discard(  # noqa: PLR6301
         self,
-        possible_cards: CardList,
+        decision_input: PossibleCards,
     ) -> CardNameDataModel:
-        return possible_cards[0]
+        return decision_input.possible_cards[0]
 
     def skip_card_reception_in_hand(  # noqa: PLR6301
         self,

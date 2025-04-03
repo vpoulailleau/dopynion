@@ -8,7 +8,7 @@ from collections import defaultdict
 from enum import StrEnum
 from typing import TYPE_CHECKING, ClassVar, Final
 
-from dopynion.data_model import CardNameAndHand, Cards, Hand
+from dopynion.data_model import CardNameAndHand, Cards, Hand, PossibleCards
 from dopynion.exceptions import HookError
 
 if TYPE_CHECKING:
@@ -259,7 +259,7 @@ class Feast(Card):
         ]
         if possible_cards:
             choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
-                possible_cards,
+                PossibleCards(possible_cards=possible_cards),
             )
             try:
                 card_name = CardName[choosen_card_name.upper()]
@@ -425,7 +425,7 @@ class Remodel(Card):
         ]
         if possible_cards:
             choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
-                possible_cards,
+                PossibleCards(possible_cards=possible_cards),
             )
             player.game.stock.remove(choosen_card_name)
             player.discard.append(choosen_card_name)
@@ -494,7 +494,7 @@ class Workshop(Card):
         logger.debug(possible_cards)
         if possible_cards:
             choosen_card_name = player.hooks.choose_card_to_receive_in_discard(
-                possible_cards,
+                PossibleCards(possible_cards=possible_cards),
             )
             player.game.stock.remove(choosen_card_name)
             player.discard.append(choosen_card_name)
