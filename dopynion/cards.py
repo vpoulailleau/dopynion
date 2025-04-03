@@ -311,8 +311,7 @@ class Library(Card):
             if not Card.types[card_name].is_action:
                 player.hand.append(card_name)
             elif player.hooks.skip_card_reception_in_hand(
-                card_name,
-                list(player.hand),
+                CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 skipped_cards.append(card_name)
             else:

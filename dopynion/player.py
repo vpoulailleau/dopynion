@@ -66,8 +66,7 @@ class PlayerHooks(ABC):
     @abstractmethod
     def skip_card_reception_in_hand(
         self,
-        card_name: CardName,
-        hand: CardList,
+        decision_input: CardNameAndHand,
     ) -> bool:
         pass
 
@@ -103,8 +102,7 @@ class DefaultPlayerHooks(PlayerHooks):
 
     def skip_card_reception_in_hand(  # noqa: PLR6301
         self,
-        _card_name: CardName,
-        _hand: CardList,
+        _decision_input: CardNameAndHand,
     ) -> bool:
         return False
 

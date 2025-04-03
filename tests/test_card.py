@@ -324,8 +324,7 @@ def test_library(empty_player: Player) -> None:
 
         def skip_card_reception_in_hand(
             self,
-            _card_name: CardName,
-            _hand: list[CardName],
+            _decision_input: CardNameAndHand,
         ) -> bool:
             self.nb_cards += 1
             return self.nb_cards <= self.nb_max_skip
