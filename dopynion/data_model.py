@@ -2,6 +2,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+CardName = str
+CardList = list[CardName]
+
 
 class Cards(BaseModel):
     quantities: dict[str, int]
@@ -32,3 +35,20 @@ class PlayerTurnRecord(BaseModel):
 class GameRecord(BaseModel):
     date: datetime
     turns: list[PlayerTurnRecord] = Field(default_factory=list)
+
+
+class CardNameAndHand(BaseModel):
+    card_name: CardName
+    hand: CardList
+
+
+class Hand(BaseModel):
+    hand: CardList
+
+
+class PossibleCards(BaseModel):
+    possible_cards: CardList
+
+
+class MoneyCardsInHand(BaseModel):
+    money_in_hand: CardList

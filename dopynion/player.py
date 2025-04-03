@@ -6,6 +6,7 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from dopynion.cards import Card, CardContainer, CardName
+from dopynion.data_model import CardNameAndHand
 from dopynion.data_model import Player as PlayerData
 from dopynion.exceptions import (
     ActionDuringBuyError,
@@ -33,8 +34,7 @@ class PlayerHooks(ABC):
     @abstractmethod
     def confirm_discard_card_from_hand(
         self,
-        card_name: CardName,
-        hand: list[CardName],
+        decision_input: CardNameAndHand,
     ) -> bool:
         pass
 
@@ -75,8 +75,7 @@ class PlayerHooks(ABC):
 class DefaultPlayerHooks(PlayerHooks):
     def confirm_discard_card_from_hand(  # noqa: PLR6301
         self,
-        _card_name: CardName,
-        _hand: list[CardName],
+        _decision_input: CardNameAndHand,
     ) -> bool:
         return False
 

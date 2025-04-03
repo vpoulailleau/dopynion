@@ -8,7 +8,7 @@ from collections import defaultdict
 from enum import StrEnum
 from typing import TYPE_CHECKING, ClassVar, Final
 
-from dopynion.data_model import Cards
+from dopynion.data_model import CardNameAndHand, Cards
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -154,8 +154,7 @@ class Cellar(Card):
         nb_discarded_cards = 0
         for card_name in player.hand.copy():
             if player.hooks.confirm_discard_card_from_hand(
-                card_name,
-                list(player.hand),
+                CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(card_name)
                 player.discard.append(card_name)
@@ -189,8 +188,7 @@ class Chapel(Card):
         nb_discarded_cards = 0
         for card_name in player.hand.copy():
             if player.hooks.confirm_discard_card_from_hand(
-                card_name,
-                list(player.hand),
+                CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(card_name)
                 player.discard.append(card_name)
@@ -383,8 +381,7 @@ class MoneyLender(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         if player.hand.copper_qty >= 1 and player.hooks.confirm_discard_card_from_hand(
-            CardName.COPPER,
-            list(player.hand),
+            CardNameAndHand(card_name=CardName.COPPER, hand=list(player.hand)),
         ):
             player.hand.remove(CardName.COPPER)
             for _ in range(3):
