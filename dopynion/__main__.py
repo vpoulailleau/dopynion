@@ -31,7 +31,7 @@ game.add_player(player3)
 game.start()
 
 
-def play(player: Player, strategy: "Strategy") -> None:  # noqa: F821
+def play(player: Player, strategy: "Strategy") -> None:  # type:ignore [name-defined] # noqa: F821
     print("-" * 80)
     player.start_turn()
     strategy.start_turn()
