@@ -8,7 +8,13 @@ from collections import defaultdict
 from enum import StrEnum
 from typing import TYPE_CHECKING, ClassVar, Final
 
-from dopynion.data_model import CardNameAndHand, Cards, Hand, PossibleCards
+from dopynion.data_model import (
+    CardNameAndHand,
+    Cards,
+    Hand,
+    MoneyCardsInHand,
+    PossibleCards,
+)
 from dopynion.exceptions import HookError
 
 if TYPE_CHECKING:
@@ -362,7 +368,9 @@ class Mine(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         money_cards = list(set(player.hand.money_cards))
-        trashed_card = player.hooks.trash_money_card_for_better_money_card(money_cards)
+        trashed_card = player.hooks.trash_money_card_for_better_money_card(
+            MoneyCardsInHand(money_in_hand=money_cards),
+        )
         if trashed_card is not None:
             player.hand.remove(trashed_card)
             possible_money_cards = [

@@ -6,13 +6,13 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from dopynion.cards import Card, CardContainer, CardName
+from dopynion.data_model import CardName as CardNameDataModel
 from dopynion.data_model import (
-    CardList,
     CardNameAndHand,
     Hand,
+    MoneyCardsInHand,
     PossibleCards,
 )
-from dopynion.data_model import CardName as CardNameDataModel
 from dopynion.data_model import Player as PlayerData
 from dopynion.exceptions import (
     ActionDuringBuyError,
@@ -72,7 +72,7 @@ class PlayerHooks(ABC):
     @abstractmethod
     def trash_money_card_for_better_money_card(
         self,
-        money_in_hand: CardList,
+        decision_input: MoneyCardsInHand,
     ) -> CardNameDataModel | None:
         pass
 
@@ -107,7 +107,7 @@ class DefaultPlayerHooks(PlayerHooks):
 
     def trash_money_card_for_better_money_card(  # noqa: PLR6301
         self,
-        _money_in_hand: CardList,
+        _decision_input: MoneyCardsInHand,
     ) -> CardNameDataModel | None:
         return None
 

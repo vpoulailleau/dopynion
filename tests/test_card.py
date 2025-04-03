@@ -4,14 +4,14 @@ import pytest
 
 from dopynion.cards import Card, CardContainer, CardName, Village
 from dopynion.data_model import (
-    CardList,
+    CardName as CardNameDataModel,
+)
+from dopynion.data_model import (
     CardNameAndHand,
     Cards,
     Hand,
+    MoneyCardsInHand,
     PossibleCards,
-)
-from dopynion.data_model import (
-    CardName as CardNameDataModel,
 )
 from dopynion.game import Game
 from dopynion.player import DefaultPlayerHooks, Player
@@ -375,7 +375,7 @@ def test_mine_trash_copper(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
-            _money_in_hand: CardList,
+            _decision_input: MoneyCardsInHand,
         ) -> CardNameDataModel | None:
             return CardName.COPPER
 
@@ -395,7 +395,7 @@ def test_mine_trash_silver(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
-            _money_in_hand: CardList,
+            _decision_input: MoneyCardsInHand,
         ) -> CardNameDataModel | None:
             return CardName.SILVER
 
@@ -415,7 +415,7 @@ def test_mine_trash_gold(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
         def trash_money_card_for_better_money_card(  # noqa: PLR6301
             self,
-            _money_in_hand: CardList,
+            _decision_input: MoneyCardsInHand,
         ) -> CardNameDataModel | None:
             return CardName.GOLD
 
