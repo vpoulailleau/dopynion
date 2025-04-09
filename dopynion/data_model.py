@@ -1,8 +1,42 @@
 from datetime import datetime
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
-CardName = str
+
+class CardName(StrEnum):  # Create with a metaclass
+    ADVENTURER = "adventurer"
+    BUREAUCRAT = "bureaucrat"
+    CELLAR = "cellar"
+    CHANCELLOR = "chancellor"
+    CHAPEL = "chapel"
+    COPPER = "copper"
+    COUNCILROOM = "councilroom"
+    CURSE = "curse"
+    DUCHY = "duchy"
+    ESTATE = "estate"
+    FEAST = "feast"
+    FESTIVAL = "festival"
+    GARDENS = "gardens"
+    GOLD = "gold"
+    LABORATORY = "laboratory"
+    LIBRARY = "library"
+    MARKET = "market"
+    MILITIA = "militia"
+    MINE = "mine"
+    MONEYLENDER = "moneylender"
+    NONE = "NONE"
+    PROVINCE = "province"
+    REMODEL = "remodel"
+    SILVER = "silver"
+    SMITHY = "smithy"
+    VILLAGE = "village"
+    WITCH = "witch"
+    WOODCUTTER = "woodcutter"
+    WORKSHOP = "workshop"
+
+    def __repr__(self) -> str:
+        return self.value.title()
 
 
 class Cards(BaseModel):
