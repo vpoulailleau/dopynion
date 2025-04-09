@@ -40,7 +40,7 @@ class CardName(StrEnum):  # Create with a metaclass
 
 
 class Cards(BaseModel):
-    quantities: dict[str, int]
+    quantities: dict[CardName, int]
 
 
 class Player(BaseModel):
