@@ -47,6 +47,7 @@ class CardName(StrEnum):  # Create with a metaclass
     MILITIA = "militia"
     MINE = "mine"
     MONEYLENDER = "moneylender"
+    NONE = "NONE"
     PROVINCE = "province"
     REMODEL = "remodel"
     SILVER = "silver"
