@@ -24,8 +24,9 @@ class Record:
     def load(path: Path) -> GameRecord:
         return GameRecord.model_validate_json(path.read_text(encoding="utf-8"))
 
-    def save(self) -> None:
+    def save(self) -> Path:
         self._file.write_text(self._game_record.model_dump_json(indent=None))
+        return self._file
 
     def start_turn(self) -> None:
         self._game_record.turns.append(PlayerTurnRecord())
