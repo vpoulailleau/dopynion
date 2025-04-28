@@ -2,6 +2,7 @@ import inspect
 import operator
 import random
 from collections.abc import Callable
+from pathlib import Path
 
 import dopynion.cards
 from dopynion.cards import Card, CardContainer, CardName
@@ -94,5 +95,5 @@ class Game:
         ret["leaderboard"] = leaderboard
         return ret
 
-    def save(self) -> None:
-        self.record.save()
+    def save(self) -> Path:
+        return self.record.save()
