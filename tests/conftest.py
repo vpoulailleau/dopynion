@@ -17,6 +17,9 @@ def _game() -> Game:
         def add_action(self, action: str, player: Player) -> None:
             pass
 
+        def add_error(self, error: str, player: Player) -> None:
+            pass
+
     return Game(record_factory=TestRecord)
 
 
