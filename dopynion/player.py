@@ -203,12 +203,15 @@ class Player:
         self.game.record.add_action(f"BUY {card_name}", self)
         if not self.purchases_left:
             msg = "No more buy available"
+            self.game.record.add_error(msg, self)
             raise InvalidBuyError(msg)
         quantity = getattr(self.game.stock, card_name + "_qty")
         if not quantity:
+            self.game.record.add_error(f"Invalid buy, no {card_name} in stock", self)
             raise InvalidBuyError(card_name)
         card = Card.types[card_name]
         if self.money + self.hand.money < card.cost:
+            self.game.record.add_error("Invalid buy, not enough money", self)
             raise NotEnoughMoneyError
         self._prepare_money(card.cost)
         self.money -= card.cost
@@ -224,9 +227,11 @@ class Player:
             logger.debug("actions_left %d", self.actions_left)
             logger.debug(self.state_machine.name)
             logger.debug(self.state)
+            self.game.record.add_error("Tried action during buy phase", self)
             raise ActionDuringBuyError(card_name)
         if card_name not in self.hand:
             logger.debug(self.state)
+            self.game.record.add_error(f"Invalid action, {card_name} not in hand", self)
             raise InvalidActionError(card_name)
         self.actions_left -= 1
         self.hand.remove(card_name)
@@ -258,6 +263,7 @@ class Player:
     def discard_one_card_from_hand(self, card_name: CardName) -> None:
         if card_name not in self.hand:
             msg = f"{card_name} not in player hand"
+            self.game.record.add_error("Invalid discard, " + msg, self)
             raise InvalidDiscardError(msg)
         self.hand.remove(card_name)
         self.discard.append(card_name)

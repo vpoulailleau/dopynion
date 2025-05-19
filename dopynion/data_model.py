@@ -61,8 +61,13 @@ class ActionRecord(BaseModel):
     score: int
 
 
+class ErrorRecord(BaseModel):
+    error: str
+    player: Player
+
+
 class PlayerTurnRecord(BaseModel):
-    actions: list[ActionRecord] = Field(default_factory=list)
+    actions: list[ActionRecord | ErrorRecord] = Field(default_factory=list)
 
 
 class GameRecord(BaseModel):

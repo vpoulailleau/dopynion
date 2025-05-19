@@ -1,7 +1,7 @@
 import datetime
 from pathlib import Path
 
-from dopynion.data_model import ActionRecord, GameRecord, PlayerTurnRecord
+from dopynion.data_model import ActionRecord, ErrorRecord, GameRecord, PlayerTurnRecord
 from dopynion.player import Player
 
 records_dir = Path.cwd() / "games"
@@ -39,3 +39,11 @@ class Record:
             score=player.score()["score"],
         )
         turn.actions.append(action_record)
+
+    def add_error(self, error: str, player: Player) -> None:
+        turn = self._game_record.turns[-1]
+        error_record = ErrorRecord(
+            error=error,
+            player=player.state,
+        )
+        turn.actions.append(error_record)
