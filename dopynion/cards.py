@@ -240,6 +240,10 @@ class Feast(Card):
                 player.game.stock.remove(card_name)
                 player.discard.append(card_name)
             except Exception as e:
+                player.game.record.add_error(
+                    "Exception occured in choose_card_to_receive_in_discard management",
+                    player,
+                )
                 raise HookError(player) from e
 
 
@@ -325,6 +329,10 @@ class Militia(Card):
                 try:
                     other_player.hand.remove(CardName[removed_card.upper()])
                 except Exception as e:
+                    other_player.game.record.add_error(
+                        "Exception occured in discard_card_from_hand management",
+                        other_player,
+                    )
                     raise HookError(player=other_player) from e
 
 
@@ -352,6 +360,11 @@ class Mine(Card):
                         and player.game.stock.quantity(card_name)
                     ]
                 except Exception as e:
+                    player.game.record.add_error(
+                        "Exception occured in trash_money_card_for_better_money_card "
+                        "management",
+                        player,
+                    )
                     raise HookError(player) from e
                 if possible_money_cards:
                     best_money = max(
@@ -407,6 +420,10 @@ class Remodel(Card):
                 and Card.types[card_name].cost <= Card.types[trashed_card_name].cost + 2
             ]
         except Exception as e:
+            player.game.record.add_error(
+                "Exception occured in discard_card_from_hand management",
+                player,
+            )
             raise HookError(player) from e
         if possible_cards:
             chosen_card = player.hooks.choose_card_to_receive_in_discard(
@@ -419,6 +436,10 @@ class Remodel(Card):
                 player.game.stock.remove(chosen_card_name)
                 player.discard.append(chosen_card_name)
             except Exception as e:
+                player.game.record.add_error(
+                    "Exception occured in choose_card_to_receive_in_discard management",
+                    player,
+                )
                 raise HookError(player) from e
 
 
@@ -492,6 +513,10 @@ class Workshop(Card):
                 player.game.stock.remove(chosen_card_name)
                 player.discard.append(chosen_card_name)
             except Exception as e:
+                player.game.record.add_error(
+                    "Exception occured in choose_card_to_receive_in_discard management",
+                    player,
+                )
                 raise HookError(player) from e
 
 
