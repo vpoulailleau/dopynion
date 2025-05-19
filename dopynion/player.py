@@ -201,6 +201,9 @@ class Player:
     def buy(self, card_name: CardName) -> None:
         logger.debug("> BUY %s", card_name)
         self.game.record.add_action(f"BUY {card_name}", self)
+        if not self.purchases_left:
+            msg = "No more buy available"
+            raise InvalidBuyError(msg)
         quantity = getattr(self.game.stock, card_name + "_qty")
         if not quantity:
             raise InvalidBuyError(card_name)
