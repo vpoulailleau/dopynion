@@ -162,7 +162,7 @@ class Chapel(Card):
     def _action(cls, player: Player) -> None:
         nb_discarded_cards = 0
         for card_name in player.hand.copy():
-            if player.hooks.confirm_discard_card_from_hand(
+            if player.hooks.confirm_discard_card_from_hand(  # TODO trash et non discard
                 CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(card_name)
@@ -328,6 +328,7 @@ class Militia(Card):
                 )
                 try:
                     other_player.hand.remove(CardName[removed_card.upper()])
+                    other_player.discard.append(CardName[removed_card.upper()])
                 except Exception as e:
                     other_player.game.record.add_error(
                         "Exception occured in discard_card_from_hand management",
@@ -381,14 +382,17 @@ class MoneyLender(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        if player.hand.copper_qty >= 1 and player.hooks.confirm_discard_card_from_hand(
-            CardNameAndHand(card_name=CardName.COPPER, hand=list(player.hand)),
+        if (
+            player.hand.copper_qty >= 1
+            and player.hooks.confirm_discard_card_from_hand(  # TODO confirme trash
+                CardNameAndHand(card_name=CardName.COPPER, hand=list(player.hand)),
+            )
         ):
             player.hand.remove(CardName.COPPER)
             for _ in range(3):
                 if player.game.stock.copper_qty:
                     player.game.stock.remove(CardName.COPPER)
-                    player.hand.append(CardName.COPPER)
+                    player.hand.append(CardName.COPPER)  # TODO BUG  !!!!
 
 
 class Province(Card):
@@ -407,7 +411,7 @@ class Remodel(Card):
     def _action(cls, player: Player) -> None:
         if not player.hand:
             return
-        trashed_card = player.hooks.discard_card_from_hand(
+        trashed_card = player.hooks.discard_card_from_hand(  # TODO trash_card_from_hand
             Hand(hand=list(player.hand)),
         )
         try:

@@ -357,6 +357,7 @@ def test_militia(game_with_two_players: tuple[Game, Player, Player]) -> None:
 
     assert len(player.hand) == 4
     assert len(enemy.hand) == 3
+    assert len(enemy.discard) == 2
 
 
 def test_mine_don_t_trash(empty_player: Player) -> None:
