@@ -323,10 +323,10 @@ class Militia(Card):
     def _action(cls, player: Player) -> None:
         for other_player in player.other_players():
             while len(other_player.hand) > cls.enemy_hand_size_left:
-                removed_card = other_player.hooks.discard_card_from_hand(
-                    Hand(hand=list(other_player.hand)),
-                )
                 try:
+                    removed_card = other_player.hooks.discard_card_from_hand(
+                        Hand(hand=list(other_player.hand)),
+                    )
                     other_player.hand.remove(CardName[removed_card.upper()])
                     other_player.discard.append(CardName[removed_card.upper()])
                 except Exception as e:
@@ -389,10 +389,8 @@ class MoneyLender(Card):
             )
         ):
             player.hand.remove(CardName.COPPER)
-            for _ in range(3):
-                if player.game.stock.copper_qty:
-                    player.game.stock.remove(CardName.COPPER)
-                    player.hand.append(CardName.COPPER)  # TODO BUG  !!!!
+            if player.game.stock.copper_qty:
+                player.money += 3
 
 
 class Province(Card):

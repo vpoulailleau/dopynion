@@ -472,8 +472,9 @@ def test_money_lender_accept(empty_player: Player) -> None:
     assert len(player.deck) == 0
     assert len(player.discard) == 0
     assert len(player.played_cards) == 1
-    assert player.hand.copper_qty == 1 + 3
-    assert len(player.hand) == 4 - 1 + 3
+    assert player.hand.copper_qty == 1
+    assert len(player.hand) == 4 - 1
+    assert player.money == 3  # hand.money is not in money
 
 
 def test_remodel(empty_player: Player) -> None:
