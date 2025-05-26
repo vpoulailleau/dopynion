@@ -408,10 +408,10 @@ class Remodel(Card):
     def _action(cls, player: Player) -> None:
         if not player.hand:
             return
-        trashed_card = player.hooks.discard_card_from_hand(  # TODO trash_card_from_hand
-            Hand(hand=list(player.hand)),
-        )
         try:
+            trashed_card = player.hooks.trash_card_from_hand(
+                Hand(hand=list(player.hand)),
+            )
             trashed_card_name = CardName[trashed_card.upper()]
             player.hand.remove(trashed_card_name)
             possible_cards: list[str] = [

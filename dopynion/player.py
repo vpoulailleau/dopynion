@@ -59,6 +59,13 @@ class PlayerHooks(ABC):
         pass
 
     @abstractmethod
+    def trash_card_from_hand(
+        self,
+        decision_input: Hand,
+    ) -> CardNameDataModel:
+        pass
+
+    @abstractmethod
     def confirm_discard_deck(self) -> bool:
         pass
 
@@ -98,6 +105,12 @@ class DefaultPlayerHooks(PlayerHooks):
         return False
 
     def discard_card_from_hand(  # noqa: PLR6301
+        self,
+        decision_input: Hand,
+    ) -> CardNameDataModel:
+        return decision_input.hand[0]
+
+    def trash_card_from_hand(  # noqa: PLR6301
         self,
         decision_input: Hand,
     ) -> CardNameDataModel:

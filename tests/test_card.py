@@ -485,7 +485,7 @@ def test_remodel(empty_player: Player) -> None:
             super().__init__(*args, **kwargs)
             self.nb_cards = 0
 
-        def discard_card_from_hand(  # noqa: PLR6301
+        def trash_card_from_hand(  # noqa: PLR6301
             self,
             _hand: Hand,
         ) -> CardNameDataModel:
@@ -514,7 +514,7 @@ def test_remodel(empty_player: Player) -> None:
     assert len(player.deck) == 0
     assert len(player.played_cards) == 1
     assert len(player.hand) == 3
-    assert len(player.discard) == 1
+    assert len(player.discard) == 1  # copper is trashed, but received one card
 
 
 def test_witch(game_with_two_players: tuple[Game, Player, Player]) -> None:
