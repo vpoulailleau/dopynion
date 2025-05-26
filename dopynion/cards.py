@@ -156,19 +156,18 @@ class Chapel(Card):
     name = "Chapelle"
     cost = 2
     is_action = True
-    max_discarded_cards: Final[int] = 4
+    max_trashed_cards: Final[int] = 4
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        nb_discarded_cards = 0
+        nb_trashed_cards = 0
         for card_name in player.hand.copy():
-            if player.hooks.confirm_discard_card_from_hand(  # TODO trash et non discard
+            if player.hooks.confirm_trash_card_from_hand(
                 CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(card_name)
-                player.discard.append(card_name)
-                nb_discarded_cards += 1
-            if nb_discarded_cards >= cls.max_discarded_cards:
+                nb_trashed_cards += 1
+            if nb_trashed_cards >= cls.max_trashed_cards:
                 break
 
 
@@ -329,7 +328,7 @@ class Militia(Card):
                     )
                     other_player.hand.remove(CardName[removed_card.upper()])
                     other_player.discard.append(CardName[removed_card.upper()])
-                except Exception as e:
+                except Exception as e:  # noqa: PERF203
                     other_player.game.record.add_error(
                         "Exception occured in discard_card_from_hand management",
                         other_player,

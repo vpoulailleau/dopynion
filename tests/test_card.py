@@ -183,13 +183,13 @@ def test_chancellor_discard_deck(empty_player: Player) -> None:
     assert len(player.discard) == 3
 
 
-def test_chapel_discard_two_cards(empty_player: Player) -> None:
+def test_chapel_trash_two_cards(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
         def __init__(self, *args: tuple, **kwargs: dict) -> None:
             super().__init__(*args, **kwargs)
             self.nb_cards = 0
 
-        def confirm_discard_card_from_hand(
+        def confirm_trash_card_from_hand(
             self,
             _decision_input: CardNameAndHand,
         ) -> bool:
@@ -205,11 +205,12 @@ def test_chapel_discard_two_cards(empty_player: Player) -> None:
     player.action(CardName.CHAPEL)
 
     assert len(player.hand) == 2
+    assert len(player.played_cards) == 1
     assert len(player.deck) == 0
-    assert len(player.discard) == 2
+    assert len(player.discard) == 0
 
 
-def test_chapel_discard_as_many_cards_as_possible_that_is_four(
+def test_chapel_trash_as_many_cards_as_possible_that_is_four(
     empty_player: Player,
 ) -> None:
     class Hooks(DefaultPlayerHooks):
@@ -217,7 +218,7 @@ def test_chapel_discard_as_many_cards_as_possible_that_is_four(
             super().__init__(*args, **kwargs)
             self.nb_cards = 0
 
-        def confirm_discard_card_from_hand(  # noqa: PLR6301
+        def confirm_trash_card_from_hand(  # noqa: PLR6301
             self,
             _decision_input: CardNameAndHand,
         ) -> bool:
@@ -232,8 +233,9 @@ def test_chapel_discard_as_many_cards_as_possible_that_is_four(
     player.action(CardName.CHAPEL)
 
     assert len(player.hand) == 10
+    assert len(player.played_cards) == 1
     assert len(player.deck) == 0
-    assert len(player.discard) == 4
+    assert len(player.discard) == 0
 
 
 def test_feast_trash(empty_player: Player) -> None:
