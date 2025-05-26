@@ -381,15 +381,11 @@ class MoneyLender(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        if (
-            player.hand.copper_qty >= 1
-            and player.hooks.confirm_trash_card_from_hand(  # TODO confirme trash
-                CardNameAndHand(card_name=CardName.COPPER, hand=list(player.hand)),
-            )
+        if player.hand.copper_qty >= 1 and player.hooks.confirm_trash_card_from_hand(
+            CardNameAndHand(card_name=CardName.COPPER, hand=list(player.hand)),
         ):
             player.hand.remove(CardName.COPPER)
-            if player.game.stock.copper_qty:
-                player.money += 3
+            player.money += 3
 
 
 class Province(Card):
