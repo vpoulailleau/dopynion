@@ -383,7 +383,7 @@ class MoneyLender(Card):
     def _action(cls, player: Player) -> None:
         if (
             player.hand.copper_qty >= 1
-            and player.hooks.confirm_discard_card_from_hand(  # TODO confirme trash
+            and player.hooks.confirm_trash_card_from_hand(  # TODO confirme trash
                 CardNameAndHand(card_name=CardName.COPPER, hand=list(player.hand)),
             )
         ):

@@ -457,7 +457,7 @@ def test_money_lender_accept(empty_player: Player) -> None:
             super().__init__(*args, **kwargs)
             self.nb_cards = 0
 
-        def confirm_discard_card_from_hand(  # noqa: PLR6301
+        def confirm_trash_card_from_hand(  # noqa: PLR6301
             self,
             _decision_input: CardNameAndHand,
         ) -> bool:
