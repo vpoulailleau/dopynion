@@ -64,8 +64,6 @@ class Game:
             and class_.is_kingdom
         ]
         for _ in range(10):
-            if not possible_kingdoms:
-                break  # TODO à virer quand on aura plus de 10 possibles
             card_name = random.choice(possible_kingdoms)  # noqa: S311
             if card_name == CardName.GARDENS:
                 self.stock.append_several(self.duchy_qty, card_name)
