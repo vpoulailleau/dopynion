@@ -40,7 +40,7 @@ class CardName(StrEnum):  # Create with a metaclass
 
 
 class Cards(BaseModel):
-    quantities: dict[CardName, int]
+    quantities: dict[CardName, int] = Field(default_factory=dict)
 
 
 class Player(BaseModel):
@@ -73,6 +73,7 @@ class PlayerTurnRecord(BaseModel):
 class GameRecord(BaseModel):
     date: datetime
     turns: list[PlayerTurnRecord] = Field(default_factory=list)
+    scores: dict[str, int] = Field(default_factory=dict)
 
 
 class CardNameAndHand(BaseModel):

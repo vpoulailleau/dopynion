@@ -94,4 +94,4 @@ class Game:
         return ret
 
     def save(self) -> Path:
-        return self.record.save()
+        return self.record.save(self.state)

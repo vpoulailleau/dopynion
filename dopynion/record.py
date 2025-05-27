@@ -1,7 +1,14 @@
 import datetime
 from pathlib import Path
 
-from dopynion.data_model import ActionRecord, ErrorRecord, GameRecord, PlayerTurnRecord
+from dopynion.data_model import (
+    ActionRecord,
+    Cards,
+    ErrorRecord,
+    Game,
+    GameRecord,
+    PlayerTurnRecord,
+)
 from dopynion.player import Player
 
 records_dir = Path.cwd() / "games"
@@ -18,13 +25,15 @@ class Record:
             raise ValueError(msg)
         self._file.write_text("", encoding="utf-8")
         self._game_record = GameRecord(date=now)
-        self.save()
+        self.save(Game(finished=False, players=[], stock=Cards()))
 
     @staticmethod
     def load(path: Path) -> GameRecord:
         return GameRecord.model_validate_json(path.read_text(encoding="utf-8"))
 
-    def save(self) -> Path:
+    def save(self, game: Game) -> Path:
+        for player in game.players:
+            self._game_record.scores[player.name] = player.score
         self._file.write_text(self._game_record.model_dump_json(indent=None))
         return self._file
 
