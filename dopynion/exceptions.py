@@ -1,9 +1,3 @@
-from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    from dopynion.player import Player
-
-
 class InvalidCommandError(Exception):
     pass
 
@@ -34,14 +28,3 @@ class NotEnoughMoneyError(InvalidCommandError):
 
 class InvalidDiscardError(InvalidCommandError):
     pass
-
-
-class HookError(InvalidCommandError):
-    def __init__(
-        self,
-        player: "Player",
-        *args: tuple[Any],
-        **kwargs: dict[str, Any],
-    ) -> None:
-        super().__init__(*args, **kwargs)
-        self.player = player

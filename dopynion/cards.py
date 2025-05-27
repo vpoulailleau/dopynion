@@ -15,7 +15,6 @@ from dopynion.data_model import (
     MoneyCardsInHand,
     PossibleCards,
 )
-from dopynion.exceptions import HookError
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -96,7 +95,8 @@ class Card(metaclass=ClassNameRepr):
         player.actions_left += cls.more_actions
         player.money += cls.more_money
 
-        cls._action(player)
+        with ErrorManager(player):
+            cls._action(player)
 
     @classmethod
     def _action(cls, player: Player) -> None:
@@ -135,10 +135,11 @@ class Bureaucrat(Card):
             player.deck.prepend(silver)
             player.game.stock.remove(silver)
         for other_player in player.other_players():
-            victory_cards = other_player.hand.victory_cards
-            if victory_cards:
-                other_player.deck.prepend(victory_cards[0])
-                other_player.hand.remove(victory_cards[0])
+            with ErrorManager(other_player):
+                victory_cards = other_player.hand.victory_cards
+                if victory_cards:
+                    other_player.deck.prepend(victory_cards[0])
+                    other_player.hand.remove(victory_cards[0])
 
 
 class Cellar(Card):
@@ -212,9 +213,10 @@ class CouncilRoom(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         for other_player in player.other_players():
-            card_name = other_player.take_one_card_from_deck()
-            if card_name is not None:
-                other_player.hand.append(card_name)
+            with ErrorManager(other_player):
+                card_name = other_player.take_one_card_from_deck()
+                if card_name is not None:
+                    other_player.hand.append(card_name)
 
 
 class Curse(Card):
@@ -257,16 +259,9 @@ class Feast(Card):
             chosen_card_name = player.hooks.choose_card_to_receive_in_discard(
                 PossibleCards(possible_cards=possible_cards),
             )
-            try:
-                card_name = CardName[chosen_card_name.upper()]
-                player.game.stock.remove(card_name)
-                player.discard.append(card_name)
-            except Exception as e:
-                player.game.record.add_error(
-                    "Exception occured in choose_card_to_receive_in_discard management",
-                    player,
-                )
-                raise HookError(player) from e
+            card_name = CardName[chosen_card_name.upper()]
+            player.game.stock.remove(card_name)
+            player.discard.append(card_name)
 
 
 class Festival(Card):
@@ -345,18 +340,11 @@ class Militia(Card):
     def _action(cls, player: Player) -> None:
         for other_player in player.other_players():
             while len(other_player.hand) > cls.enemy_hand_size_left:
-                try:
-                    removed_card = other_player.hooks.discard_card_from_hand(
-                        Hand(hand=list(other_player.hand)),
-                    )
-                    other_player.hand.remove(CardName[removed_card.upper()])
-                    other_player.discard.append(CardName[removed_card.upper()])
-                except Exception as e:  # noqa: PERF203
-                    other_player.game.record.add_error(
-                        "Exception occured in discard_card_from_hand management",
-                        other_player,
-                    )
-                    raise HookError(player=other_player) from e
+                removed_card = other_player.hooks.discard_card_from_hand(
+                    Hand(hand=list(other_player.hand)),
+                )
+                other_player.hand.remove(CardName[removed_card.upper()])
+                other_player.discard.append(CardName[removed_card.upper()])
 
 
 class Mine(Card):
@@ -372,23 +360,15 @@ class Mine(Card):
                 MoneyCardsInHand(money_in_hand=money_cards),
             )
             if trashed_card is not None:
-                try:
-                    trashed_card_name = CardName[trashed_card.upper()]
-                    player.hand.remove(trashed_card_name)
-                    possible_money_cards = [
-                        card_name
-                        for card_name in player.game.stock
-                        if (class_ := Card.types[card_name]).is_money
-                        and class_.cost <= Card.types[trashed_card_name].cost + 3
-                        and player.game.stock.quantity(card_name)
-                    ]
-                except Exception as e:
-                    player.game.record.add_error(
-                        "Exception occured in trash_money_card_for_better_money_card "
-                        "management",
-                        player,
-                    )
-                    raise HookError(player) from e
+                trashed_card_name = CardName[trashed_card.upper()]
+                player.hand.remove(trashed_card_name)
+                possible_money_cards = [
+                    card_name
+                    for card_name in player.game.stock
+                    if (class_ := Card.types[card_name]).is_money
+                    and class_.cost <= Card.types[trashed_card_name].cost + 3
+                    and player.game.stock.quantity(card_name)
+                ]
                 if possible_money_cards:
                     best_money = max(
                         possible_money_cards,
@@ -427,40 +407,26 @@ class Remodel(Card):
     def _action(cls, player: Player) -> None:
         if not player.hand:
             return
-        try:
-            trashed_card = player.hooks.trash_card_from_hand(
-                Hand(hand=list(player.hand)),
-            )
-            trashed_card_name = CardName[trashed_card.upper()]
-            player.hand.remove(trashed_card_name)
-            possible_cards: list[str] = [
-                card_name
-                for card_name in player.game.stock
-                if player.game.stock.quantity(card_name)
-                and Card.types[card_name].cost <= Card.types[trashed_card_name].cost + 2
-            ]
-        except Exception as e:
-            player.game.record.add_error(
-                "Exception occured in discard_card_from_hand management",
-                player,
-            )
-            raise HookError(player) from e
+        trashed_card = player.hooks.trash_card_from_hand(
+            Hand(hand=list(player.hand)),
+        )
+        trashed_card_name = CardName[trashed_card.upper()]
+        player.hand.remove(trashed_card_name)
+        possible_cards: list[str] = [
+            card_name
+            for card_name in player.game.stock
+            if player.game.stock.quantity(card_name)
+            and Card.types[card_name].cost <= Card.types[trashed_card_name].cost + 2
+        ]
         if possible_cards:
             chosen_card = player.hooks.choose_card_to_receive_in_discard(
                 # TODO partout où il y a des possible_cards, vérifier que la réponse est
                 # dans la liste
                 PossibleCards(possible_cards=possible_cards),
             )
-            try:
-                chosen_card_name = CardName[chosen_card.upper()]
-                player.game.stock.remove(chosen_card_name)
-                player.discard.append(chosen_card_name)
-            except Exception as e:
-                player.game.record.add_error(
-                    "Exception occured in choose_card_to_receive_in_discard management",
-                    player,
-                )
-                raise HookError(player) from e
+            chosen_card_name = CardName[chosen_card.upper()]
+            player.game.stock.remove(chosen_card_name)
+            player.discard.append(chosen_card_name)
 
 
 class Silver(Card):
@@ -495,9 +461,10 @@ class Witch(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         for other_player in player.other_players():
-            if player.game.stock.curse_qty:
-                other_player.discard.append(CardName.CURSE)
-                player.game.stock.remove(CardName.CURSE)
+            with ErrorManager(other_player):
+                if player.game.stock.curse_qty:
+                    other_player.discard.append(CardName.CURSE)
+                    player.game.stock.remove(CardName.CURSE)
 
 
 class Woodcutter(Card):
@@ -528,16 +495,9 @@ class Workshop(Card):
             chosen_card = player.hooks.choose_card_to_receive_in_discard(
                 PossibleCards(possible_cards=possible_cards),
             )
-            try:
-                chosen_card_name = CardName[chosen_card.upper()]
-                player.game.stock.remove(chosen_card_name)
-                player.discard.append(chosen_card_name)
-            except Exception as e:
-                player.game.record.add_error(
-                    "Exception occured in choose_card_to_receive_in_discard management",
-                    player,
-                )
-                raise HookError(player) from e
+            chosen_card_name = CardName[chosen_card.upper()]
+            player.game.stock.remove(chosen_card_name)
+            player.discard.append(chosen_card_name)
 
 
 actions_card_name: set[CardName] = {
