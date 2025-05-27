@@ -50,6 +50,8 @@ class Record:
         turn.actions.append(action_record)
 
     def add_error(self, error: str, player: Player) -> None:
+        if not self._game_record.turns:
+            self._game_record.turns.append(PlayerTurnRecord())
         turn = self._game_record.turns[-1]
         error_record = ErrorRecord(
             error=error,
