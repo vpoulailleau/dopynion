@@ -43,10 +43,11 @@ class ErrorManager:
     ) -> bool:
         if exc_type is not None:
             self.player.game.record.add_error(
-                f"Error: {exc_type} {exc_val}",
+                f"Error: {exc_type!r} {exc_val!r}",
                 self.player,
             )
             self.player.eliminate()
+            self.player.game.save()
         return True
 
 
