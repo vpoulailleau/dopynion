@@ -154,6 +154,7 @@ class Player:
         self.money: int = 0
         self.playing = False
         self.state_machine: State = State.ACTION
+        self.eliminated = False
         self.hooks: PlayerHooks = DefaultPlayerHooks()
         self._adjust()
 
@@ -275,16 +276,17 @@ class Player:
 
     def score(self) -> dict:
         cards = self.hand + self.discard + self.deck
-        ret = {}
-        ret["province_qty"] = cards.province_qty
-        ret["duchy_qty"] = cards.duchy_qty
-        ret["estate_qty"] = cards.estate_qty
-        ret["curse_qty"] = cards.curse_qty
-        ret["gardens_qty"] = cards.gardens_qty
-        ret["score"] = sum(
-            Card.types[card_name].victory_points for card_name in cards
-        ) + cards.gardens_qty * (len(cards) // 10)
-        return ret
+        if self.eliminated:
+            return {"score": -10000}
+        return {
+            "province_qty": cards.province_qty,
+            "duchy_qty": cards.duchy_qty,
+            "estate_qty": cards.estate_qty,
+            "curse_qty": cards.curse_qty,
+            "gardens_qty": cards.gardens_qty,
+            "score": sum(Card.types[card_name].victory_points for card_name in cards)
+            + cards.gardens_qty * (len(cards) // 10),
+        }
 
     def discard_one_card_from_hand(self, card_name: CardName) -> None:
         if card_name not in self.hand:
