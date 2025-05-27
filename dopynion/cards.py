@@ -19,6 +19,7 @@ from dopynion.exceptions import HookError
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
+    from types import TracebackType
 
     from dopynion.player import Player
 
@@ -26,6 +27,28 @@ logger = logging.getLogger(__name__)
 
 
 # TODO ajout robustesse sur action invalide
+
+
+class ErrorManager:
+    def __init__(self, player: Player) -> None:
+        self.player = player
+
+    def __enter__(self) -> None:
+        pass
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> bool:
+        if exc_type is not None:
+            self.player.game.record.add_error(
+                f"Error: {exc_type} {exc_val}",
+                self.player,
+            )
+            self.player.eliminate()
+        return True
 
 
 class ClassNameRepr(type):

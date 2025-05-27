@@ -276,7 +276,7 @@ class Player:
 
     def eliminate(self) -> None:
         self.eliminated = True
-        self.game.record.add_error(f"{self.name} is eliminated")
+        self.game.record.add_error("Elimination", self)
 
     def score(self) -> dict:
         cards = self.hand + self.discard + self.deck
