@@ -270,7 +270,7 @@ class Player:
     def state(self) -> PlayerData:
         score = self.score()["score"]
         state = PlayerData(name=self.name, hand=None, score=score)
-        if self.playing:
+        if self.playing and not self.eliminated:
             state.hand = self.hand.state
         return state
 
