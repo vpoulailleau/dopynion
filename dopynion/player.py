@@ -274,6 +274,10 @@ class Player:
             state.hand = self.hand.state
         return state
 
+    def eliminate(self) -> None:
+        self.eliminated = True
+        self.game.record.add_error(f"{self.name} is eliminated")
+
     def score(self) -> dict:
         cards = self.hand + self.discard + self.deck
         if self.eliminated:
@@ -298,5 +302,5 @@ class Player:
 
     def other_players(self) -> Generator[Player, None, None]:
         for other_player in self.game.players:
-            if other_player != self:
+            if other_player != self and not other_player.eliminated:
                 yield other_player
