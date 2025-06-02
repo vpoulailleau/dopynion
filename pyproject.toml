@@ -1,6 +1,6 @@
 [project]
 name = "dopynion"
-version = "0.4.11"
+version = "0.4.12"
 description = "Dopynion"
 readme = "README.md"
 requires-python = ">=3.12"
