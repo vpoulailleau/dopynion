@@ -64,7 +64,7 @@ class Card(metaclass=ClassNameRepr):
     money = 0
     is_action = False
     is_kingdom = True
-    is_money = False
+    is_treasure = False
     more_cards_from_deck = 0
     more_purchases = 0
     more_actions = 0
@@ -118,7 +118,7 @@ class Adventurer(Card):
             card_name = player.take_one_card_from_deck()
             if card_name is None:
                 break
-            if Card.types[card_name].is_money:
+            if Card.types[card_name].is_treasure:
                 nb_kept_cards += 1
                 player.hand.append(card_name)
             else:
@@ -210,7 +210,7 @@ class Copper(Card):
     cost = 0
     money = 1
     is_kingdom = False
-    is_money = True
+    is_treasure = True
 
 
 class CouncilRoom(Card):
@@ -294,7 +294,7 @@ class Gold(Card):
     cost = 6
     money = 3
     is_kingdom = False
-    is_money = True
+    is_treasure = True
 
 
 class Laboratory(Card):
@@ -376,7 +376,7 @@ class Mine(Card):
                 possible_money_cards = [
                     card_name
                     for card_name in player.game.stock
-                    if (class_ := Card.types[card_name]).is_money
+                    if (class_ := Card.types[card_name]).is_treasure
                     and class_.cost <= Card.types[trashed_card_name].cost + 3
                     and player.game.stock.quantity(card_name)
                 ]
@@ -407,7 +407,7 @@ class Platinum(Card):
     cost = 9
     money = 5
     is_kingdom = False
-    is_money = True
+    is_treasure = True
 
 
 class Province(Card):
@@ -453,7 +453,7 @@ class Silver(Card):
     cost = 3
     money = 2
     is_kingdom = False
-    is_money = True
+    is_treasure = True
 
 
 class Smithy(Card):
@@ -525,11 +525,10 @@ actions_card_name: set[CardName] = {
     if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_action
 }
 
-money_card_name: set[CardName] = {
-    CardName.COPPER,
-    CardName.SILVER,
-    CardName.GOLD,
-    CardName.PLATINUM,
+treasure_card_name: set[CardName] = {
+    CardName[name.upper()]
+    for name, class_ in inspect.getmembers(sys.modules[__name__], inspect.isclass)
+    if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_treasure
 }
 
 
@@ -624,7 +623,7 @@ class CardContainer:
 
     def contains_money(self) -> bool:
         return any(
-            card_name in money_card_name
+            card_name in treasure_card_name
             for card_name, qty in self._quantities.items()
             if qty > 0
         )
@@ -633,7 +632,7 @@ class CardContainer:
     def money_cards(self) -> CardContainer:
         ret = CardContainer()
         for card_name, qty in self._quantities.items():
-            if card_name in money_card_name:
+            if card_name in treasure_card_name:
                 ret.append_several(qty, card_name)
         return ret
 
