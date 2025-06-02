@@ -24,7 +24,7 @@ class Record:
             msg = f"game record is already created ({self._file})"
             raise ValueError(msg)
         self._file.write_text("", encoding="utf-8")
-        self._game_record = GameRecord(date=now)
+        self._game_record = GameRecord(date=now, stock=Cards())
         self.save(Game(finished=False, players=[], stock=Cards()))
 
     @staticmethod
@@ -39,6 +39,9 @@ class Record:
 
     def start_turn(self) -> None:
         self._game_record.turns.append(PlayerTurnRecord())
+
+    def add_stock(self, stock: Cards) -> None:
+        self.stock = stock
 
     def add_action(self, action: str, player: Player) -> None:
         turn = self._game_record.turns[-1]

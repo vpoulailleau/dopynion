@@ -79,6 +79,7 @@ class PlayerTurnRecord(BaseModel):
 
 class GameRecord(BaseModel):
     date: datetime
+    stock: Cards
     turns: list[PlayerTurnRecord] = Field(default_factory=list)
     scores: dict[str, int] = Field(default_factory=dict)
 

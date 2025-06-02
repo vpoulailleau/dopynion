@@ -1,6 +1,7 @@
 import pytest
 
 from dopynion.cards import CardName
+from dopynion.data_model import Cards
 from dopynion.game import Game
 from dopynion.player import Player
 
@@ -13,6 +14,9 @@ def _game() -> Game:
             pass
 
         def start_turn(self) -> None:
+            pass
+
+        def add_stock(self, stock: Cards) -> None:
             pass
 
         def add_action(self, action: str, player: Player) -> None:

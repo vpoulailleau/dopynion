@@ -73,6 +73,7 @@ class Game:
             else:
                 self.stock.append_several(10, card_name)
             possible_kingdoms.remove(card_name)
+        self.record.add_stock(self.stock.state)
 
     @property
     def finished(self) -> bool:
