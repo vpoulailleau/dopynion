@@ -32,6 +32,7 @@ class CardName(StrEnum):  # Create with a metaclass
     REMODEL = "remodel"
     SILVER = "silver"
     SMITHY = "smithy"
+    SWAP = "swap"
     VILLAGE = "village"
     WITCH = "witch"
     WOODCUTTER = "woodcutter"

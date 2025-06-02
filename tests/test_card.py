@@ -648,6 +648,13 @@ class CardParameter:
             more_cards=3,
         ),
         CardParameter(
+            CardName.SWAP,
+            more_purchase=0,
+            more_actions=1,
+            more_money=0,
+            more_cards=1,
+        ),
+        CardParameter(
             CardName.VILLAGE,
             more_purchase=0,
             more_actions=2,

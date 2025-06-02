@@ -468,6 +468,15 @@ class Smithy(Card):
     more_cards_from_deck = 3
 
 
+class Swap(Card):
+    name = "Troc"
+    card_set = "allies"
+    cost = 5
+    is_action = True
+    more_cards_from_deck = 1
+    more_actions = 1
+
+
 class Village(Card):
     name = "Village"
     cost = 3
