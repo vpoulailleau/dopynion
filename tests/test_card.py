@@ -579,6 +579,56 @@ def test_workshop(empty_player: Player) -> None:
     assert len(player.hand) == 4
 
 
+def test_swap(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+
+        def confirm_trash_card_from_hand(  # noqa: PLR6301
+            self,
+            _decision_input: CardNameAndHand,
+        ) -> bool:
+            return True
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append_several(5, CardName.SWAP)
+
+    player.start_turn()
+    swap_stock_before = player.game.stock.swap_qty
+
+    player.action(CardName.SWAP)
+
+    swap_stock_after = player.game.stock.swap_qty
+    assert swap_stock_after == swap_stock_before + 1
+    assert len(player.hand) == 3  # 4 - 1
+    assert len(player.discard) == 1
+
+
+def test_swap_no_action(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+
+        def confirm_trash_card_from_hand(  # noqa: PLR6301
+            self,
+            _decision_input: CardNameAndHand,
+        ) -> bool:
+            return True
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append(CardName.SWAP)
+    player.hand.append_several(4, CardName.GOLD)
+
+    player.start_turn()
+
+    player.action(CardName.SWAP)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 0
+
+
 @dataclass
 class CardParameter:
     card_name: CardName

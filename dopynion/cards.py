@@ -475,6 +475,38 @@ class Swap(Card):
     is_action = True
     more_cards_from_deck = 1
     more_actions = 1
+    max_cost_swap = 5
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for trashed_card_name in list(player.hand):
+            if not Card.types[trashed_card_name].is_action:
+                continue
+            if player.hooks.confirm_trash_card_from_hand(
+                CardNameAndHand(card_name=trashed_card_name, hand=list(player.hand)),
+            ):
+                player.hand.remove(trashed_card_name)
+                player.game.stock.append(trashed_card_name)
+
+                possible_cards: list[str] = [
+                    card_name
+                    for card_name in player.game.stock
+                    if player.game.stock.quantity(card_name)
+                    and Card.types[card_name].cost <= cls.max_cost_swap
+                    and Card.types[card_name].is_action
+                    and card_name != trashed_card_name
+                ]
+                if possible_cards:
+                    chosen_card = player.hooks.choose_card_to_receive_in_discard(
+                        # TODO partout où il y a des possible_cards, vérifier que la
+                        # réponse est dans la liste
+                        PossibleCards(possible_cards=possible_cards),
+                    )
+                    chosen_card_name = CardName[chosen_card.upper()]
+                    player.game.stock.remove(chosen_card_name)
+                    player.discard.append(chosen_card_name)
+
+                break
 
 
 class Village(Card):
