@@ -10,6 +10,7 @@ class CardName(StrEnum):  # Create with a metaclass
     CELLAR = "cellar"
     CHANCELLOR = "chancellor"
     CHAPEL = "chapel"
+    COLONY = "colony"
     COPPER = "copper"
     COUNCILROOM = "councilroom"
     CURSE = "curse"

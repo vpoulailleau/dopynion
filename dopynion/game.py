@@ -27,6 +27,7 @@ class Game:
         self.stock.append_several(12, CardName.ESTATE)
         self.stock.append_several(12, CardName.DUCHY)
         self.stock.append_several(12, CardName.PROVINCE)
+        self.stock.append_several(12, CardName.COLONY)
         self.stock.append_several(30, CardName.CURSE)
 
     def __getattr__(self, name: str) -> int:
@@ -51,6 +52,7 @@ class Game:
             self.estate_qty = 8
             self.duchy_qty = 8
             self.province_qty = 8
+            self.colony_qty = 8
             self.curse_qty = 10
         elif len(self.players) == 3:  # noqa: PLR2004
             self.curse_qty = 20
@@ -73,7 +75,11 @@ class Game:
 
     @property
     def finished(self) -> bool:
-        return (self.stock.province_qty == 0) or self.stock.three_empty_piles
+        return (
+            (self.stock.province_qty == 0)
+            or (self.stock.colony_qty == 0)
+            or self.stock.three_empty_piles
+        )
 
     @property
     def state(self) -> GameData:

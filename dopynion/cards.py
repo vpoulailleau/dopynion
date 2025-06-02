@@ -58,6 +58,7 @@ class ClassNameRepr(type):
 
 class Card(metaclass=ClassNameRepr):
     types: ClassVar[dict[CardName, type[Card]]] = {}
+    card_set = "baseset"
     name = "Unknown"
     cost = 10_000
     money = 0
@@ -194,6 +195,14 @@ class Chapel(Card):
                 nb_trashed_cards += 1
             if nb_trashed_cards >= cls.max_trashed_cards:
                 break
+
+
+class Colony(Card):
+    name = "Colonie"
+    card_set = "prosperity"
+    cost = 11
+    is_kingdom = False
+    victory_points = 10
 
 
 class Copper(Card):

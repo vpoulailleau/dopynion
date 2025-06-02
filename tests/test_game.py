@@ -47,6 +47,7 @@ def test_initial_estates_2_players(game: Game) -> None:
     assert game.estate_qty == 8
     assert game.duchy_qty == 8
     assert game.province_qty == 8
+    assert game.colony_qty == 8
 
 
 def test_initial_estates_3_players(game: Game) -> None:
@@ -57,6 +58,7 @@ def test_initial_estates_3_players(game: Game) -> None:
     assert game.estate_qty == 12
     assert game.duchy_qty == 12
     assert game.province_qty == 12
+    assert game.colony_qty == 12
 
 
 def test_initial_malediction_2_players(game: Game) -> None:

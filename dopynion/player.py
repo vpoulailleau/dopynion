@@ -283,6 +283,7 @@ class Player:
         if self.eliminated:
             return {"score": -10000}
         return {
+            "colony_qty": cards.colony_qty,
             "province_qty": cards.province_qty,
             "duchy_qty": cards.duchy_qty,
             "estate_qty": cards.estate_qty,
