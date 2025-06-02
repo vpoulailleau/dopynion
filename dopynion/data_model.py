@@ -22,6 +22,7 @@ class CardName(StrEnum):  # Create with a metaclass
     FESTIVAL = "festival"
     GARDENS = "gardens"
     GOLD = "gold"
+    HIRELING = "hireling"
     LABORATORY = "laboratory"
     LIBRARY = "library"
     MARKET = "market"

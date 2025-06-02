@@ -168,6 +168,7 @@ class Player:
         self.playing = False
         self.state_machine: State = State.ACTION
         self.eliminated = False
+        self.nb_cards_in_hand_at_turn_start = 5
         self.hooks: PlayerHooks = DefaultPlayerHooks()
         self._adjust()
 
@@ -221,7 +222,7 @@ class Player:
     def _adjust(self) -> None:
         self.played_cards.empty_to(self.discard)
         self.hand.empty_to(self.discard)
-        for _ in range(5):
+        for _ in range(self.nb_cards_in_hand_at_turn_start):
             card_name = self.take_one_card_from_deck()
             if card_name is not None:
                 self.hand.append(card_name)

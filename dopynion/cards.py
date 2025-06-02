@@ -352,6 +352,19 @@ class Gold(Card):
     is_treasure = True
 
 
+class Hireling(Card):
+    name = "Recrue"
+    card_set = "adventures"
+    cost = 6
+    is_action = True
+    more_cards_from_deck = 1
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        player.played_cards.pop()
+        player.nb_cards_in_hand_at_turn_start += 1
+
+
 class Laboratory(Card):
     name = "Laboratoire"
     cost = 5

@@ -663,6 +663,23 @@ def test_distant_shore_no_estate(empty_player: Player) -> None:
     assert len(player.discard) == 0
 
 
+def test_hireling_more_cards_at_start(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(10, CardName.GOLD)
+    player.hand.append_several(4, CardName.COPPER)
+    player.hand.append(CardName.HIRELING)
+
+    player.start_turn()
+
+    player.action(CardName.HIRELING)
+    assert CardName.HIRELING not in player.played_cards
+    assert CardName.HIRELING not in player.discard
+
+    player.end_turn()
+    player.start_turn()
+    assert len(player.hand) == 6
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -716,6 +733,13 @@ class CardParameter:
             more_actions=2,
             more_money=2,
             more_cards=0,
+        ),
+        CardParameter(
+            CardName.HIRELING,
+            more_purchase=0,
+            more_actions=0,
+            more_money=0,
+            more_cards=1,
         ),
         CardParameter(
             CardName.LABORATORY,
