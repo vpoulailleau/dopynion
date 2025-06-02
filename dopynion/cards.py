@@ -340,12 +340,13 @@ class Militia(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         for other_player in player.other_players():
-            while len(other_player.hand) > cls.enemy_hand_size_left:
-                removed_card = other_player.hooks.discard_card_from_hand(
-                    Hand(hand=list(other_player.hand)),
-                )
-                other_player.hand.remove(CardName[removed_card.upper()])
-                other_player.discard.append(CardName[removed_card.upper()])
+            with ErrorManager(other_player):
+                while len(other_player.hand) > cls.enemy_hand_size_left:
+                    removed_card = other_player.hooks.discard_card_from_hand(
+                        Hand(hand=list(other_player.hand)),
+                    )
+                    other_player.hand.remove(CardName[removed_card.upper()])
+                    other_player.discard.append(CardName[removed_card.upper()])
 
 
 class Mine(Card):
