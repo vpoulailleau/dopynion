@@ -21,6 +21,7 @@ class Game:
         self.players: list[Player] = []
         self.started = False
         self.stock = CardContainer()
+        self.stock.append_several(12, CardName.PLATINUM)
         self.stock.append_several(30, CardName.GOLD)
         self.stock.append_several(40, CardName.SILVER)
         self.stock.append_several(60, CardName.COPPER)

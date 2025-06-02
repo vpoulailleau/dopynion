@@ -402,6 +402,14 @@ class MoneyLender(Card):
             player.money += 3
 
 
+class Platinum(Card):
+    name = "Platine"
+    cost = 9
+    money = 5
+    is_kingdom = False
+    is_money = True
+
+
 class Province(Card):
     name = "Province"
     cost = 8
@@ -517,7 +525,12 @@ actions_card_name: set[CardName] = {
     if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_action
 }
 
-money_card_name: set[CardName] = {CardName.COPPER, CardName.SILVER, CardName.GOLD}
+money_card_name: set[CardName] = {
+    CardName.COPPER,
+    CardName.SILVER,
+    CardName.GOLD,
+    CardName.PLATINUM,
+}
 
 
 class CardContainer:
@@ -630,6 +643,7 @@ class CardContainer:
             1 * self._quantities.get(CardName.COPPER, 0)
             + 2 * self._quantities.get(CardName.SILVER, 0)
             + 3 * self._quantities.get(CardName.GOLD, 0)
+            + 5 * self._quantities.get(CardName.PLATINUM, 0)
         )
 
     def pop(self, index: int = -1) -> CardName:

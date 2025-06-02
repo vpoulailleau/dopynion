@@ -35,6 +35,7 @@ def test_initial_money(game: Game) -> None:
     game.add_player(Player("1"))
     game.add_player(Player("2"))
     game.start()
+    assert game.platinum_qty == 12
     assert game.gold_qty == 30
     assert game.silver_qty == 40
     assert game.copper_qty == 60 - 7 * 2

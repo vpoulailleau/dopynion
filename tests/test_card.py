@@ -431,7 +431,27 @@ def test_mine_trash_gold(empty_player: Player) -> None:
     player.action(CardName.MINE)
 
     assert len(player.hand) == 1
-    assert player.hand[0] == CardName.GOLD
+    assert player.hand[0] == CardName.PLATINUM
+
+
+def test_mine_trash_platinum(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def trash_money_card_for_better_money_card(  # noqa: PLR6301
+            self,
+            _decision_input: MoneyCardsInHand,
+        ) -> CardNameDataModel | None:
+            return CardName.PLATINUM
+
+    player = empty_player
+    player.hooks = Hooks()
+    player.hand.append(CardName.PLATINUM)
+    player.hand.append(CardName.MINE)
+    player.start_turn()
+
+    player.action(CardName.MINE)
+
+    assert len(player.hand) == 1
+    assert player.hand[0] == CardName.PLATINUM
 
 
 # TODO trash don't exist
