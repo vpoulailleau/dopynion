@@ -272,6 +272,16 @@ class Curse(Card):
     victory_points = -1
 
 
+class DistantShore(Card):
+    name = "Rivage lointain"
+    cost = 6
+    is_action = True
+    is_treasure = True
+    more_actions = 1
+    more_cards_from_deck = 2
+    victory_points = 2
+
+
 class Duchy(Card):
     name = "Duché"
     cost = 5

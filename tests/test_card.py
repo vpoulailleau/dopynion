@@ -678,6 +678,13 @@ class CardParameter:
             more_cards=4,
         ),
         CardParameter(
+            CardName.DISTANTSHORE,
+            more_purchase=0,
+            more_actions=1,
+            more_money=0,
+            more_cards=2,
+        ),
+        CardParameter(
             CardName.FESTIVAL,
             more_purchase=1,
             more_actions=2,
