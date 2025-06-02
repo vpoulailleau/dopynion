@@ -214,10 +214,6 @@ def test_chapel_trash_as_many_cards_as_possible_that_is_four(
     empty_player: Player,
 ) -> None:
     class Hooks(DefaultPlayerHooks):
-        def __init__(self, *args: tuple, **kwargs: dict) -> None:
-            super().__init__(*args, **kwargs)
-            self.nb_cards = 0
-
         def confirm_trash_card_from_hand(  # noqa: PLR6301
             self,
             _decision_input: CardNameAndHand,
@@ -263,10 +259,6 @@ def test_feast_trash_good_cardname(empty_player: Player) -> None:
 
 def test_feast_choose_a_card(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
-        def __init__(self, *args: tuple, **kwargs: dict) -> None:
-            super().__init__(*args, **kwargs)
-            self.nb_cards = 0
-
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
             decision_input: PossibleCards,
@@ -473,10 +465,6 @@ def test_money_lender_refuse(empty_player: Player) -> None:
 
 def test_money_lender_accept(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
-        def __init__(self, *args: tuple, **kwargs: dict) -> None:
-            super().__init__(*args, **kwargs)
-            self.nb_cards = 0
-
         def confirm_trash_card_from_hand(  # noqa: PLR6301
             self,
             _decision_input: CardNameAndHand,
@@ -501,10 +489,6 @@ def test_money_lender_accept(empty_player: Player) -> None:
 
 def test_remodel(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
-        def __init__(self, *args: tuple, **kwargs: dict) -> None:
-            super().__init__(*args, **kwargs)
-            self.nb_cards = 0
-
         def trash_card_from_hand(  # noqa: PLR6301
             self,
             _hand: Hand,
@@ -555,10 +539,6 @@ def test_witch(game_with_two_players: tuple[Game, Player, Player]) -> None:
 
 def test_workshop(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
-        def __init__(self, *args: tuple, **kwargs: dict) -> None:
-            super().__init__(*args, **kwargs)
-            self.nb_cards = 0
-
         def choose_card_to_receive_in_discard(  # noqa: PLR6301
             self,
             decision_input: PossibleCards,
@@ -581,9 +561,6 @@ def test_workshop(empty_player: Player) -> None:
 
 def test_swap(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
-        def __init__(self, *args: tuple, **kwargs: dict) -> None:
-            super().__init__(*args, **kwargs)
-
         def confirm_trash_card_from_hand(  # noqa: PLR6301
             self,
             _decision_input: CardNameAndHand,
@@ -607,9 +584,6 @@ def test_swap(empty_player: Player) -> None:
 
 def test_swap_no_action(empty_player: Player) -> None:
     class Hooks(DefaultPlayerHooks):
-        def __init__(self, *args: tuple, **kwargs: dict) -> None:
-            super().__init__(*args, **kwargs)
-
         def confirm_trash_card_from_hand(  # noqa: PLR6301
             self,
             _decision_input: CardNameAndHand,
@@ -627,6 +601,40 @@ def test_swap_no_action(empty_player: Player) -> None:
 
     assert len(player.hand) == 4
     assert len(player.discard) == 0
+
+
+def test_artificer(empty_player: Player) -> None:
+    class Hooks(DefaultPlayerHooks):
+        def __init__(self, *args: tuple, **kwargs: dict) -> None:
+            super().__init__(*args, **kwargs)
+            self.nb_cards = 0
+
+        def confirm_discard_card_from_hand(
+            self,
+            _decision_input: CardNameAndHand,
+        ) -> bool:
+            self.nb_cards += 1
+            return self.nb_cards <= 3
+
+        def choose_card_to_receive_in_deck(  # noqa: PLR6301
+            self,
+            decision_input: PossibleCards,
+        ) -> CardNameDataModel:
+            return CardName.VILLAGE
+
+    player = empty_player
+    player.game.stock.append(CardName.VILLAGE)
+    player.hooks = Hooks()
+    player.hand.append(CardName.ARTIFICER)
+    player.hand.append_several(4, CardName.GOLD)
+
+    player.start_turn()
+
+    player.action(CardName.ARTIFICER)
+
+    assert len(player.hand) == 4 - 3
+    assert len(player.discard) == 3
+    assert len(player.deck) == 1
 
 
 @dataclass

@@ -137,7 +137,28 @@ class Artificer(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        pass
+        nb_discarded_cards = 0
+        for card_name in player.hand.copy():
+            if player.hooks.confirm_discard_card_from_hand(
+                CardNameAndHand(card_name=card_name, hand=list(player.hand)),
+            ):
+                player.hand.remove(card_name)
+                player.discard.append(card_name)
+                nb_discarded_cards += 1
+
+        possible_cards: list[str] = [
+            card_name
+            for card_name in player.game.stock
+            if player.game.stock.quantity(card_name)
+            and Card.types[card_name].cost == nb_discarded_cards
+        ]
+        if possible_cards:
+            chosen_card_name = player.hooks.choose_card_to_receive_in_deck(
+                PossibleCards(possible_cards=possible_cards),
+            )
+            card_name = CardName[chosen_card_name.upper()]
+            player.game.stock.remove(card_name)
+            player.deck.prepend(card_name)
 
 
 class Bureaucrat(Card):

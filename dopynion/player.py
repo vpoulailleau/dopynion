@@ -77,6 +77,13 @@ class PlayerHooks(ABC):
         pass
 
     @abstractmethod
+    def choose_card_to_receive_in_deck(
+        self,
+        decision_input: PossibleCards,
+    ) -> CardNameDataModel:
+        pass
+
+    @abstractmethod
     def skip_card_reception_in_hand(
         self,
         decision_input: CardNameAndHand,
@@ -120,6 +127,12 @@ class DefaultPlayerHooks(PlayerHooks):
         return False
 
     def choose_card_to_receive_in_discard(  # noqa: PLR6301
+        self,
+        decision_input: PossibleCards,
+    ) -> CardNameDataModel:
+        return decision_input.possible_cards[0]
+
+    def choose_card_to_receive_in_deck(  # noqa: PLR6301
         self,
         decision_input: PossibleCards,
     ) -> CardNameDataModel:
