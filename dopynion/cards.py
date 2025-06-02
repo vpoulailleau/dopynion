@@ -126,6 +126,20 @@ class Adventurer(Card):
                 player.discard.append(card_name)
 
 
+class Artificer(Card):
+    name = "Maître artisan"
+    card_set = "adventures"
+    cost = 5
+    is_action = True
+    more_actions = 1
+    more_cards_from_deck = 1
+    more_money = 1
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        pass
+
+
 class Bureaucrat(Card):
     name = "Bureaucrate"
     cost = 4

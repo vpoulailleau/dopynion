@@ -642,6 +642,13 @@ class CardParameter:
     ("card_param"),
     [
         CardParameter(
+            CardName.ARTIFICER,
+            more_purchase=0,
+            more_actions=1,
+            more_money=1,
+            more_cards=1,
+        ),
+        CardParameter(
             CardName.CELLAR,
             more_purchase=0,
             more_actions=1,

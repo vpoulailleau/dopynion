@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 class CardName(StrEnum):  # Create with a metaclass
     ADVENTURER = "adventurer"
+    ARTIFICER = "artificer"
     BUREAUCRAT = "bureaucrat"
     CELLAR = "cellar"
     CHANCELLOR = "chancellor"
