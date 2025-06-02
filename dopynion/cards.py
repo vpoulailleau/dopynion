@@ -397,6 +397,20 @@ class Library(Card):
         skipped_cards.empty_to(player.discard)
 
 
+class Magnate(Card):
+    name = "Magnat"
+    card_set = "prosperity2add"
+    cost = 5
+    is_action = True
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for _ in list(player.hand.money_cards):
+            card_name = player.take_one_card_from_deck()
+            if card_name is not None:
+                player.hand.append(card_name)
+
+
 class Market(Card):
     name = "Marché"
     cost = 5

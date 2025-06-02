@@ -25,6 +25,7 @@ class CardName(StrEnum):  # Create with a metaclass
     HIRELING = "hireling"
     LABORATORY = "laboratory"
     LIBRARY = "library"
+    MAGNATE = "magnate"
     MARKET = "market"
     MILITIA = "militia"
     MINE = "mine"
