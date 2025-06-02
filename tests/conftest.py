@@ -8,6 +8,7 @@ from dopynion.player import Player
 @pytest.fixture(name="game")
 def _game() -> Game:
     class TestRecord:
+        # ne pas ajouter le second paramètre (pour ne pas zapper des exceptions)
         def save(self) -> None:
             pass
 

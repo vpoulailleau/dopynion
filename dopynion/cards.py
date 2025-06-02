@@ -281,6 +281,12 @@ class DistantShore(Card):
     more_cards_from_deck = 2
     victory_points = 2
 
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        if CardName.ESTATE in player.game.stock:
+            player.game.stock.remove(CardName.ESTATE)
+            player.discard.append(CardName.ESTATE)
+
 
 class Duchy(Card):
     name = "Duché"

@@ -637,6 +637,32 @@ def test_artificer(empty_player: Player) -> None:
     assert len(player.deck) == 1
 
 
+def test_distant_shore(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.DISTANTSHORE)
+
+    player.start_turn()
+
+    player.action(CardName.DISTANTSHORE)
+
+    assert len(player.hand) == 4
+    assert CardName.ESTATE in player.discard
+
+
+def test_distant_shore_no_estate(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.DISTANTSHORE)
+    while CardName.ESTATE in player.game.stock:
+        player.game.stock.remove(CardName.ESTATE)
+
+    player.start_turn()
+
+    player.action(CardName.DISTANTSHORE)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 0
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
