@@ -65,6 +65,7 @@ class Card(metaclass=ClassNameRepr):
     is_action = False
     is_kingdom = True
     is_treasure = False
+    is_victory = False
     more_cards_from_deck = 0
     more_purchases = 0
     more_actions = 0
@@ -240,6 +241,7 @@ class Duchy(Card):
     name = "Duché"
     cost = 5
     is_kingdom = False
+    is_victory = True
     victory_points = 3
 
 
@@ -247,6 +249,7 @@ class Estate(Card):
     name = "Domaine"
     cost = 2
     is_kingdom = False
+    is_victory = True
     victory_points = 1
 
 
@@ -287,6 +290,7 @@ class Gardens(Card):
     name = "Jardins"
     cost = 4
     is_kingdom = True
+    is_victory = True
 
 
 class Gold(Card):
@@ -414,6 +418,7 @@ class Province(Card):
     name = "Province"
     cost = 8
     is_kingdom = False
+    is_victory = True
     victory_points = 6
 
 
@@ -531,6 +536,12 @@ treasure_card_name: set[CardName] = {
     if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_treasure
 }
 
+victory_card_name: set[CardName] = {
+    CardName[name.upper()]
+    for name, class_ in inspect.getmembers(sys.modules[__name__], inspect.isclass)
+    if issubclass(class_, Card) and class_.name != "Unknown" and class_.is_victory
+}
+
 
 class CardContainer:
     """Storage for card."""
@@ -609,7 +620,7 @@ class CardContainer:
     def victory_cards(self) -> CardContainer:
         ret = CardContainer()
         for card_name, qty in self._quantities.items():
-            if Card.types[card_name].victory_points:
+            if card_name in victory_card_name:
                 ret.append_several(qty, card_name)
         return ret
 
