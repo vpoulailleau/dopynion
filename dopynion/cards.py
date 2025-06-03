@@ -270,6 +270,7 @@ class Curse(Card):
     name = "Malédiction"
     cost = 0
     is_kingdom = False
+    is_victory = True
     victory_points = -1
 
 
