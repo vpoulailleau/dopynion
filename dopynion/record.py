@@ -41,7 +41,7 @@ class Record:
         self._game_record.turns.append(PlayerTurnRecord())
 
     def add_stock(self, stock: Cards) -> None:
-        self.stock = stock
+        self._game_record.stock = stock
 
     def add_action(self, action: str, player: Player) -> None:
         turn = self._game_record.turns[-1]
