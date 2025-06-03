@@ -274,6 +274,7 @@ class Curse(Card):
 
 class DistantShore(Card):
     name = "Rivage lointain"
+    card_set = "allies"
     cost = 6
     is_action = True
     is_treasure = True
