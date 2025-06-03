@@ -486,6 +486,7 @@ class MoneyLender(Card):
 
 class Platinum(Card):
     name = "Platine"
+    card_set = "prosperity"
     cost = 9
     money = 5
     is_kingdom = False
