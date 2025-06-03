@@ -238,6 +238,7 @@ class Colony(Card):
     card_set = "prosperity"
     cost = 11
     is_kingdom = False
+    is_victory = True
     victory_points = 10
 
 
@@ -278,6 +279,7 @@ class DistantShore(Card):
     cost = 6
     is_action = True
     is_treasure = True
+    is_victory = True
     more_actions = 1
     more_cards_from_deck = 2
     victory_points = 2
