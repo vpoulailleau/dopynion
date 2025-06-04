@@ -18,7 +18,7 @@ records_dir.mkdir(parents=True, exist_ok=True)
 class Record:
     def __init__(self) -> None:
         now = datetime.datetime.now(tz=datetime.UTC)
-        now_str = now.strftime("%Y_%m_%d__%H_%M_%S")
+        now_str = now.strftime("%Y_%m_%d__%H_%M_%S_%f")
         self._file = records_dir / f"game__{now_str}.dop"
         if self._file.exists():
             msg = f"game record is already created ({self._file})"
