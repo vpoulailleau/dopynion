@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -71,6 +72,7 @@ class ActionRecord(BaseModel):
 class ErrorRecord(BaseModel):
     error: str
     player: Player
+    type: Literal["error", "warning"] = "error"
 
 
 class PlayerTurnRecord(BaseModel):

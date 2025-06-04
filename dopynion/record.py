@@ -1,5 +1,6 @@
 import datetime
 from pathlib import Path
+from typing import Literal
 
 from dopynion.data_model import (
     ActionRecord,
@@ -53,11 +54,19 @@ class Record:
         turn.actions.append(action_record)
 
     def add_error(self, error: str, player: Player) -> None:
+        self._add_error(error, player, "error")
+
+    def add_warning(self, error: str, player: Player) -> None:
+        self._add_error(error, player, "warning")
+
+    def _add_error(
+        self,
+        error: str,
+        player: Player,
+        type_: Literal["error", "warning"],
+    ) -> None:
         if not self._game_record.turns:
             self._game_record.turns.append(PlayerTurnRecord())
         turn = self._game_record.turns[-1]
-        error_record = ErrorRecord(
-            error=error,
-            player=player.state,
-        )
+        error_record = ErrorRecord(error=error, player=player.state, type=type_)
         turn.actions.append(error_record)
