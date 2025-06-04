@@ -1,31 +1,13 @@
 import pytest
 
 from dopynion.cards import CardName
-from dopynion.data_model import Cards
-from dopynion.data_model import Game as GameData
 from dopynion.game import Game
 from dopynion.player import Player
 
 
 @pytest.fixture(name="game")
 def _game() -> Game:
-    class TestRecord:
-        def save(self, _game: GameData) -> None:
-            pass
-
-        def start_turn(self) -> None:
-            pass
-
-        def add_stock(self, stock: Cards) -> None:
-            pass
-
-        def add_action(self, action: str, player: Player) -> None:
-            pass
-
-        def add_error(self, error: str, player: Player) -> None:
-            pass
-
-    return Game(record_factory=TestRecord)
+    return Game()
 
 
 @pytest.fixture(name="player")
