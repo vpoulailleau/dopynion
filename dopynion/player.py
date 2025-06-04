@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar, cast, overload
 
-from dopynion.cards import Card, CardContainer, CardName
-from dopynion.data_model import CardName as CardNameDataModel
+from dopynion.cards import Card, CardContainer
 from dopynion.data_model import (
+    CardName,
     CardNameAndHand,
     Hand,
+    HookCallArgs,
+    HookCallResult,
     MoneyCardsInHand,
     PossibleCards,
 )
@@ -36,6 +39,10 @@ class State(Enum):
     ADJUST = 3
 
 
+HookArg = TypeVar("HookArg", bound=HookCallArgs)
+HookRet = TypeVar("HookRet", bound=HookCallResult)
+
+
 class PlayerHooks(ABC):
     @abstractmethod
     def confirm_discard_card_from_hand(
@@ -55,14 +62,14 @@ class PlayerHooks(ABC):
     def discard_card_from_hand(
         self,
         decision_input: Hand,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         pass
 
     @abstractmethod
     def trash_card_from_hand(
         self,
         decision_input: Hand,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         pass
 
     @abstractmethod
@@ -73,14 +80,14 @@ class PlayerHooks(ABC):
     def choose_card_to_receive_in_discard(
         self,
         decision_input: PossibleCards,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         pass
 
     @abstractmethod
     def choose_card_to_receive_in_deck(
         self,
         decision_input: PossibleCards,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         pass
 
     @abstractmethod
@@ -94,7 +101,7 @@ class PlayerHooks(ABC):
     def trash_money_card_for_better_money_card(
         self,
         decision_input: MoneyCardsInHand,
-    ) -> CardNameDataModel | None:
+    ) -> CardName | None:
         pass
 
 
@@ -114,13 +121,13 @@ class DefaultPlayerHooks(PlayerHooks):
     def discard_card_from_hand(  # noqa: PLR6301
         self,
         decision_input: Hand,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         return decision_input.hand[0]
 
     def trash_card_from_hand(  # noqa: PLR6301
         self,
         decision_input: Hand,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         return decision_input.hand[0]
 
     def confirm_discard_deck(self) -> bool:  # noqa: PLR6301
@@ -129,13 +136,13 @@ class DefaultPlayerHooks(PlayerHooks):
     def choose_card_to_receive_in_discard(  # noqa: PLR6301
         self,
         decision_input: PossibleCards,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         return decision_input.possible_cards[0]
 
     def choose_card_to_receive_in_deck(  # noqa: PLR6301
         self,
         decision_input: PossibleCards,
-    ) -> CardNameDataModel:
+    ) -> CardName:
         return decision_input.possible_cards[0]
 
     def skip_card_reception_in_hand(  # noqa: PLR6301
@@ -147,7 +154,7 @@ class DefaultPlayerHooks(PlayerHooks):
     def trash_money_card_for_better_money_card(  # noqa: PLR6301
         self,
         _decision_input: MoneyCardsInHand,
-    ) -> CardNameDataModel | None:
+    ) -> CardName | None:
         return None
 
 
@@ -319,3 +326,27 @@ class Player:
         for other_player in self.game.players:
             if other_player != self and not other_player.eliminated:
                 yield other_player
+
+    @overload
+    def use_hook(self, hook: Callable[[], HookRet]) -> HookRet: ...
+    @overload
+    def use_hook(
+        self,
+        hook: Callable[[HookArg], HookRet],
+        args: HookArg,
+    ) -> HookRet: ...
+
+    def use_hook(
+        self,
+        hook: Callable[[], HookRet] | Callable[[HookArg], HookRet],
+        args: HookArg | None = None,
+    ) -> HookRet:
+        self.game.record.add_hook_call(self, hook.__name__, args)
+        if args is None:
+            zero_arg_hook = cast(Callable[[], HookRet], hook)
+            result = zero_arg_hook()
+        else:
+            arg_hook = cast(Callable[[HookArg], HookRet], hook)
+            result = arg_hook(args)
+        self.game.record.add_hook_result(self, result)
+        return result

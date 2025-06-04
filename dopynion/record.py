@@ -8,6 +8,10 @@ from dopynion.data_model import (
     ErrorRecord,
     Game,
     GameRecord,
+    HookCallArgs,
+    HookCallRecord,
+    HookCallResult,
+    HookResultRecord,
     PlayerTurnRecord,
 )
 from dopynion.player import Player
@@ -70,3 +74,11 @@ class Record:
         turn = self._game_record.turns[-1]
         error_record = ErrorRecord(error=error, player=player.state, type=type_)
         turn.actions.append(error_record)
+
+    def add_hook_call(self, player: Player, name: str, args: HookCallArgs) -> None:
+        turn = self._game_record.turns[-1]
+        turn.actions.append(HookCallRecord(name=name, player=player.state, args=args))
+
+    def add_hook_result(self, player: Player, result: HookCallResult) -> None:
+        turn = self._game_record.turns[-1]
+        turn.actions.append(HookResultRecord(player=player.state, result=result))

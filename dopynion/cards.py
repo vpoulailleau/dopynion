@@ -139,7 +139,8 @@ class Artificer(Card):
     def _action(cls, player: Player) -> None:
         nb_discarded_cards = 0
         for card_name in player.hand.copy():
-            if player.hooks.confirm_discard_card_from_hand(
+            if player.use_hook(
+                player.hooks.confirm_discard_card_from_hand,
                 CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(card_name)
@@ -153,7 +154,8 @@ class Artificer(Card):
             and Card.types[card_name].cost == nb_discarded_cards
         ]
         if possible_cards:
-            chosen_card_name = player.hooks.choose_card_to_receive_in_deck(
+            chosen_card_name = player.use_hook(
+                player.hooks.choose_card_to_receive_in_deck,
                 PossibleCards(possible_cards=possible_cards),
             )
             card_name = CardName[chosen_card_name.upper()]
@@ -190,7 +192,8 @@ class Cellar(Card):
     def _action(cls, player: Player) -> None:
         nb_discarded_cards = 0
         for card_name in player.hand.copy():
-            if player.hooks.confirm_discard_card_from_hand(
+            if player.use_hook(
+                player.hooks.confirm_discard_card_from_hand,
                 CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(card_name)
@@ -210,7 +213,7 @@ class Chancellor(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        if player.hooks.confirm_discard_deck():
+        if player.use_hook(player.hooks.confirm_discard_deck):
             player.deck.empty_to(player.discard)
 
 
@@ -224,7 +227,8 @@ class Chapel(Card):
     def _action(cls, player: Player) -> None:
         nb_trashed_cards = 0
         for card_name in player.hand.copy():
-            if player.hooks.confirm_trash_card_from_hand(
+            if player.use_hook(
+                player.hooks.confirm_trash_card_from_hand,
                 CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(card_name)
@@ -324,7 +328,8 @@ class Feast(Card):
             and Card.types[card_name].cost <= cls.max_new_card_cost
         ]
         if possible_cards:
-            chosen_card_name = player.hooks.choose_card_to_receive_in_discard(
+            chosen_card_name = player.use_hook(
+                player.hooks.choose_card_to_receive_in_discard,
                 PossibleCards(possible_cards=possible_cards),
             )
             card_name = CardName[chosen_card_name.upper()]
@@ -392,7 +397,8 @@ class Library(Card):
                 break
             if not Card.types[card_name].is_action:
                 player.hand.append(card_name)
-            elif player.hooks.skip_card_reception_in_hand(
+            elif player.use_hook(
+                player.hooks.skip_card_reception_in_hand,
                 CardNameAndHand(card_name=card_name, hand=list(player.hand)),
             ):
                 skipped_cards.append(card_name)
@@ -437,7 +443,8 @@ class Militia(Card):
         for other_player in player.other_players():
             with ErrorManager(other_player):
                 while len(other_player.hand) > cls.enemy_hand_size_left:
-                    removed_card = other_player.hooks.discard_card_from_hand(
+                    removed_card = other_player.use_hook(
+                        other_player.hooks.discard_card_from_hand,
                         Hand(hand=list(other_player.hand)),
                     )
                     other_player.hand.remove(CardName[removed_card.upper()])
@@ -453,7 +460,8 @@ class Mine(Card):
     def _action(cls, player: Player) -> None:
         money_cards: list[str] = list(set(player.hand.money_cards))
         if money_cards:
-            trashed_card = player.hooks.trash_money_card_for_better_money_card(
+            trashed_card = player.use_hook(
+                player.hooks.trash_money_card_for_better_money_card,
                 MoneyCardsInHand(money_in_hand=money_cards),
             )
             if trashed_card is not None:
@@ -481,7 +489,8 @@ class MoneyLender(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        if player.hand.copper_qty >= 1 and player.hooks.confirm_trash_card_from_hand(
+        if player.hand.copper_qty >= 1 and player.use_hook(
+            player.hooks.confirm_trash_card_from_hand,
             CardNameAndHand(card_name=CardName.COPPER, hand=list(player.hand)),
         ):
             player.hand.remove(CardName.COPPER)
@@ -514,7 +523,8 @@ class Remodel(Card):
     def _action(cls, player: Player) -> None:
         if not player.hand:
             return
-        trashed_card = player.hooks.trash_card_from_hand(
+        trashed_card = player.use_hook(
+            player.hooks.trash_card_from_hand,
             Hand(hand=list(player.hand)),
         )
         trashed_card_name = CardName[trashed_card.upper()]
@@ -526,7 +536,8 @@ class Remodel(Card):
             and Card.types[card_name].cost <= Card.types[trashed_card_name].cost + 2
         ]
         if possible_cards:
-            chosen_card = player.hooks.choose_card_to_receive_in_discard(
+            chosen_card = player.use_hook(
+                player.hooks.choose_card_to_receive_in_discard,
                 # TODO partout où il y a des possible_cards, vérifier que la réponse est
                 # dans la liste
                 PossibleCards(possible_cards=possible_cards),
@@ -565,7 +576,8 @@ class Swap(Card):
         for trashed_card_name in list(player.hand):
             if not Card.types[trashed_card_name].is_action:
                 continue
-            if player.hooks.confirm_trash_card_from_hand(
+            if player.use_hook(
+                player.hooks.confirm_trash_card_from_hand,
                 CardNameAndHand(card_name=trashed_card_name, hand=list(player.hand)),
             ):
                 player.hand.remove(trashed_card_name)
@@ -580,7 +592,8 @@ class Swap(Card):
                     and card_name != trashed_card_name
                 ]
                 if possible_cards:
-                    chosen_card = player.hooks.choose_card_to_receive_in_discard(
+                    chosen_card = player.use_hook(
+                        player.hooks.choose_card_to_receive_in_discard,
                         # TODO partout où il y a des possible_cards, vérifier que la
                         # réponse est dans la liste
                         PossibleCards(possible_cards=possible_cards),
@@ -640,7 +653,8 @@ class Workshop(Card):
         possible_cards = list(set(possible_cards))
         logger.debug(possible_cards)
         if possible_cards:
-            chosen_card = player.hooks.choose_card_to_receive_in_discard(
+            chosen_card = player.use_hook(
+                player.hooks.choose_card_to_receive_in_discard,
                 PossibleCards(possible_cards=possible_cards),
             )
             chosen_card_name = CardName[chosen_card.upper()]

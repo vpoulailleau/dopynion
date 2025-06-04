@@ -75,17 +75,6 @@ class ErrorRecord(BaseModel):
     type: Literal["error", "warning"] = "error"
 
 
-class PlayerTurnRecord(BaseModel):
-    actions: list[ActionRecord | ErrorRecord] = Field(default_factory=list)
-
-
-class GameRecord(BaseModel):
-    date: datetime
-    stock: Cards
-    turns: list[PlayerTurnRecord] = Field(default_factory=list)
-    scores: dict[str, int] = Field(default_factory=dict)
-
-
 class CardNameAndHand(BaseModel):
     card_name: CardName
     hand: list[CardName]
@@ -101,3 +90,31 @@ class PossibleCards(BaseModel):
 
 class MoneyCardsInHand(BaseModel):
     money_in_hand: list[CardName]
+
+
+HookCallArgs = CardNameAndHand | Hand | PossibleCards | MoneyCardsInHand | None
+HookCallResult = CardName | bool | None
+
+
+class HookCallRecord(BaseModel):
+    name: str
+    player: Player
+    args: HookCallArgs
+
+
+class HookResultRecord(BaseModel):
+    player: Player
+    result: HookCallResult
+
+
+class PlayerTurnRecord(BaseModel):
+    actions: list[ActionRecord | ErrorRecord | HookCallRecord | HookResultRecord] = (
+        Field(default_factory=list)
+    )
+
+
+class GameRecord(BaseModel):
+    date: datetime
+    stock: Cards
+    turns: list[PlayerTurnRecord] = Field(default_factory=list)
+    scores: dict[str, int] = Field(default_factory=dict)
