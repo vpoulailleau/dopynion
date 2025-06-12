@@ -421,6 +421,19 @@ class Magnate(Card):
                 player.hand.append(card_name)
 
 
+class Magpie(Card):
+    name = "Pie voleuse"
+    card_set = "adventures"
+    cost = 4
+    is_action = True
+    more_actions = 1
+    more_cards_from_deck = 1
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        pass
+
+
 class Market(Card):
     name = "Marché"
     cost = 5

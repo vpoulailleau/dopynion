@@ -791,6 +791,13 @@ class CardParameter:
             more_cards=1,
         ),
         CardParameter(
+            CardName.MAGPIE,
+            more_purchase=0,
+            more_actions=1,
+            more_money=0,
+            more_cards=1,
+        ),
+        CardParameter(
             CardName.MARQUIS,
             more_purchase=1,
             more_actions=0,
