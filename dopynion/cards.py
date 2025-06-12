@@ -431,7 +431,15 @@ class Magpie(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        pass
+        card_name = player.take_one_card_from_deck()
+        if card_name is not None:
+            if card_name in treasure_card_name:
+                player.hand.append(card_name)
+            else:
+                player.deck.prepend(card_name)
+                if CardName.MAGPIE in player.game.stock:
+                    player.game.stock.remove(CardName.MAGPIE)
+                    player.discard.append(CardName.MAGPIE)
 
 
 class Market(Card):

@@ -715,6 +715,37 @@ def test_marquis_no_deck(empty_player: Player) -> None:
     assert len(player.hand) == 2
 
 
+def test_magpie_with_treasure(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append(CardName.VILLAGE)
+    player.deck.append(CardName.GOLD)
+    player.hand.append_several(3, CardName.MAGPIE)
+
+    player.start_turn()
+
+    player.action(CardName.MAGPIE)
+
+    assert len(player.hand) == 4
+    assert CardName.GOLD in player.hand
+    assert CardName.VILLAGE in player.hand
+
+
+def test_magpie_without_treasure(empty_player: Player) -> None:
+    player = empty_player
+    player.game.stock.append(CardName.MAGPIE)
+    player.deck.append(CardName.VILLAGE)
+    player.deck.append(CardName.SMITHY)
+    player.hand.append_several(3, CardName.MAGPIE)
+
+    player.start_turn()
+
+    player.action(CardName.MAGPIE)
+
+    assert len(player.hand) == 3
+    assert CardName.VILLAGE in player.hand
+    assert CardName.MAGPIE in player.discard
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -866,10 +897,12 @@ def test_basic_cards(
     assert player.purchases_left == old_purchases_left + card_param.more_purchase
     assert player.actions_left == (old_actions_left - 1) + card_param.more_actions
     assert player.money == old_money + card_param.more_money
-    assert (
-        len(player.hand) == (old_nb_cards - 1) + card_param.more_cards
-        or card_param.card_name == CardName.MARQUIS
-    )
+    assert len(player.hand) == (
+        old_nb_cards - 1
+    ) + card_param.more_cards or card_param.card_name in {
+        CardName.MARQUIS,
+        CardName.MAGPIE,
+    }
 
 
 def test_card_coverage(player: Player) -> None:
