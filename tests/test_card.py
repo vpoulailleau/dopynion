@@ -680,6 +680,41 @@ def test_hireling_more_cards_at_start(empty_player: Player) -> None:
     assert len(player.hand) == 6
 
 
+def test_marquis_small_hand(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(10, CardName.GOLD)
+    player.hand.append_several(3, CardName.MARQUIS)
+
+    player.start_turn()
+
+    player.action(CardName.MARQUIS)
+
+    assert len(player.hand) == 4
+
+
+def test_marquis_big_hand(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(10, CardName.GOLD)
+    player.hand.append_several(23, CardName.MARQUIS)
+
+    player.start_turn()
+
+    player.action(CardName.MARQUIS)
+
+    assert len(player.hand) == 10
+
+
+def test_marquis_no_deck(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(3, CardName.MARQUIS)
+
+    player.start_turn()
+
+    player.action(CardName.MARQUIS)
+
+    assert len(player.hand) == 2
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -756,6 +791,13 @@ class CardParameter:
             more_cards=1,
         ),
         CardParameter(
+            CardName.MARQUIS,
+            more_purchase=1,
+            more_actions=0,
+            more_money=0,
+            more_cards=0,
+        ),
+        CardParameter(
             CardName.MILITIA,
             more_purchase=0,
             more_actions=0,
@@ -817,7 +859,10 @@ def test_basic_cards(
     assert player.purchases_left == old_purchases_left + card_param.more_purchase
     assert player.actions_left == (old_actions_left - 1) + card_param.more_actions
     assert player.money == old_money + card_param.more_money
-    assert len(player.hand) == (old_nb_cards - 1) + card_param.more_cards
+    assert (
+        len(player.hand) == (old_nb_cards - 1) + card_param.more_cards
+        or card_param.card_name == CardName.MARQUIS
+    )
 
 
 def test_card_coverage(player: Player) -> None:

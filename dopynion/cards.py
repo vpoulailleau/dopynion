@@ -431,6 +431,29 @@ class Market(Card):
     more_money = 1
 
 
+class Marquis(Card):
+    name = "Marquis"
+    cost = 6
+    is_action = True
+    more_purchases = 1
+    hand_size_left: Final[int] = 10
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for _ in list(player.hand):
+            card_name = player.take_one_card_from_deck()
+            if card_name is not None:
+                player.hand.append(card_name)
+        while len(player.hand) > cls.hand_size_left:
+            print("DISCARD")
+            removed_card = player.use_hook(
+                player.hooks.discard_card_from_hand,
+                Hand(hand=list(player.hand)),
+            )
+            player.hand.remove(CardName[removed_card.upper()])
+            player.discard.append(CardName[removed_card.upper()])
+
+
 class Militia(Card):
     name = "Milice"
     cost = 4
@@ -576,6 +599,7 @@ class Swap(Card):
         for trashed_card_name in list(player.hand):
             if not Card.types[trashed_card_name].is_action:
                 continue
+            # TODO c'est pas vraiment un trash, il faudrait utiliser un nouveau hook
             if player.use_hook(
                 player.hooks.confirm_trash_card_from_hand,
                 CardNameAndHand(card_name=trashed_card_name, hand=list(player.hand)),
@@ -592,6 +616,7 @@ class Swap(Card):
                     and card_name != trashed_card_name
                 ]
                 if possible_cards:
+                    # TODO normalement ça ne va pas en discard, mais dans la main
                     chosen_card = player.use_hook(
                         player.hooks.choose_card_to_receive_in_discard,
                         # TODO partout où il y a des possible_cards, vérifier que la
