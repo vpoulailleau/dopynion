@@ -433,6 +433,7 @@ class Market(Card):
 
 class Marquis(Card):
     name = "Marquis"
+    card_set = "allies"
     cost = 6
     is_action = True
     more_purchases = 1
