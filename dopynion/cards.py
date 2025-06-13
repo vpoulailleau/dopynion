@@ -551,6 +551,15 @@ class Platinum(Card):
     is_treasure = True
 
 
+class Port(Card):
+    name = "Ville portuaire"
+    card_set = "adventures"
+    cost = 4
+    is_action = True
+    more_cards_from_deck = 1
+    more_actions = 2
+
+
 class Province(Card):
     name = "Province"
     cost = 8

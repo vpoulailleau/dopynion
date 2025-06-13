@@ -263,10 +263,11 @@ class Player:
             raise NotEnoughMoneyError
         self._prepare_money(card.cost)
         self.money -= card.cost
-        nb_bought_cards = 1
+        nb_bought_cards = 2 if card_name == CardName.PORT else 1
         for _ in range(nb_bought_cards):
-            self.game.stock.remove(card_name)
-            self.discard.append(card_name)
+            if card_name in self.game.stock:
+                self.game.stock.remove(card_name)
+                self.discard.append(card_name)
         self.purchases_left -= 1
         self._check_for_buy_to_adjust_transition()
 

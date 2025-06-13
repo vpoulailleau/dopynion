@@ -746,6 +746,20 @@ def test_magpie_without_treasure(empty_player: Player) -> None:
     assert CardName.MAGPIE in player.discard
 
 
+def test_port_buy(empty_player: Player) -> None:
+    player = empty_player
+    player.game.stock.append(CardName.PORT)
+    player.game.stock.append(CardName.PORT)
+    player.hand.append_several(4, CardName.COPPER)
+
+    player.start_turn()
+
+    player.buy(CardName.PORT)
+
+    assert len(player.hand) == 0
+    assert player.discard.port_qty == 2
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -841,6 +855,13 @@ class CardParameter:
             more_actions=0,
             more_money=2,
             more_cards=0,
+        ),
+        CardParameter(
+            CardName.PORT,
+            more_purchase=0,
+            more_actions=2,
+            more_money=0,
+            more_cards=1,
         ),
         CardParameter(
             CardName.SMITHY,
