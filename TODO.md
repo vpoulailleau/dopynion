@@ -3,11 +3,28 @@
 
 - nouvelles cartes
   - faciles :
+    - artisan
+    - remake
+    - bandit
+    - farmingvillage
+    - fortuneteller
+    - poacher
+    - fairgrounds
+    - harvest
+    - huntingparty
+    - jester
+    - menagerie
+    - vassal
+
+    - harbinger : nouveau hook
+    - sentry : nouveau hook un peu chiant
+    - hamlet : nouveaux hook
     - charlatan : un peu plus dure
     - sunkentreasure : il faut regarder les règles (les règles papier ne disent pas si le trésor compte quand on a appliqué son effet) et quand on la joue ?
     - anvil : il faut regarder les règles (les règles papier ne disent pas si le trésor compte quand on a appliqué son effet) et quand on la joue ?
     - courier : implique de jouer une autre carte au moment de cette action
     - lostcity : faire une action au moment de l'achat…
+    - hornofplenty : lire les règles pour être sûr
   - moyennes:
     - stronghold : au prochain tour
     - dungeon : au prochain tour
