@@ -910,6 +910,20 @@ def test_fortuneteller_deck_with_victory_points(
     assert enemy.deck[0] == CardName.ESTATE
 
 
+def test_cursedgold(empty_player: Player) -> None:
+    player = empty_player
+    player.game.stock.append(CardName.VILLAGE)
+    player.hand.append_several(5, CardName.CURSEDGOLD)
+
+    player.start_turn()
+
+    player.buy(CardName.VILLAGE)
+
+    assert len(player.hand) == 4
+    assert CardName.VILLAGE in player.discard
+    assert CardName.CURSE in player.discard
+
+
 @dataclass
 class CardParameter:
     card_name: CardName

@@ -105,6 +105,15 @@ class Card(metaclass=ClassNameRepr):
     def _action(cls, player: Player) -> None:
         pass
 
+    @classmethod
+    def buy(cls, player: Player) -> None:
+        with ErrorManager(player):
+            cls._buy(player)
+
+    @classmethod
+    def _buy(cls, player: Player) -> None:
+        pass
+
 
 class Adventurer(Card):
     name = "Aventurier"
@@ -306,6 +315,21 @@ class Curse(Card):
     is_kingdom = False
     is_victory = True
     victory_points = -1
+
+
+class CursedGold(Card):
+    name = "Or maudit"
+    card_set = "nocturne"
+    cost = 4
+    money = 3
+    is_kingdom = False
+    is_treasure = True
+
+    @classmethod
+    def _buy(cls, player: Player) -> None:
+        if CardName.CURSE in player.game.stock:
+            player.game.stock.remove(CardName.CURSE)
+            player.discard.append(CardName.CURSE)
 
 
 class DistantShore(Card):
@@ -945,11 +969,9 @@ class CardContainer:
 
     @property
     def money(self) -> int:
-        return (
-            1 * self._quantities.get(CardName.COPPER, 0)
-            + 2 * self._quantities.get(CardName.SILVER, 0)
-            + 3 * self._quantities.get(CardName.GOLD, 0)
-            + 5 * self._quantities.get(CardName.PLATINUM, 0)
+        return sum(
+            Card.types[card_name].money * quantity
+            for card_name, quantity in self._quantities.items()
         )
 
     def pop(self, index: int = -1) -> CardName:

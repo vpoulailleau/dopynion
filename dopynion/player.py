@@ -237,12 +237,18 @@ class Player:
 
     def _prepare_money(self, money: int) -> None:
         money_cards = self.hand.money_cards
-        money_cards.sort(key=lambda card_name: Card.types[card_name].money)
+        money_cards.sort(
+            key=lambda card_name: (
+                card_name == CardName.CURSEDGOLD,
+                Card.types[card_name].money,
+            ),
+        )
         while self.money < money:
             if not money_cards:
                 break
             money_card = money_cards.pop(0)
             self.money += Card.types[money_card].money
+            Card.types[money_card].buy(self)
             self.hand.remove(money_card)
             self.played_cards.append(money_card)
 
