@@ -341,6 +341,25 @@ class Estate(Card):
     victory_points = 1
 
 
+class FarmingVillage(Card):
+    name = "Village agricole"
+    card_set = "cornucopia"
+    cost = 4
+    is_action = True
+    more_actions = 2
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        drawn_cards = CardContainer()
+        while (card_name := player.take_one_card_from_deck()) is not None:
+            class_ = Card.types[card_name]
+            if class_.is_treasure or class_.is_action:
+                player.hand.append(card_name)
+                break
+            drawn_cards.append(card_name)
+        drawn_cards.empty_to(player.discard)
+
+
 class Feast(Card):
     name = "Festin"
     cost = 4

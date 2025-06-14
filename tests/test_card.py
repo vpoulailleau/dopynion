@@ -809,6 +809,65 @@ def test_bandit_dont_trash_money(
     assert len(enemy.deck) == 0
 
 
+def test_farming_village_empty_deck(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.FARMINGVILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.FARMINGVILLAGE)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 0
+
+
+def test_farming_village_deck_full_of_victory_points(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(10, CardName.ESTATE)
+    player.hand.append_several(5, CardName.FARMINGVILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.FARMINGVILLAGE)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 10
+
+
+def test_farming_village_get_action(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(10, CardName.ESTATE)
+    player.deck.append(CardName.VILLAGE)
+    player.deck.append_several(10, CardName.ESTATE)
+    player.hand.append_several(5, CardName.FARMINGVILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.FARMINGVILLAGE)
+
+    assert len(player.hand) == 5
+    assert CardName.VILLAGE in player.hand
+    assert len(player.discard) == 10
+    assert len(player.deck) == 10
+
+
+def test_farming_village_get_treasure(empty_player: Player) -> None:
+    player = empty_player
+    player.deck.append_several(10, CardName.ESTATE)
+    player.deck.append(CardName.GOLD)
+    player.deck.append_several(10, CardName.ESTATE)
+    player.hand.append_several(5, CardName.FARMINGVILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.FARMINGVILLAGE)
+
+    assert len(player.hand) == 5
+    assert CardName.GOLD in player.hand
+    assert len(player.discard) == 10
+    assert len(player.deck) == 10
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -862,6 +921,13 @@ class CardParameter:
             more_actions=1,
             more_money=0,
             more_cards=2,
+        ),
+        CardParameter(
+            CardName.FARMINGVILLAGE,
+            more_purchase=0,
+            more_actions=2,
+            more_money=0,
+            more_cards=0,
         ),
         CardParameter(
             CardName.FESTIVAL,
@@ -984,6 +1050,7 @@ def test_basic_cards(
     assert len(player.hand) == (
         old_nb_cards - 1
     ) + card_param.more_cards or card_param.card_name in {
+        CardName.FARMINGVILLAGE,
         CardName.MARQUIS,
         CardName.MAGPIE,
         CardName.REMAKE,
