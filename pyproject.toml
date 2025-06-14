@@ -17,7 +17,7 @@ plugins = ['pydantic.mypy']
 
 [tool.pytest.ini_options]
 minversion = "8.0"
-addopts = "-vvv --cov=dopynion --cov-branch --cov-report=term --cov-report html"
+addopts = "-vvv --cov=dopynion --cov-branch --cov-report=term --cov-report html" # "-n auto" for pytest-xdist, but slow startup
 log_cli = false
 log_cli_level = "DEBUG"
 
@@ -68,4 +68,10 @@ packages = ["dopynion"]
 "dopynion" = ["py.typed"]
 
 [tool.uv]
-dev-dependencies = ["pytest-cov>=5.0.0", "pytest>=8.3.3", "ruff>=0.6.8", "mypy"]
+dev-dependencies = [
+    "pytest-cov>=5.0.0",
+    "pytest>=8.3.3",
+    "pytest-xdist",
+    "ruff>=0.6.8",
+    "mypy",
+]

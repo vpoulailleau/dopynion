@@ -772,7 +772,7 @@ def test_bandit_add_gold(empty_player: Player) -> None:
     assert CardName.GOLD in player.discard
 
 
-@pytest.mark.parametrize(("card_name"), treasure_card_name - {CardName.COPPER})
+@pytest.mark.parametrize(("card_name"), sorted(treasure_card_name - {CardName.COPPER}))
 def test_bandit_trash_money(
     game_with_two_players: tuple[Game, Player, Player],
     card_name: CardName,
