@@ -320,7 +320,8 @@ class Player:
             "curse_qty": cards.curse_qty,
             "gardens_qty": cards.gardens_qty,
             "score": sum(Card.types[card_name].victory_points for card_name in cards)
-            + cards.gardens_qty * (len(cards) // 10),
+            + cards.gardens_qty * (len(cards) // 10)
+            + cards.fairgrounds_qty * (len(set(cards)) // 5),
         }
 
     def discard_one_card_from_hand(self, card_name: CardName) -> None:

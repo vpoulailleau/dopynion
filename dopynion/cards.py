@@ -365,6 +365,13 @@ class Estate(Card):
     victory_points = 1
 
 
+class FairGrounds(Card):
+    name = "Champ de foire"
+    card_set = "cornucopia"
+    cost = 6
+    is_victory = True
+
+
 class FarmingVillage(Card):
     name = "Village agricole"
     card_set = "cornucopia"
@@ -442,7 +449,6 @@ class FortuneTeller(Card):
 class Gardens(Card):
     name = "Jardins"
     cost = 4
-    is_kingdom = True
     is_victory = True
 
 
