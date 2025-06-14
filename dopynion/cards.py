@@ -394,6 +394,27 @@ class Festival(Card):
     more_money = 2
 
 
+class FortuneTeller(Card):
+    name = "Diseuse de bonne aventure"
+    card_set = "cornucopia"
+    cost = 3
+    is_action = True
+    more_money = 2
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for other_player in player.other_players():
+            with ErrorManager(other_player):
+                drawn_cards = CardContainer()
+                while (card_name := other_player.take_one_card_from_deck()) is not None:
+                    class_ = Card.types[card_name]
+                    if class_.is_victory:
+                        other_player.deck.prepend(card_name)
+                        break
+                    drawn_cards.append(card_name)
+                drawn_cards.empty_to(other_player.discard)
+
+
 class Gardens(Card):
     name = "Jardins"
     cost = 4

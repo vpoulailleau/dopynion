@@ -4,8 +4,7 @@
 - gérer HTTP 404 sur get name
 - nouvelles cartes
   - faciles :
-    - farmingvillage
-    - fortuneteller
+    - cursedgold
     - poacher
     - fairgrounds
     - harvest

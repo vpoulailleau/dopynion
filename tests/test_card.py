@@ -868,6 +868,48 @@ def test_farming_village_get_treasure(empty_player: Player) -> None:
     assert len(player.deck) == 10
 
 
+def test_fortuneteller_deck_without_victory_points(
+    game_with_two_players: tuple[Game, Player, Player],
+) -> None:
+    _, player, enemy = game_with_two_players
+    player.deck.append_several(10, CardName.ESTATE)
+    player.hand.clear()
+    player.hand.append_several(5, CardName.FORTUNETELLER)
+    enemy.deck.clear()
+    enemy.deck.append_several(10, CardName.COPPER)
+
+    player.start_turn()
+
+    player.action(CardName.FORTUNETELLER)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 0
+    assert len(enemy.discard) == 10
+
+
+def test_fortuneteller_deck_with_victory_points(
+    game_with_two_players: tuple[Game, Player, Player],
+) -> None:
+    _, player, enemy = game_with_two_players
+    player.deck.append_several(10, CardName.ESTATE)
+    player.hand.clear()
+    player.hand.append_several(5, CardName.FORTUNETELLER)
+    enemy.deck.clear()
+    enemy.deck.append_several(10, CardName.COPPER)
+    enemy.deck.append(CardName.ESTATE)
+    enemy.deck.append_several(10, CardName.COPPER)
+
+    player.start_turn()
+
+    player.action(CardName.FORTUNETELLER)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 0
+    assert len(enemy.discard) == 10
+    assert len(enemy.deck) == 11
+    assert enemy.deck[0] == CardName.ESTATE
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -933,6 +975,13 @@ class CardParameter:
             CardName.FESTIVAL,
             more_purchase=1,
             more_actions=2,
+            more_money=2,
+            more_cards=0,
+        ),
+        CardParameter(
+            CardName.FORTUNETELLER,
+            more_purchase=0,
+            more_actions=0,
             more_money=2,
             more_cards=0,
         ),
