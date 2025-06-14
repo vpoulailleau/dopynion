@@ -1,6 +1,7 @@
 
 # TODO
 
+- gérer HTTP 404 sur get name
 - nouvelles cartes
   - faciles :
     - artisan
