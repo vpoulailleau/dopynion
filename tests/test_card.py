@@ -924,6 +924,48 @@ def test_cursedgold(empty_player: Player) -> None:
     assert CardName.CURSE in player.discard
 
 
+def test_poacher_0_empty_pile(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.POACHER)
+
+    player.start_turn()
+
+    player.action(CardName.POACHER)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 0
+
+
+def test_poacher_1_empty_pile(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.POACHER)
+    while CardName.ESTATE in player.game.stock:
+        player.game.stock.remove(CardName.ESTATE)
+
+    player.start_turn()
+
+    player.action(CardName.POACHER)
+
+    assert len(player.hand) == 3
+    assert len(player.discard) == 1
+
+
+def test_poacher_2_empty_piles(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.POACHER)
+    while CardName.DUCHY in player.game.stock:
+        player.game.stock.remove(CardName.DUCHY)
+    while CardName.ESTATE in player.game.stock:
+        player.game.stock.remove(CardName.ESTATE)
+
+    player.start_turn()
+
+    player.action(CardName.POACHER)
+
+    assert len(player.hand) == 2
+    assert len(player.discard) == 2
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -1040,6 +1082,13 @@ class CardParameter:
             more_actions=0,
             more_money=2,
             more_cards=0,
+        ),
+        CardParameter(
+            CardName.POACHER,
+            more_purchase=0,
+            more_actions=1,
+            more_money=1,
+            more_cards=1,
         ),
         CardParameter(
             CardName.PORT,

@@ -560,7 +560,6 @@ class Marquis(Card):
             if card_name is not None:
                 player.hand.append(card_name)
         while len(player.hand) > cls.hand_size_left:
-            print("DISCARD")
             removed_card = player.use_hook(
                 player.hooks.discard_card_from_hand,
                 Hand(hand=list(player.hand)),
@@ -642,6 +641,28 @@ class Platinum(Card):
     money = 5
     is_kingdom = False
     is_treasure = True
+
+
+class Poacher(Card):
+    name = "Braconnier"
+    card_set = "baseset2add"
+    cost = 4
+    is_action = True
+    more_cards_from_deck = 1
+    more_actions = 1
+    more_money = 1
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for _ in range(player.game.stock.nb_empty_piles):
+            if not player.hand:
+                break
+            removed_card = player.use_hook(
+                player.hooks.discard_card_from_hand,
+                Hand(hand=list(player.hand)),
+            )
+            player.hand.remove(CardName[removed_card.upper()])
+            player.discard.append(CardName[removed_card.upper()])
 
 
 class Port(Card):
@@ -993,9 +1014,13 @@ class CardContainer:
         self._cards.clear()
 
     @property
+    def nb_empty_piles(self) -> int:
+        return sum(1 for qty in self._quantities.values() if qty == 0)
+
+    @property
     def three_empty_piles(self) -> bool:
         nb_piles = 3
-        return sum(1 for qty in self._quantities.values() if qty == 0) >= nb_piles
+        return self.nb_empty_piles >= nb_piles
 
     @property
     def state(self) -> Cards:
