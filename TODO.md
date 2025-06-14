@@ -45,13 +45,10 @@
     - tiara : jouer deux fois un carte
     - specialist : pas clair, et jouer deux fois une carte
 
-- mettre les TODO dans un autre fichier
 - mettre les noms des joueurs dans l'ordre des scores d'une partie sur la liste des anciennes parties
 - afficher en fin de partie les cartes possédées par chaque joueur
-- afficher dans les log le résultat des hooks
-- dans le site, mettre l'ordre des joueurs en fonction du score dans les anciennes parties
+- afficher mieux dans les log le résultat des hooks
 - checker les identifiants de partie renvoyés par les API
-- s'assurer que les stratégies random fonctionnent avec des parties en simultané
 - afficher les noms des équipes sur le leader board et le graphe
 - purger les anciens games automatiquement sur le serveur
 - pour l'année prochaine, prévoir une apparition progressive des cartes
