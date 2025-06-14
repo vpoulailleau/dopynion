@@ -5,10 +5,10 @@
 - nouvelles cartes
   - faciles :
     - huntingparty
-    - jester
     - menagerie
-    - vassal
 
+    - vassal : nouveau hook
+    - jester : nouveau hook
     - artisan : nouveau hook
     - harbinger : nouveau hook
     - sentry : nouveau hook un peu chiant
