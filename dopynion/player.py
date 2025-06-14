@@ -303,7 +303,7 @@ class Player:
         self.game.record.add_error("Elimination", self)
 
     def score(self) -> dict:
-        cards = self.hand + self.discard + self.deck
+        cards = self.hand + self.discard + self.deck + self.played_cards
         if self.eliminated:
             return {"score": -10000}
         return {
