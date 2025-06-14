@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from dopynion.cards import Card, CardContainer, CardName, Village
+from dopynion.cards import Card, CardContainer, CardName, Village, treasure_card_name
 from dopynion.data_model import (
     CardName as CardNameDataModel,
 )
@@ -760,6 +760,55 @@ def test_port_buy(empty_player: Player) -> None:
     assert player.discard.port_qty == 2
 
 
+def test_bandit_add_gold(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.BANDIT)
+
+    player.start_turn()
+
+    player.action(CardName.BANDIT)
+
+    assert len(player.hand) == 4
+    assert CardName.GOLD in player.discard
+
+
+@pytest.mark.parametrize(("card_name"), treasure_card_name - {CardName.COPPER})
+def test_bandit_trash_money(
+    game_with_two_players: tuple[Game, Player, Player],
+    card_name: CardName,
+) -> None:
+    _, player, enemy = game_with_two_players
+    player.hand.append(CardName.BANDIT)
+    enemy.deck.clear()
+    enemy.deck.append_several(2, card_name)
+
+    player.start_turn()
+
+    player.action(CardName.BANDIT)
+
+    assert len(enemy.discard) == 1
+    assert len(enemy.hand) == 5
+    assert len(enemy.deck) == 0
+
+
+def test_bandit_dont_trash_money(
+    game_with_two_players: tuple[Game, Player, Player],
+) -> None:
+    _, player, enemy = game_with_two_players
+    player.hand.append(CardName.BANDIT)
+    enemy.deck.clear()
+    enemy.deck.append(CardName.COPPER)
+    enemy.deck.append(CardName.VILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.BANDIT)
+
+    assert len(enemy.discard) == 2
+    assert len(enemy.hand) == 5
+    assert len(enemy.deck) == 0
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -778,6 +827,13 @@ class CardParameter:
             more_actions=1,
             more_money=1,
             more_cards=1,
+        ),
+        CardParameter(
+            CardName.BANDIT,
+            more_purchase=0,
+            more_actions=0,
+            more_money=0,
+            more_cards=0,
         ),
         CardParameter(
             CardName.CELLAR,

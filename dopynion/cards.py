@@ -163,6 +163,36 @@ class Artificer(Card):
             player.deck.prepend(card_name)
 
 
+class Bandit(Card):
+    name = "Bandit"
+    card_set = "baseset2add"
+    cost = 5
+    is_action = True
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        if CardName.GOLD in player.game.stock:
+            player.game.stock.remove(CardName.GOLD)
+            player.discard.append(CardName.GOLD)
+        for other_player in player.other_players():
+            with ErrorManager(other_player):
+                drawn_cards = [
+                    card_name
+                    for _ in range(2)
+                    if (card_name := other_player.take_one_card_from_deck()) is not None
+                ]
+                trashable_money_cards = [
+                    card_name
+                    for card_name in drawn_cards
+                    if card_name in (treasure_card_name - {CardName.COPPER})
+                ]
+                trashable_money_cards.sort(key=lambda c: Card.types[c].money)
+                if trashable_money_cards:
+                    drawn_cards.remove(trashable_money_cards[0])
+                for card_name in drawn_cards:
+                    other_player.discard.append(card_name)
+
+
 class Bureaucrat(Card):
     name = "Bureaucrate"
     cost = 4
@@ -283,7 +313,6 @@ class DistantShore(Card):
     card_set = "allies"
     cost = 6
     is_action = True
-    is_treasure = True
     is_victory = True
     more_actions = 1
     more_cards_from_deck = 2
