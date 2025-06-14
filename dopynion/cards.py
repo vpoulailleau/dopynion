@@ -147,12 +147,12 @@ class Artificer(Card):
                 player.discard.append(card_name)
                 nb_discarded_cards += 1
 
-        possible_cards: list[str] = [
+        possible_cards: list[CardName] = list({
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost == nb_discarded_cards
-        ]
+        })
         if possible_cards:
             chosen_card_name = player.use_hook(
                 player.hooks.choose_card_to_receive_in_deck,
@@ -321,12 +321,12 @@ class Feast(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         player.played_cards.pop()
-        possible_cards: list[str] = [
+        possible_cards: list[CardName] = list({
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost <= cls.max_new_card_cost
-        ]
+        })
         if possible_cards:
             chosen_card_name = player.use_hook(
                 player.hooks.choose_card_to_receive_in_discard,
@@ -583,12 +583,12 @@ class Remodel(Card):
         )
         trashed_card_name = CardName[trashed_card.upper()]
         player.hand.remove(trashed_card_name)
-        possible_cards: list[str] = [
+        possible_cards: list[CardName] = list({
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost <= Card.types[trashed_card_name].cost + 2
-        ]
+        })
         if possible_cards:
             chosen_card = player.use_hook(
                 player.hooks.choose_card_to_receive_in_discard,
@@ -638,14 +638,14 @@ class Swap(Card):
                 player.hand.remove(trashed_card_name)
                 player.game.stock.append(trashed_card_name)
 
-                possible_cards: list[str] = [
+                possible_cards: list[CardName] = list({
                     card_name
                     for card_name in player.game.stock
                     if player.game.stock.quantity(card_name)
                     and Card.types[card_name].cost <= cls.max_cost_swap
                     and Card.types[card_name].is_action
                     and card_name != trashed_card_name
-                ]
+                })
                 if possible_cards:
                     # TODO normalement ça ne va pas en discard, mais dans la main
                     chosen_card = player.use_hook(
@@ -700,12 +700,12 @@ class Workshop(Card):
 
     @classmethod
     def _action(cls, player: Player) -> None:
-        possible_cards: list[str] = [
+        possible_cards: list[str] = list({
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
             and Card.types[card_name].cost <= cls.max_cost_of_received_card
-        ]
+        })
         possible_cards = list(set(possible_cards))
         logger.debug(possible_cards)
         if possible_cards:
