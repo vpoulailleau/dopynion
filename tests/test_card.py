@@ -864,6 +864,13 @@ class CardParameter:
             more_cards=1,
         ),
         CardParameter(
+            CardName.REMAKE,
+            more_purchase=0,
+            more_actions=0,
+            more_money=0,
+            more_cards=0,
+        ),
+        CardParameter(
             CardName.SMITHY,
             more_purchase=0,
             more_actions=0,
@@ -923,6 +930,7 @@ def test_basic_cards(
     ) + card_param.more_cards or card_param.card_name in {
         CardName.MARQUIS,
         CardName.MAGPIE,
+        CardName.REMAKE,
     }
 
 

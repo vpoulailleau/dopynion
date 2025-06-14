@@ -568,6 +568,39 @@ class Province(Card):
     victory_points = 6
 
 
+class Remake(Card):
+    name = "Renouvellement"
+    card_set = "cornucopia"
+    cost = 4
+    is_action = True
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        for _ in range(2):
+            if not player.hand:
+                return
+            trashed_card = player.use_hook(
+                player.hooks.trash_card_from_hand,
+                Hand(hand=list(player.hand)),
+            )
+            trashed_card_name = CardName[trashed_card.upper()]
+            player.hand.remove(trashed_card_name)
+            possible_cards: list[CardName] = list({
+                card_name
+                for card_name in player.game.stock
+                if player.game.stock.quantity(card_name)
+                and Card.types[card_name].cost == Card.types[trashed_card_name].cost + 1
+            })
+            if possible_cards:
+                chosen_card = player.use_hook(
+                    player.hooks.choose_card_to_receive_in_discard,
+                    PossibleCards(possible_cards=possible_cards),
+                )
+                chosen_card_name = CardName[chosen_card.upper()]
+                player.game.stock.remove(chosen_card_name)
+                player.discard.append(chosen_card_name)
+
+
 class Remodel(Card):
     name = "Rénovation"
     cost = 4

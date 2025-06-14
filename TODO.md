@@ -4,8 +4,6 @@
 - gérer HTTP 404 sur get name
 - nouvelles cartes
   - faciles :
-    - artisan
-    - remake
     - bandit
     - farmingvillage
     - fortuneteller
@@ -17,6 +15,7 @@
     - menagerie
     - vassal
 
+    - artisan : nouveau hook
     - harbinger : nouveau hook
     - sentry : nouveau hook un peu chiant
     - hamlet : nouveaux hook
