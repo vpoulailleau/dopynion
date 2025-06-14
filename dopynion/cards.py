@@ -460,6 +460,29 @@ class Gold(Card):
     is_treasure = True
 
 
+class Harvest(Card):
+    name = "Récolte"
+    card_set = "cornucopia"
+    cost = 5
+    is_action = True
+    nb_drawn_cards: Final[int] = 4
+
+    @classmethod
+    def _action(cls, player: Player) -> None:
+        drawn_cards = CardContainer()
+        while (card_name := player.take_one_card_from_deck()) is not None:
+            drawn_cards.append(card_name)
+            if len(drawn_cards) == cls.nb_drawn_cards:
+                break
+        nb_different_cards = len(set(drawn_cards))
+        drawn_cards.empty_to(player.discard)
+        for _ in range(nb_different_cards):
+            card_name = player.take_one_card_from_deck()
+            if card_name is None:
+                break
+            player.hand.append(card_name)
+
+
 class Hireling(Card):
     name = "Recrue"
     card_set = "adventures"

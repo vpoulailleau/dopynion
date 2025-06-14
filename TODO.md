@@ -4,7 +4,6 @@
 - gérer HTTP 404 sur get name
 - nouvelles cartes
   - faciles :
-    - harvest
     - huntingparty
     - jester
     - menagerie

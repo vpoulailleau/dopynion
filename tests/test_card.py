@@ -966,6 +966,89 @@ def test_poacher_2_empty_piles(empty_player: Player) -> None:
     assert len(player.discard) == 2
 
 
+def test_harvest_no_deck(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.HARVEST)
+
+    player.start_turn()
+
+    player.action(CardName.HARVEST)
+
+    assert len(player.hand) == 4
+    assert len(player.discard) == 0
+
+
+def test_harvest_deck_one_type(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.HARVEST)
+    player.deck.append_several(5, CardName.VILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.HARVEST)
+
+    assert len(player.hand) == 5
+    assert len(player.discard) == 4
+
+
+def test_harvest_deck_one_type_small_deck(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.HARVEST)
+    player.deck.append_several(2, CardName.VILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.HARVEST)
+
+    assert len(player.hand) == 5
+    assert len(player.discard) + len(player.deck) == 1
+
+
+def test_harvest_deck_two_types(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.HARVEST)
+    player.deck.append_several(3, CardName.VILLAGE)
+    player.deck.append_several(2, CardName.COPPER)
+
+    player.start_turn()
+
+    player.action(CardName.HARVEST)
+
+    assert len(player.hand) == 6
+    assert len(player.discard) + len(player.deck) == 3
+
+
+def test_harvest_deck_three_types(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.HARVEST)
+    player.deck.append(CardName.GOLD)
+    player.deck.append_several(2, CardName.COPPER)
+    player.deck.append_several(2, CardName.VILLAGE)
+
+    player.start_turn()
+
+    player.action(CardName.HARVEST)
+
+    assert len(player.hand) == 7
+    assert len(player.discard) + len(player.deck) == 2
+
+
+def test_harvest_deck_four_types(empty_player: Player) -> None:
+    player = empty_player
+    player.hand.append_several(5, CardName.HARVEST)
+    player.deck.append(CardName.GOLD)
+    player.deck.append(CardName.PLATINUM)
+    player.deck.append(CardName.SILVER)
+    player.deck.append_several(2, CardName.COPPER)
+
+    player.start_turn()
+
+    player.action(CardName.HARVEST)
+
+    assert len(player.hand) == 8
+    assert len(player.discard) + len(player.deck) == 1
+
+
 @dataclass
 class CardParameter:
     card_name: CardName
@@ -1039,6 +1122,13 @@ class CardParameter:
             more_purchase=0,
             more_actions=0,
             more_money=2,
+            more_cards=0,
+        ),
+        CardParameter(
+            CardName.HARVEST,
+            more_purchase=0,
+            more_actions=0,
+            more_money=0,
             more_cards=0,
         ),
         CardParameter(
@@ -1163,6 +1253,7 @@ def test_basic_cards(
         old_nb_cards - 1
     ) + card_param.more_cards or card_param.card_name in {
         CardName.FARMINGVILLAGE,
+        CardName.HARVEST,
         CardName.MARQUIS,
         CardName.MAGPIE,
         CardName.REMAKE,
