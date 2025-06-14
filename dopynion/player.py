@@ -163,7 +163,8 @@ class Player:
         self.game: dopynion.game.Game = None  # type: ignore[assignment]
         self.name = name
         self.deck = CardContainer()
-        self.deck.append_several(7, CardName.COPPER)
+        self.deck.append_several(6, CardName.COPPER)
+        self.deck.append(CardName.CURSEDGOLD)
         self.deck.append_several(3, CardName.ESTATE)
         self.deck.shuffle()
         self.hand = CardContainer()

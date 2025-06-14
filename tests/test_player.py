@@ -11,7 +11,8 @@ from dopynion.player import Player
 
 def test_initial_deck(player: Player) -> None:
     assert len(player.deck) + len(player.hand) == 10
-    assert player.deck.copper_qty + player.hand.copper_qty == 7
+    assert player.deck.copper_qty + player.hand.copper_qty == 6
+    assert player.deck.cursedgold_qty + player.hand.cursedgold_qty == 1
     assert player.deck.estate_qty + player.hand.estate_qty == 3
 
 
