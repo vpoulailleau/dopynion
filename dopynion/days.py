@@ -1,56 +1,77 @@
 from dopynion.cards import Card, CardName
 
-day1 = {
+day1: set[CardName] = {
     CardName.COPPER,
     CardName.GOLD,
     CardName.SILVER,
     CardName.ESTATE,
     CardName.DUCHY,
     CardName.PROVINCE,
+    CardName.FESTIVAL,
+    CardName.LABORATORY,
+    CardName.MARKET,
+    CardName.SMITHY,
     CardName.VILLAGE,
+    CardName.WOODCUTTER,
 }
 
-unused_cards = [
-    CardName.ADVENTURER,
-    CardName.ARTIFICER,
-    CardName.BANDIT,
-    CardName.BUREAUCRAT,
-    CardName.CELLAR,
-    CardName.CHANCELLOR,
-    CardName.CHAPEL,
-    CardName.COLONY,
+day2: set[CardName] = set()
+
+day3: set[CardName] = {
     CardName.COUNCILROOM,
     CardName.CURSE,
-    CardName.CURSEDGOLD,
     CardName.DISTANTSHORE,
-    CardName.FAIRGROUNDS,
     CardName.FARMINGVILLAGE,
-    CardName.FEAST,
-    CardName.FESTIVAL,
-    CardName.FORTUNETELLER,
-    CardName.GARDENS,
-    CardName.HARVEST,
     CardName.HIRELING,
-    CardName.LABORATORY,
+    CardName.WITCH,
+}
+
+# begin hooks
+day4: set[CardName] = {
+    CardName.BANDIT,
+    CardName.BUREAUCRAT,
+    CardName.CHANCELLOR,
+    CardName.GARDENS,
+    CardName.MILITIA,
+}
+
+day5: set[CardName] = {
+    CardName.ADVENTURER,
+    CardName.CELLAR,
+    CardName.FEAST,
+    CardName.FORTUNETELLER,
     CardName.LIBRARY,
     CardName.MAGNATE,
-    CardName.MAGPIE,
-    CardName.MARKET,
-    CardName.MARQUIS,
-    CardName.MILITIA,
+    CardName.WORKSHOP,
+}
+
+day6: set[CardName] = {
+    CardName.CHAPEL,
     CardName.MINE,
     CardName.MONEYLENDER,
-    CardName.PLATINUM,
-    CardName.POACHER,
-    CardName.PORT,
-    CardName.REMAKE,
     CardName.REMODEL,
-    CardName.SMITHY,
     CardName.SWAP,
-    CardName.WITCH,
-    CardName.WOODCUTTER,
-    CardName.WORKSHOP,
-]
+}
+
+day7: set[CardName] = {
+    CardName.ARTIFICER,
+    CardName.COLONY,
+    CardName.MARQUIS,
+    CardName.POACHER,
+    CardName.REMAKE,
+}
+
+day8: set[CardName] = {
+    CardName.CURSEDGOLD,
+    CardName.HARVEST,
+    CardName.MAGPIE,
+    CardName.PORT,
+}
+
+day9: set[CardName] = {
+    CardName.FAIRGROUNDS,
+    CardName.PLATINUM,
+}
 
 
 def init_day() -> None:
