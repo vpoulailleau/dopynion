@@ -1,3 +1,5 @@
+import datetime
+
 from dopynion.cards import Card, CardName
 
 day1: set[CardName] = {
@@ -75,7 +77,22 @@ day9: set[CardName] = {
 
 
 def init_day() -> None:
-    allowed_cards = day1
+    allowed_cards = set()
+    days = {
+        datetime.date(2000, 1, 1): day1,
+        datetime.date(2025, 10, 8): day2,
+        datetime.date(2025, 10, 9): day3,
+        datetime.date(2025, 10, 10): day4,
+        datetime.date(2025, 10, 27): day5,
+        datetime.date(2025, 10, 28): day6,
+        datetime.date(2025, 11, 17): day7,
+        datetime.date(2025, 11, 18): day8,
+        datetime.date(2025, 11, 20): day9,
+    }
+    for day, cards in days.items():
+        if day <= datetime.datetime.now(tz=datetime.UTC).date():
+            allowed_cards |= cards
+
     for card_name in list(Card.types):
         if card_name not in allowed_cards:
             Card.types.pop(card_name)
