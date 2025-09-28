@@ -84,7 +84,7 @@ class Game:
     def finished(self) -> bool:
         return (
             (self.stock.province_qty == 0)
-            or (self.stock.colony_qty == 0)
+            or (self.stock.colony_qty == 0 and CardName.COLONY in Card.types)
             or self.stock.three_empty_piles
         )
 
