@@ -4,6 +4,7 @@ import random
 from pathlib import Path
 
 import dopynion.cards
+import dopynion.days
 from dopynion.cards import Card, CardContainer, CardName
 from dopynion.constants import MAX_NB_PLAYERS
 from dopynion.data_model import Game as GameData
@@ -21,6 +22,7 @@ class Game:
         self.players: list[Player] = []
         self.started = False
         self.stock = CardContainer()
+        dopynion.days.init_day()
         self.stock.append_several(12, CardName.PLATINUM)
         self.stock.append_several(30, CardName.GOLD)
         self.stock.append_several(40, CardName.SILVER)

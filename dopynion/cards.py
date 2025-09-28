@@ -923,7 +923,7 @@ class CardContainer:
     def __getattr__(self, attribute: str) -> int:
         if attribute.endswith("_qty"):
             card_name = attribute[:-4]
-            return self._quantities[CardName[card_name.upper()]]
+            return self._quantities.get(CardName[card_name.upper()], 0)
         raise AttributeError
 
     def __repr__(self) -> str:
@@ -960,11 +960,21 @@ class CardContainer:
         return new
 
     def prepend(self, card_name: CardName) -> None:
-        """Insert next card to be played."""
+        """
+        Insert next card to be played.
+
+        Raises:
+            KeyError: If unknown card_name.
+
+        """
+        if card_name not in Card.types:
+            raise KeyError(card_name)
         self._cards.insert(0, card_name)
         self._quantities[card_name] += 1
 
     def append(self, card_name: CardName) -> None:
+        if card_name not in Card.types:
+            raise KeyError(card_name)
         self._cards.append(card_name)
         self._quantities[card_name] += 1
 
