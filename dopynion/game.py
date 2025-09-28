@@ -59,7 +59,7 @@ class Game:
             self.curse_qty = 20
         elif len(self.players) == 4:  # noqa: PLR2004
             self.curse_qty = 30
-        possible_kingdoms: list[CardName] = [
+        possible_kingdoms: list[CardName] = [  # TODO niveau par jour
             CardName[name.upper()]
             for name, class_ in inspect.getmembers(dopynion.cards, inspect.isclass)
             if issubclass(class_, Card)
