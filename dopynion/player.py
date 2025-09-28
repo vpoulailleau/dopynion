@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Callable
 from enum import Enum
 from typing import TYPE_CHECKING, TypeVar, cast, overload
 
@@ -26,7 +25,7 @@ from dopynion.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
 
     import dopynion.game
 
@@ -164,7 +163,10 @@ class Player:
         self.name = name
         self.deck = CardContainer()
         self.deck.append_several(6, CardName.COPPER)
-        self.deck.append(CardName.CURSEDGOLD)
+        if CardName.CURSEDGOLD in Card.types:
+            self.deck.append(CardName.CURSEDGOLD)
+        else:
+            self.deck.append(CardName.COPPER)
         self.deck.append_several(3, CardName.ESTATE)
         self.deck.shuffle()
         self.hand = CardContainer()
@@ -354,10 +356,10 @@ class Player:
     ) -> HookRet:
         self.game.record.add_hook_call(self, hook.__name__, args)
         if args is None:
-            zero_arg_hook = cast(Callable[[], HookRet], hook)
+            zero_arg_hook = cast("Callable[[], HookRet]", hook)
             result = zero_arg_hook()
         else:
-            arg_hook = cast(Callable[[HookArg], HookRet], hook)
+            arg_hook = cast("Callable[[HookArg], HookRet]", hook)
             result = arg_hook(args)
         self.game.record.add_hook_result(self, result)
         return result
