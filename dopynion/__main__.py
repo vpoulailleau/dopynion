@@ -5,6 +5,7 @@ import random
 from pprint import pprint
 
 from dopynion.cards import Card, CardName
+from dopynion.days import init_day
 from dopynion.game import Game
 from dopynion.player import Player
 
@@ -18,8 +19,9 @@ logging.basicConfig(
     ),
     datefmt="%m/%d/%Y %H:%M:%S",
 )
-logging.info("Launching server")
+logging.info("Launching server")  # noqa: LOG015 used only once…
 
+init_day()
 game = Game()
 player1 = Player("Foo")
 player2 = Player("Bar")
