@@ -1,6 +1,6 @@
 [project]
 name = "dopynion"
-version = "0.7.3"
+version = "0.8.0"
 description = "Dopynion"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -22,7 +22,7 @@ log_cli = false
 log_cli_level = "DEBUG"
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 output-format = "concise"
 fix = true
 
@@ -30,6 +30,7 @@ fix = true
 preview = true
 select = ["ALL"]
 ignore = [
+    "COM812",  # ruff recommends to disable it while using ruff format
     "CPY001",
     "D1",
     "D203",
