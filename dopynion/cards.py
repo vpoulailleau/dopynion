@@ -955,8 +955,8 @@ class CardContainer:
 
     def copy(self) -> CardContainer:
         new = CardContainer()
-        new._quantities = self._quantities.copy()  # noqa: SLF001
-        new._cards = self._cards.copy()  # noqa: SLF001
+        new._quantities = self._quantities.copy()
+        new._cards = self._cards.copy()
         return new
 
     def prepend(self, card_name: CardName) -> None:
