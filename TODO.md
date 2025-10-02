@@ -44,4 +44,3 @@
 - checker les identifiants de partie renvoyés par les API
 - afficher les noms des équipes sur le leader board et le graphe
 - purger les anciens games automatiquement sur le serveur
-- pour l'année prochaine, prévoir une apparition progressive des cartes
