@@ -823,7 +823,8 @@ class Swap(Card):
                     and card_name != trashed_card_name
                 })
                 if possible_cards:
-                    # TODO normalement ça ne va pas en discard, mais dans la main
+                    # TODO normalement ça ne va pas en discard, mais dans la main,
+                    # nouveau hook à prévoir
                     chosen_card = player.use_hook(
                         player.hooks.choose_card_to_receive_in_discard,
                         # TODO partout où il y a des possible_cards, vérifier que la
