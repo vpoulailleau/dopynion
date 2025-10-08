@@ -4,8 +4,8 @@ from dopynion.cards import Card, CardName
 
 day1: set[CardName] = {
     CardName.COPPER,
-    CardName.GOLD,
     CardName.SILVER,
+    CardName.GOLD,
     CardName.ESTATE,
     CardName.DUCHY,
     CardName.PROVINCE,
@@ -52,7 +52,7 @@ day6: set[CardName] = {
     CardName.MINE,
     CardName.MONEYLENDER,
     CardName.REMODEL,
-    CardName.SWAP,
+    CardName.SWAP,  # TODO corriger le code de la carte, avec les nouveaux hooks
 }
 
 day7: set[CardName] = {
