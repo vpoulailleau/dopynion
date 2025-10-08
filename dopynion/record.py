@@ -1,6 +1,7 @@
 import datetime
 from pathlib import Path
 from typing import Literal
+from zoneinfo import ZoneInfo
 
 from dopynion.data_model import (
     ActionRecord,
@@ -22,7 +23,7 @@ records_dir.mkdir(parents=True, exist_ok=True)
 
 class Record:
     def __init__(self) -> None:
-        now = datetime.datetime.now(tz=datetime.UTC)
+        now = datetime.datetime.now(tz=ZoneInfo("Europe/Paris"))
         now_str = now.strftime("%Y_%m_%d__%H_%M_%S_%f")
         self._file = records_dir / f"game__{now_str}.dop"
         if self._file.exists():
