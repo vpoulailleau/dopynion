@@ -76,6 +76,10 @@ class Card(metaclass=ClassNameRepr):
     def card_name(cls) -> CardName:
         return CardName[cls.__name__.upper()]
 
+    @staticmethod
+    def card_class(card_name: str) -> type[Card]:
+        return Card.types.get(CardName[card_name.upper()], Card)
+
     def __init_subclass__(cls) -> None:
         Card.types[cls.card_name()] = cls
 
