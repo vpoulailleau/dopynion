@@ -285,7 +285,9 @@ def test_council_room(game_with_two_players: tuple[Game, Player, Player]) -> Non
 
     player.action(CardName.COUNCILROOM)
 
-    assert len(player.hand) == 4 + Card.types[CardName.COUNCILROOM].more_cards_from_deck
+    assert (
+        len(player.hand) == 4 + Card.class_(CardName.COUNCILROOM).more_cards_from_deck
+    )
     assert len(enemy.hand) == 1
 
 
@@ -501,8 +503,7 @@ def test_remodel(empty_player: Player) -> None:
         ) -> CardNameDataModel:
             for card_name in decision_input.possible_cards:
                 assert (
-                    Card.types[CardName[card_name.upper()]].cost
-                    <= Card.types[CardName.COPPER].cost + 2
+                    Card.class_(card_name).cost <= Card.class_(CardName.COPPER).cost + 2
                 )
             return decision_input.possible_cards[0]
 
@@ -532,7 +533,7 @@ def test_witch(game_with_two_players: tuple[Game, Player, Player]) -> None:
 
     player.action(CardName.WITCH)
 
-    assert len(player.hand) == 4 + Card.types[CardName.WITCH].more_cards_from_deck
+    assert len(player.hand) == 4 + Card.class_(CardName.WITCH).more_cards_from_deck
     assert len(enemy.hand) == 5
     assert CardName.CURSE in enemy.discard
 
@@ -544,7 +545,7 @@ def test_workshop(empty_player: Player) -> None:
             decision_input: PossibleCards,
         ) -> CardNameDataModel:
             for card_name in decision_input.possible_cards:
-                assert Card.types[CardName[card_name.upper()]].cost <= 4
+                assert Card.class_(card_name).cost <= 4
             return decision_input.possible_cards[0]
 
     player = empty_player
@@ -1245,7 +1246,7 @@ def test_basic_cards(
 
     player.action(card_param.card_name)
 
-    assert Card.types[card_param.card_name].is_action
+    assert Card.class_(card_param.card_name).is_action
     assert player.purchases_left == old_purchases_left + card_param.more_purchase
     assert player.actions_left == (old_actions_left - 1) + card_param.more_actions
     assert player.money == old_money + card_param.more_money

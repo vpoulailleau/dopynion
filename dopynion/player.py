@@ -243,15 +243,15 @@ class Player:
         money_cards.sort(
             key=lambda card_name: (
                 card_name == CardName.CURSEDGOLD,
-                Card.types[card_name].money,
+                Card.class_(card_name).money,
             ),
         )
         while self.money < money:
             if not money_cards:
                 break
             money_card = money_cards.pop(0)
-            self.money += Card.types[money_card].money
-            Card.types[money_card].buy(self)
+            self.money += Card.class_(money_card).money
+            Card.class_(money_card).buy(self)
             self.hand.remove(money_card)
             self.played_cards.append(money_card)
 
@@ -266,7 +266,7 @@ class Player:
         if not quantity:
             self.game.record.add_error(f"Invalid buy, no {card_name} in stock", self)
             raise InvalidBuyError(card_name)
-        card = Card.types[card_name]
+        card = Card.class_(card_name)
         if self.money + self.hand.money < card.cost:
             self.game.record.add_error("Invalid buy, not enough money", self)
             raise NotEnoughMoneyError
@@ -296,7 +296,7 @@ class Player:
         self.actions_left -= 1
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
-        Card.types[card_name].action(self)
+        Card.class_(card_name).action(self)
         self._check_for_action_to_buy_transition()
 
     @property
@@ -322,7 +322,7 @@ class Player:
             "estate_qty": cards.estate_qty,
             "curse_qty": cards.curse_qty,
             "gardens_qty": cards.gardens_qty,
-            "score": sum(Card.types[card_name].victory_points for card_name in cards)
+            "score": sum(Card.class_(card_name).victory_points for card_name in cards)
             + cards.gardens_qty * (len(cards) // 10)
             + cards.fairgrounds_qty * (len(set(cards)) // 5),
         }

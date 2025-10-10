@@ -77,7 +77,7 @@ class Card(metaclass=ClassNameRepr):
         return CardName[cls.__name__.upper()]
 
     @staticmethod
-    def card_class(card_name: str) -> type[Card]:
+    def class_(card_name: str) -> type[Card]:
         return Card.types.get(CardName[card_name.upper()], Card)
 
     def __init_subclass__(cls) -> None:
@@ -132,7 +132,7 @@ class Adventurer(Card):
             card_name = player.take_one_card_from_deck()
             if card_name is None:
                 break
-            if Card.types[card_name].is_treasure:
+            if Card.class_(card_name).is_treasure:
                 nb_kept_cards += 1
                 player.hand.append(card_name)
             else:
@@ -164,7 +164,7 @@ class Artificer(Card):
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
-            and Card.types[card_name].cost == nb_discarded_cards
+            and Card.class_(card_name).cost == nb_discarded_cards
         })
         if possible_cards:
             chosen_card_name = player.use_hook(
@@ -199,7 +199,7 @@ class Bandit(Card):
                     for card_name in drawn_cards
                     if card_name in (treasure_card_name - {CardName.COPPER})
                 ]
-                trashable_money_cards.sort(key=lambda c: Card.types[c].money)
+                trashable_money_cards.sort(key=lambda c: Card.class_(c).money)
                 if trashable_money_cards:
                     drawn_cards.remove(trashable_money_cards[0])
                 for card_name in drawn_cards:
@@ -387,7 +387,7 @@ class FarmingVillage(Card):
     def _action(cls, player: Player) -> None:
         drawn_cards = CardContainer()
         while (card_name := player.take_one_card_from_deck()) is not None:
-            class_ = Card.types[card_name]
+            class_ = Card.class_(card_name)
             if class_.is_treasure or class_.is_action:
                 player.hand.append(card_name)
                 break
@@ -408,7 +408,7 @@ class Feast(Card):
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
-            and Card.types[card_name].cost <= cls.max_new_card_cost
+            and Card.class_(card_name).cost <= cls.max_new_card_cost
         })
         if possible_cards:
             chosen_card_name = player.use_hook(
@@ -442,8 +442,7 @@ class FortuneTeller(Card):
             with ErrorManager(other_player):
                 drawn_cards = CardContainer()
                 while (card_name := other_player.take_one_card_from_deck()) is not None:
-                    class_ = Card.types[card_name]
-                    if class_.is_victory:
+                    if Card.class_(card_name).is_victory:
                         other_player.deck.prepend(card_name)
                         break
                     drawn_cards.append(card_name)
@@ -521,7 +520,7 @@ class Library(Card):
             card_name = player.take_one_card_from_deck()
             if card_name is None:
                 break
-            if not Card.types[card_name].is_action:
+            if not Card.class_(card_name).is_action:
                 player.hand.append(card_name)
             elif player.use_hook(
                 player.hooks.skip_card_reception_in_hand,
@@ -640,14 +639,14 @@ class Mine(Card):
                 possible_money_cards = [
                     card_name
                     for card_name in player.game.stock
-                    if (class_ := Card.types[card_name]).is_treasure
-                    and class_.cost <= Card.types[trashed_card_name].cost + 3
+                    if (class_ := Card.class_(card_name)).is_treasure
+                    and class_.cost <= Card.class_(trashed_card_name).cost + 3
                     and player.game.stock.quantity(card_name)
                 ]
                 if possible_money_cards:
                     best_money = max(
                         possible_money_cards,
-                        key=lambda card_name: Card.types[card_name].money,
+                        key=lambda card_name: Card.class_(card_name).money,
                     )
                     player.hand.append(best_money)
 
@@ -736,7 +735,8 @@ class Remake(Card):
                 card_name
                 for card_name in player.game.stock
                 if player.game.stock.quantity(card_name)
-                and Card.types[card_name].cost == Card.types[trashed_card_name].cost + 1
+                and Card.class_(card_name).cost
+                == Card.class_(trashed_card_name).cost + 1
             })
             if possible_cards:
                 chosen_card = player.use_hook(
@@ -767,7 +767,7 @@ class Remodel(Card):
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
-            and Card.types[card_name].cost <= Card.types[trashed_card_name].cost + 2
+            and Card.class_(card_name).cost <= Card.class_(trashed_card_name).cost + 2
         })
         if possible_cards:
             chosen_card = player.use_hook(
@@ -808,7 +808,7 @@ class Swap(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         for trashed_card_name in list(player.hand):
-            if not Card.types[trashed_card_name].is_action:
+            if not Card.class_(trashed_card_name).is_action:
                 continue
             # TODO c'est pas vraiment un trash, il faudrait utiliser un nouveau hook
             if player.use_hook(
@@ -822,8 +822,8 @@ class Swap(Card):
                     card_name
                     for card_name in player.game.stock
                     if player.game.stock.quantity(card_name)
-                    and Card.types[card_name].cost <= cls.max_cost_swap
-                    and Card.types[card_name].is_action
+                    and Card.class_(card_name).cost <= cls.max_cost_swap
+                    and Card.class_(card_name).is_action
                     and card_name != trashed_card_name
                 })
                 if possible_cards:
@@ -885,7 +885,7 @@ class Workshop(Card):
             card_name
             for card_name in player.game.stock
             if player.game.stock.quantity(card_name)
-            and Card.types[card_name].cost <= cls.max_cost_of_received_card
+            and Card.class_(card_name).cost <= cls.max_cost_of_received_card
         })
         possible_cards = list(set(possible_cards))
         logger.debug(possible_cards)
@@ -1035,7 +1035,7 @@ class CardContainer:
     @property
     def money(self) -> int:
         return sum(
-            Card.types[card_name].money * quantity
+            Card.class_(card_name).money * quantity
             for card_name, quantity in self._quantities.items()
         )
 
