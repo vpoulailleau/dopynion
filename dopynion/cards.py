@@ -496,7 +496,7 @@ class Hireling(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         player.played_cards.pop()
-        player.nb_cards_in_hand_at_turn_start += 1
+        player.nb_hireling += 1
 
 
 class Laboratory(Card):

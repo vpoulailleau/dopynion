@@ -178,7 +178,7 @@ class Player:
         self.playing = False
         self.state_machine: State = State.ACTION
         self.eliminated = False
-        self.nb_cards_in_hand_at_turn_start = 5
+        self.nb_hireling = 0
         self.hooks: PlayerHooks = DefaultPlayerHooks()
         self._adjust()
 
@@ -213,6 +213,10 @@ class Player:
         self.actions_left = 1
         self.purchases_left = 1
         self.money = 0
+        for _ in range(self.nb_hireling):
+            card_name = self.take_one_card_from_deck()
+            if card_name is not None:
+                self.hand.append(card_name)
         self._check_for_action_to_buy_transition()
 
     def end_turn(self) -> None:
@@ -232,7 +236,7 @@ class Player:
     def _adjust(self) -> None:
         self.played_cards.empty_to(self.discard)
         self.hand.empty_to(self.discard)
-        for _ in range(self.nb_cards_in_hand_at_turn_start):
+        for _ in range(5):
             card_name = self.take_one_card_from_deck()
             if card_name is not None:
                 self.hand.append(card_name)
