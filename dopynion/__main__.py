@@ -29,28 +29,6 @@ game.add_player(player2)
 game.add_player(player3)
 game.start()
 
-
-def play(player: Player, strategy: "Strategy") -> None:  # type:ignore [name-defined] # noqa: F821
-    print("-" * 80)
-    player.start_turn()
-    strategy.start_turn()
-
-    action = ""
-    while action != "END_TURN":
-        print("- " * 40)
-        print(player.state)
-        action = strategy.play(game.state)
-        print(strategy.my_data)
-        print(action)
-        card_name = CardName[action.split()[-1].upper()]
-        if action.startswith("ACTION"):
-            player.action(card_name)
-        elif action.startswith("BUY"):
-            player.buy(card_name)
-        print(player)
-    player.end_turn()
-
-
 turn = 0
 while not game.finished:
     turn += 1
