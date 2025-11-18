@@ -1,10 +1,10 @@
 [project]
 name = "dopynion"
-version = "0.9.1"
+version = "0.9.2"
 description = "Dopynion"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["pydantic"]
+dependencies = ["pydantic", "tzdata"]
 
 [tool.coverage.run]
 omit = ["dopynion/__main__.py"]
