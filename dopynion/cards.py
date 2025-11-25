@@ -26,6 +26,8 @@ logger = logging.getLogger(__name__)
 
 
 # TODO ajout robustesse sur action invalide
+# TODO afficher dans les logs les résultats de hook
+# TODO vérifier que l'on répond avec une carte dans possible_cards
 
 
 class ErrorManager:
@@ -201,6 +203,7 @@ class Bandit(Card):
                 ]
                 trashable_money_cards.sort(key=lambda c: Card.class_(c).money)
                 if trashable_money_cards:
+                    # TODO afficher dans le log
                     drawn_cards.remove(trashable_money_cards[0])
                 for card_name in drawn_cards:
                     other_player.discard.append(card_name)
