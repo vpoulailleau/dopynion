@@ -131,6 +131,8 @@ class Adventurer(Card):
     def _action(cls, player: Player) -> None:
         nb_kept_cards = 0
         while nb_kept_cards < cls.nb_treasure_cards:
+            if not (player.deck + player.discard).money_cards:
+                break
             card_name = player.take_one_card_from_deck()
             if card_name is None:
                 break

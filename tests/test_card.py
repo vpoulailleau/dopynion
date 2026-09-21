@@ -47,6 +47,28 @@ def test_adventurer(empty_player: Player) -> None:
     assert CardName.COPPER not in player.hand
 
 
+def test_adventurer_stop_when_no_treasure_left(empty_player: Player) -> None:
+    player = empty_player
+
+    player.hand.append_several(5, CardName.ADVENTURER)
+    player.deck.append(CardName.BUREAUCRAT)
+    player.deck.append(CardName.SILVER)
+    player.deck.append(CardName.CURSE)
+    player.deck.append(CardName.ESTATE)
+
+    player.start_turn()
+
+    player.action(CardName.ADVENTURER)
+
+    assert len(player.hand) == 5
+    assert player.hand.silver_qty == 1
+    assert len(player.discard) == 1
+    assert player.discard[0] == CardName.BUREAUCRAT
+    assert len(player.deck) == 2
+    assert player.deck[0] == CardName.CURSE
+    assert player.deck[1] == CardName.ESTATE
+
+
 def test_bureaucrat_enemy_with_victory_cards(
     game_with_two_players: tuple[Game, Player, Player],
 ) -> None:
