@@ -130,10 +130,11 @@ class Adventurer(Card):
     @classmethod
     def _action(cls, player: Player) -> None:
         nb_kept_cards = 0
+        no_more_money_cards = False
         while nb_kept_cards < cls.nb_treasure_cards:
-            if not (player.deck + player.discard).money_cards:
-                break
             card_name = player.take_one_card_from_deck()
+            if not player.discard and not player.deck.money_cards:
+                no_more_money_cards = True
             if card_name is None:
                 break
             if Card.class_(card_name).is_treasure:
@@ -141,6 +142,8 @@ class Adventurer(Card):
                 player.hand.append(card_name)
             else:
                 player.discard.append(card_name)
+            if no_more_money_cards:
+                break
 
 
 class Artificer(Card):

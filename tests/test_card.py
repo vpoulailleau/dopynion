@@ -47,7 +47,9 @@ def test_adventurer(empty_player: Player) -> None:
     assert CardName.COPPER not in player.hand
 
 
-def test_adventurer_stop_when_no_treasure_left(empty_player: Player) -> None:
+def test_adventurer_no_infinite_loop_when_no_treasure_left(
+    empty_player: Player,
+) -> None:
     player = empty_player
 
     player.hand.append_several(5, CardName.ADVENTURER)
@@ -63,10 +65,13 @@ def test_adventurer_stop_when_no_treasure_left(empty_player: Player) -> None:
     assert len(player.hand) == 5
     assert player.hand.silver_qty == 1
     assert len(player.discard) == 1
-    assert player.discard[0] == CardName.BUREAUCRAT
     assert len(player.deck) == 2
-    assert player.deck[0] == CardName.CURSE
-    assert player.deck[1] == CardName.ESTATE
+    assert not player.deck.money_cards
+    assert set(player.discard + player.deck) == {
+        CardName.BUREAUCRAT,
+        CardName.CURSE,
+        CardName.ESTATE,
+    }
 
 
 def test_bureaucrat_enemy_with_victory_cards(
