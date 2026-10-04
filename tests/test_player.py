@@ -21,10 +21,6 @@ def test_make_hand_enough_cards_in_deck(player: Player) -> None:
     assert len(player.deck) == 5
 
 
-def test_make_hand_not_enough_cards_in_deck() -> None:
-    pass  # TODO add the test
-
-
 def test_unknown_action(player_with_action_card: Player) -> None:
     player = player_with_action_card
     player.start_turn()

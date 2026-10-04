@@ -26,7 +26,6 @@ logger = logging.getLogger(__name__)
 
 
 # TODO ajout robustesse sur action invalide
-# TODO afficher dans les logs les résultats de hook
 # TODO vérifier que l'on répond avec une carte dans possible_cards
 
 

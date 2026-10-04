@@ -475,11 +475,6 @@ def test_mine_trash_platinum(empty_player: Player) -> None:
     assert player.hand[0] == CardName.PLATINUM
 
 
-# TODO trash don't exist
-# TODO check dans les hooks quand ils piochent dans une liste que l'élément choisi est
-# bien dans la liste
-
-
 def test_money_lender_refuse(empty_player: Player) -> None:
     player = empty_player
     player.hand.append_several(2, CardName.COPPER)
