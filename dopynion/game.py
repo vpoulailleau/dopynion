@@ -37,6 +37,12 @@ class Game:
             return getattr(self.stock, name)
         raise AttributeError
 
+    def __setattr__(self, name: str, value: int) -> None:
+        if name.endswith("_qty"):
+            setattr(self.stock, name, value)
+        else:
+            super().__setattr__(name, value)
+
     def add_player(self, player: Player) -> None:
         if self.started:
             raise AddPlayerDuringGameError

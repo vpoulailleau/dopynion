@@ -938,6 +938,13 @@ class CardContainer:
             return self._quantities.get(CardName[card_name.upper()], 0)
         raise AttributeError
 
+    def __setattr__(self, attribute: str, value: int) -> None:
+        if attribute.endswith("_qty"):
+            card_name = attribute[:-4]
+            self._quantities[CardName[card_name.upper()]] = value
+        else:
+            super().__setattr__(attribute, value)
+
     def __repr__(self) -> str:
         return str(self._cards)
 

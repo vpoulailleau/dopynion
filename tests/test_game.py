@@ -1,5 +1,6 @@
 import pytest
 
+from dopynion.cards import CardName
 from dopynion.exceptions import (
     AddPlayerDuringGameError,
     InvalidCommandError,
@@ -46,9 +47,13 @@ def test_initial_estates_2_players(game: Game) -> None:
     game.add_player(Player("2"))
     game.start()
     assert game.estate_qty == 8
+    assert game.stock.quantity(CardName.ESTATE) == 8
     assert game.duchy_qty == 8
+    assert game.stock.quantity(CardName.DUCHY) == 8
     assert game.province_qty == 8
+    assert game.stock.quantity(CardName.PROVINCE) == 8
     assert game.colony_qty == 8
+    assert game.stock.quantity(CardName.COLONY) == 8
 
 
 def test_initial_estates_3_players(game: Game) -> None:
