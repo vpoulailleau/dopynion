@@ -324,7 +324,7 @@ class Player:
         total_cards = 0
 
         for container in [self.hand, self.discard, self.deck, self.played_cards]:
-            for card_name, qty in container._quantities.items():
+            for card_name, qty in container.quantities().items():
                 combined_quantities[card_name] = (
                     combined_quantities.get(card_name, 0) + qty
                 )

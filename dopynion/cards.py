@@ -1072,6 +1072,9 @@ class CardContainer:
     def quantity(self, card_name: CardName) -> int:
         return self._quantities.get(card_name, 0)
 
+    def quantities(self) -> dict[CardName, int]:
+        return self._quantities.copy()
+
     def sort(self, key: Callable, *, reverse: bool = False) -> None:
         self._cards.sort(key=key, reverse=reverse)
 
