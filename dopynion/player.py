@@ -247,15 +247,15 @@ class Player:
         money_cards.sort(
             key=lambda card_name: (
                 card_name == CardName.CURSEDGOLD,
-                Card.class_(card_name).money,
+                card_name.class_.money,
             ),
         )
         while self.money < money:
             if not money_cards:
                 break
             money_card = money_cards.pop(0)
-            self.money += Card.class_(money_card).money
-            Card.class_(money_card).buy(self)
+            self.money += money_card.class_.money
+            money_card.class_.buy(self)
             self.hand.remove(money_card)
             self.played_cards.append(money_card)
 
@@ -270,7 +270,7 @@ class Player:
         if not quantity:
             self.game.record.add_error(f"Invalid buy, no {card_name} in stock", self)
             raise InvalidBuyError(card_name)
-        card = Card.class_(card_name)
+        card = card_name.class_
         if self.money + self.hand.money < card.cost:
             self.game.record.add_error("Invalid buy, not enough money", self)
             raise NotEnoughMoneyError
@@ -300,7 +300,7 @@ class Player:
         self.actions_left -= 1
         self.hand.remove(card_name)
         self.played_cards.append(card_name)
-        Card.class_(card_name).action(self)
+        card_name.class_.action(self)
         self._check_for_action_to_buy_transition()
 
     @property
@@ -341,7 +341,7 @@ class Player:
             "curse_qty": combined_quantities.get(CardName.CURSE, 0),
             "gardens_qty": gardens_qty,
             "score": sum(
-                Card.class_(card_name).victory_points * qty
+                card_name.class_.victory_points * qty
                 for card_name, qty in combined_quantities.items()
             )
             + gardens_qty * (total_cards // 10)
