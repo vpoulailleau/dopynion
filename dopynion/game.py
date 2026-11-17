@@ -60,7 +60,8 @@ class Game:
             self.estate_qty = 8
             self.duchy_qty = 8
             self.province_qty = 8
-            self.colony_qty = 8
+            if self.colony_qty:
+                self.colony_qty = 8
             self.curse_qty = 10
         elif len(self.players) == 3:  # noqa: PLR2004
             self.curse_qty = 20

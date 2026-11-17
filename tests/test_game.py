@@ -1,6 +1,6 @@
 import pytest
 
-from dopynion.cards import CardName
+from dopynion.cards import Card, CardName
 from dopynion.exceptions import (
     AddPlayerDuringGameError,
     InvalidCommandError,
@@ -54,6 +54,18 @@ def test_initial_estates_2_players(game: Game) -> None:
     assert game.stock.quantity(CardName.PROVINCE) == 8
     assert game.colony_qty == 8
     assert game.stock.quantity(CardName.COLONY) == 8
+
+
+def test_initial_estates_2_players_without_colony_card_type(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delitem(Card.types, CardName.COLONY, raising=False)
+    game = Game()
+    game.add_player(Player("1"))
+    game.add_player(Player("2"))
+    game.start()
+    assert game.colony_qty == 0
+    assert game.stock.quantity(CardName.COLONY) == 0
 
 
 def test_initial_estates_3_players(game: Game) -> None:
