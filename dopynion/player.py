@@ -316,19 +316,36 @@ class Player:
         self.game.record.add_error("Elimination", self)
 
     def score(self) -> dict:
-        cards = self.hand + self.discard + self.deck + self.played_cards
         if self.eliminated:
             return {"score": -10000}
+
+        # Combine quantities without creating intermediate CardContainers
+        combined_quantities: dict = {}
+        total_cards = 0
+
+        for container in [self.hand, self.discard, self.deck, self.played_cards]:
+            for card_name, qty in container._quantities.items():
+                combined_quantities[card_name] = (
+                    combined_quantities.get(card_name, 0) + qty
+                )
+                total_cards += qty
+
+        gardens_qty = combined_quantities.get(CardName.GARDENS, 0)
+        fairgrounds_qty = combined_quantities.get(CardName.FAIRGROUNDS, 0)
+
         return {
-            "colony_qty": cards.colony_qty,
-            "province_qty": cards.province_qty,
-            "duchy_qty": cards.duchy_qty,
-            "estate_qty": cards.estate_qty,
-            "curse_qty": cards.curse_qty,
-            "gardens_qty": cards.gardens_qty,
-            "score": sum(Card.class_(card_name).victory_points for card_name in cards)
-            + cards.gardens_qty * (len(cards) // 10)
-            + cards.fairgrounds_qty * (len(set(cards)) // 5),
+            "colony_qty": combined_quantities.get(CardName.COLONY, 0),
+            "province_qty": combined_quantities.get(CardName.PROVINCE, 0),
+            "duchy_qty": combined_quantities.get(CardName.DUCHY, 0),
+            "estate_qty": combined_quantities.get(CardName.ESTATE, 0),
+            "curse_qty": combined_quantities.get(CardName.CURSE, 0),
+            "gardens_qty": gardens_qty,
+            "score": sum(
+                Card.class_(card_name).victory_points * qty
+                for card_name, qty in combined_quantities.items()
+            )
+            + gardens_qty * (total_cards // 10)
+            + fairgrounds_qty * (len(combined_quantities) // 5),
         }
 
     def discard_one_card_from_hand(self, card_name: CardName) -> None:
