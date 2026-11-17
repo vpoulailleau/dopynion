@@ -56,17 +56,26 @@ class Game:
 
     def start(self) -> None:
         self.started = True
+        victory_factor = 5 if CardName.COLONY in Card.types else 1
         if len(self.players) <= 2:  # noqa: PLR2004
-            self.estate_qty = 8
-            self.duchy_qty = 8
-            self.province_qty = 8
+            self.estate_qty = 8 * victory_factor
+            self.duchy_qty = 8 * victory_factor
+            self.province_qty = 8 * victory_factor
             if self.colony_qty:
-                self.colony_qty = 8
-            self.curse_qty = 10
+                self.colony_qty = 8 * victory_factor
+        else:
+            self.estate_qty = 12 * victory_factor
+            self.duchy_qty = 12 * victory_factor
+            self.province_qty = 12 * victory_factor
+            if self.colony_qty:
+                self.colony_qty = 12 * victory_factor
+
+        if len(self.players) <= 2:  # noqa: PLR2004
+            self.curse_qty = 10 * victory_factor
         elif len(self.players) == 3:  # noqa: PLR2004
-            self.curse_qty = 20
+            self.curse_qty = 20 * victory_factor
         elif len(self.players) == 4:  # noqa: PLR2004
-            self.curse_qty = 30
+            self.curse_qty = 30 * victory_factor
         possible_kingdoms: list[CardName] = [
             CardName[name.upper()]
             for name, class_ in Card.types.items()
@@ -79,7 +88,7 @@ class Game:
             if card_name == CardName.GARDENS:
                 self.stock.append_several(self.duchy_qty, card_name)
             else:
-                self.stock.append_several(10, card_name)
+                self.stock.append_several(10, card_name)  # _qty
             possible_kingdoms.remove(card_name)
         self.record.add_stock(self.stock.state)
         self.save()
