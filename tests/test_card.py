@@ -1294,3 +1294,51 @@ def test_cards_quantities() -> None:
     cards.append(CardName.DUCHY)
     cards.remove(CardName.VILLAGE)
     assert cards.state == Cards(quantities={CardName.DUCHY: 1})
+
+
+def test_card_container_qty_setter_synchronizes_with_cards_list() -> None:
+    """Test that setting _qty attributes properly synchronizes _cards list."""
+    cards = CardContainer()
+    cards.append_several(10, CardName.ESTATE)
+
+    # Verify initial state
+    assert cards.estate_qty == 10
+    assert len([c for c in cards if c == CardName.ESTATE]) == 10
+
+    # Set quantity to 5 - should remove 5 cards from _cards
+    cards.estate_qty = 5
+
+    assert cards.estate_qty == 5
+    assert len([c for c in cards if c == CardName.ESTATE]) == 5
+
+    # Should be able to remove all without errors
+    for _ in range(5):
+        cards.remove(CardName.ESTATE)
+
+    assert cards.estate_qty == 0
+    assert len([c for c in cards if c == CardName.ESTATE]) == 0
+
+
+def test_card_container_qty_setter_increase() -> None:
+    """Test that increasing qty also adds cards to _cards list."""
+    cards = CardContainer()
+    cards.append_several(5, CardName.DUCHY)
+
+    # Increase quantity
+    cards.duchy_qty = 10
+
+    assert cards.duchy_qty == 10
+    assert len([c for c in cards if c == CardName.DUCHY]) == 10
+
+
+def test_card_container_qty_setter_zero() -> None:
+    """Test that setting qty to 0 removes all cards from _cards list."""
+    cards = CardContainer()
+    cards.append_several(20, CardName.PROVINCE)
+
+    # Set to 0
+    cards.province_qty = 0
+
+    assert cards.province_qty == 0
+    assert len([c for c in cards if c == CardName.PROVINCE]) == 0
+    assert len(cards) == 0

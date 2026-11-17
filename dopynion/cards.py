@@ -940,8 +940,19 @@ class CardContainer:
 
     def __setattr__(self, attribute: str, value: int) -> None:
         if attribute.endswith("_qty"):
-            card_name = attribute[:-4]
-            self._quantities[CardName[card_name.upper()]] = value
+            card_name = CardName[attribute[:-4].upper()]
+            current_qty = self._quantities.get(card_name, 0)
+
+            if value > current_qty:
+                # Need to add cards
+                for _ in range(value - current_qty):
+                    self._cards.append(card_name)
+            elif value < current_qty:
+                # Need to remove cards
+                for _ in range(current_qty - value):
+                    self._cards.remove(card_name)
+
+            self._quantities[card_name] = value
         else:
             super().__setattr__(attribute, value)
 
